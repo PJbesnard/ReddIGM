@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @Validated
@@ -24,5 +24,15 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
+    }
+
+    @GetMapping("/by-post/{postId}")
+    public ResponseEntity<List<Comment>> getAllCommentsForPost(@PathVariable Long postId) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId));
+    }
+
+    @GetMapping("/by-user/{userName}")
+    public ResponseEntity<List<Comment>> getAllCommentsForUser(@PathVariable String userName) {
+        return ResponseEntity.status(OK).body(commentService.getAllCommentsForUser(userName));
     }
 }

@@ -1,15 +1,22 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import com.sun.istack.NotNull;
 
-@Entity
-@Table(name = "Comment")
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
+@Entity(name = "Comments")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
     private String text;
+    @NotNull
     private LocalDateTime creationDate;
 
     public Comment() {
@@ -38,6 +45,19 @@ public class Comment {
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 
     @Override
