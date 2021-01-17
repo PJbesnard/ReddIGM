@@ -1,39 +1,55 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "Users")
-public class User {
+public class User implements UserDetails {
+
+    public enum Authority {
+        USER,
+        ADMIN;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @NotNull
+    @Column(unique = true)
     private String username;
 
+    @NotNull
     private String password;
 
+    @NotNull
+    @Email
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private Authority authority;
 
     public User() {}
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, Authority authority) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.authority = authority;
     }
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -60,6 +76,38 @@ public class User {
         this.email = email;
     }
 
+    public Authority getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(Authority authority) {
+        this.authority = authority;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(authority.name()));
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,14 +115,15 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
-                Objects.equals(username, user.username) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(email, user.email);
+                username.equals(user.username) &&
+                password.equals(user.password) &&
+                email.equals(user.email) &&
+                authority == user.authority;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email);
+        return Objects.hash(id, username, password, email, authority);
     }
 
     @Override
@@ -84,6 +133,7 @@ public class User {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
+                ", authority=" + authority +
                 '}';
     }
 }
