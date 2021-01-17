@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 public class PostService {
     private PostRepository postRepository;
@@ -23,6 +25,10 @@ public class PostService {
     public Post getPost(Long id) {
         //TODO
         return null;
+    }
+
+    public List<Post> getAllPosts() {
+        return (List<Post>) postRepository.findAll();
     }
 
     public List<Post> getPostsBySubject(Long id) {

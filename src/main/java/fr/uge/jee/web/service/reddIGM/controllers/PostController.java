@@ -38,4 +38,9 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
     }
 
+    @GetMapping
+    public ResponseEntity<List<Post>> getAllPosts() {
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
+
 }
