@@ -1,19 +1,27 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
-import java.util.Objects;
 
-public class LoginRequest {
+public class RegisterRequest {
+    private String email;
     private String username;
     private String password;
 
-    public LoginRequest(String username, String password) {
-        this.username = Objects.requireNonNull(username);
-        this.password = Objects.requireNonNull(password);
+    public RegisterRequest(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
-    public LoginRequest() {
+    public RegisterRequest() {
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getUsername() {
         return username;

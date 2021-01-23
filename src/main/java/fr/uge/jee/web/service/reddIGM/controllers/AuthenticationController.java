@@ -1,46 +1,44 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
-import fr.uge.jee.web.service.reddIGM.dto.AuthenticationResponse;
+import fr.uge.jee.web.service.reddIGM.dto.LoginResponse;
 import fr.uge.jee.web.service.reddIGM.dto.LoginRequest;
+import fr.uge.jee.web.service.reddIGM.dto.RegisterRequest;
+import fr.uge.jee.web.service.reddIGM.dto.RegisterResponse;
 import fr.uge.jee.web.service.reddIGM.models.User;
-import fr.uge.jee.web.service.reddIGM.services.UserService;
-import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
+import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
+import fr.uge.jee.web.service.reddIGM.services.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
+    private AuthenticationService authenticationService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtUtil jwtUtil;
 
     @RequestMapping("/hello")
     public String hello(){ return "hello world ";}
 
     @RequestMapping("/login")
     @PostMapping
-    public AuthenticationResponse createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws  Exception {
-       /* try{
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword())
-            );
-        } catch (BadCredentialsException e){
-            throw new Exception("Incorrect username or password", e);
-        }*/
-        //User user = userService.loadUserByUsername(loginRequest.getUserName());
-        User user = new User("coco", "ococo", "truc@gmail.com", User.Authority.USER);
-        final String jtwToken = jwtUtil.generateToken(user);
-        return new AuthenticationResponse(jtwToken);
+    public LoginResponse createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws  Exception {
+       return authenticationService.login(loginRequest);
+    }
+
+    @RequestMapping("/register")
+    @PostMapping
+    public RegisterResponse registerUser(@RequestBody RegisterRequest registerRequest) {
+        return authenticationService.register(registerRequest);
+    }
+
+    @RequestMapping("/showLogin")
+    @GetMapping
+    public String showLogin() {
+        User principal =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return "User " + principal.getUsername() + " is currently logged in";
     }
 
 }

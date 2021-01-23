@@ -2,11 +2,11 @@ package fr.uge.jee.web.service.reddIGM.dto;
 
 import java.util.Objects;
 
-public class AuthenticationResponse {
+public class LoginResponse {
 
     private final String jwt;
 
-    public AuthenticationResponse(String jwt){
+    public LoginResponse(String jwt){
         this.jwt = Objects.requireNonNull(jwt);
     }
 

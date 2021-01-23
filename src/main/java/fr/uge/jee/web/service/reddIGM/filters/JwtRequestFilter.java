@@ -4,6 +4,7 @@ import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.UserService;
 import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -27,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NonNull HttpServletRequest httpServletRequest, @NonNull HttpServletResponse httpServletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
         String username = null;
@@ -39,11 +40,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             username = jwtUtil.extractUserName(jwt);
         }
         // Si pas déjà authentifié
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            //User user = this.userService.loadUserByUsername(username);
-            User user = new User("coco", "ococo", "truc@gmail.com", User.Authority.USER);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){ User user = this.userService.loadUserByUsername(username);
 
-            // vérification du toke,
+            // vérification du token
             if (jwtUtil.validateToken(jwt, user)){
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
                         user, null, user.getAuthorities()
