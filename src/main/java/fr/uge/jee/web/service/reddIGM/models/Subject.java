@@ -1,10 +1,8 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "Subjects")
@@ -19,14 +17,17 @@ public class Subject {
     @NotNull
     private String description;
 
-    // TODO : Liste des Posts
+    @NotNull
+    @OneToMany
+    private List<Post> posts;
 
     public Subject() {
     }
 
-    public Subject(String name, String description) {
-        this.name = Objects.requireNonNull(name);
-        this.description = Objects.requireNonNull(description);
+    public Subject(@NotNull String name, @NotNull String description, @NotNull List<Post> posts) {
+        this.name = name;
+        this.description = description;
+        this.posts = posts;
     }
 
     public String getName() {
@@ -45,25 +46,37 @@ public class Subject {
         this.description = description;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Subject subject = (Subject) o;
-        return name.equals(subject.name) &&
-                description.equals(subject.description);
+    public List<Post> getPosts() {
+        return posts;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, description);
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 
     @Override
     public String toString() {
         return "Subject{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", posts=" + posts +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Subject subject = (Subject) o;
+        return id == subject.id &&
+                name.equals(subject.name) &&
+                description.equals(subject.description) &&
+                posts.equals(subject.posts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, posts);
     }
 }

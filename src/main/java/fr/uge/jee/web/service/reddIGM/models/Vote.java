@@ -1,9 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -19,15 +16,19 @@ public class Vote {
     private long id;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
     private Type type;
 
-    // TODO : Associer également le User au vote
+    @NotNull
+    @ManyToOne
+    private User owner;
 
     public Vote() {
     }
 
-    public Vote(Type type) {
+    public Vote(@NotNull Type type, @NotNull User owner) {
         this.type = type;
+        this.owner = owner;
     }
 
     public Type getType() {
@@ -38,16 +39,35 @@ public class Vote {
         this.type = type;
     }
 
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "id=" + id +
+                ", type=" + type +
+                ", owner=" + owner +
+                '}';
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vote vote = (Vote) o;
-        return type == vote.type;
+        return id == vote.id &&
+                type == vote.type &&
+                owner.equals(vote.owner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return Objects.hash(id, type, owner);
     }
 }
