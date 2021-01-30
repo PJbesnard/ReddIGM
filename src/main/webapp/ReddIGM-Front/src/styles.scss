@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/bulma/sass/utilities/initial-variables";
+@import "../node_modules/bulma/sass/utilities/functions";
+
+
+$reddIGM-green: #247D4C;
+$reddIGM-green-invert: findColorInvert($reddIGM-green);
+$reddIGM-background: #2C2F33;
+$reddIGM-background-invert: findColorInvert(reddIGM-background);
+$reddIGM-search: #667177;
+$reddIGM-search-invert: findColorInvert(reddIGM-search);
+$reddIGM-light: #A8BDCA;
+$reddIGM-light-invert: findColorInvert(reddIGM-light);
+$reddIGM-grey: #3F4449;
+$reddIGM-grey-invert: findColorInvert(reddIGM-light);
+
+$primary: $reddIGM-green;
+$dark: $reddIGM-background;
+$info: $reddIGM-search;
+$light: $reddIGM-light;
+$grey: $reddIGM-grey;
+
+@import "../node_modules/bulma/sass/utilities/derived-variables";
+$addColors: (
+  "reddIGM-green":($reddIGM-green, $reddIGM-green-invert),
+  "reddIGM-background":($reddIGM-background, $reddIGM-background-invert),
+  "reddIGM-search":($reddIGM-search, $reddIGM-search-invert),
+  "reddIGM-light":($reddIGM-light, $reddIGM-light-invert),
+  "reddIGM-grey":($reddIGM-grey, $reddIGM-grey-invert),
+);
+$colors: map-merge($colors, $addColors);
+
+@import "../node_modules/bulma";
