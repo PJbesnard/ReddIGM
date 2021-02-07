@@ -1,6 +1,5 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
-import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
 import fr.uge.jee.web.service.reddIGM.models.Comment;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentDto comment) {
+    public ResponseEntity<Comment> createComment(@Valid @RequestBody Comment comment) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
     }
 
