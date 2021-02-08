@@ -1,10 +1,15 @@
 package fr.uge.jee.web.service.reddIGM.repositories;
 
 import fr.uge.jee.web.service.reddIGM.models.Comment;
+import fr.uge.jee.web.service.reddIGM.models.Post;
+import fr.uge.jee.web.service.reddIGM.models.User;
 import org.springframework.data.repository.CrudRepository;
 
-public interface CommentRepository extends CrudRepository<Comment, Long> {
-    //List<Comment> findByPost(Post post);
+import java.util.List;
 
-    // List<Comment> findAllByUser(User user);
+public interface CommentRepository extends CrudRepository<Comment, Long> {
+    List<Comment> findByPost(Post post);
+
+    List<Comment> findAllByUser(User user);
+
 }
