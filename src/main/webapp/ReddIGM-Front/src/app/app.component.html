@@ -102,18 +102,10 @@
         </div>
       </div>
 	</div>
-	
+
     <div class="column is-one-quarter">
-      <div class="card has-background-grey block" >
-        <div class="card-content">
-          <div class="content is-size-4 has-text-centered has-text-light has-text-weight-bold">
-            Reddigm posts allows you to talk about whatever you want
-          </div>
-          <div class="box has-text-centered has-background-grey is-shadowless">
-			<a class="button is-primary has-text-weight-bold is-fullwidth"(click)="openModalCreatePost()"  > CREATE POST </a>
-		  </div>
-        </div>
-      </div>
+      <app-card-create-post></app-card-create-post>
+      <!--
       <div class="card has-background-grey block" >
         <div class="card-content">
           <div class="content is-size-4 has-text-light has-text-weight-bold">
@@ -126,7 +118,8 @@
           <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMLoveUForax</div>
           <div class="content is-size-5 has-text-centered has-text-light has-text-weight-semibold is-clickable">view all</div>
         </div>
-      </div>
+      </div>-->
+      <app-browse-subs></app-browse-subs>
     </div>
   </div>
   <app-create-post [openModal]= "isModalActive" (openModelChange)="isModalActive = false"></app-create-post>
