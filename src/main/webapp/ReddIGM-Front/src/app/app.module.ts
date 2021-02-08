@@ -8,6 +8,8 @@ import { CreatePostComponent } from './pages/modals/create-post/create-post.comp
 import { CKEditorModule } from 'ckeditor4-angular';
 import { CardCreatePostComponent } from './card-create-post/card-create-post.component';
 import { BrowseSubsComponent } from './browse-subs/browse-subs.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { PostViewComponent } from './post-view/post-view.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +17,8 @@ import { BrowseSubsComponent } from './browse-subs/browse-subs.component';
     CreatePostComponent,
     CardCreatePostComponent,
     BrowseSubsComponent,
+    NavBarComponent,
+    PostViewComponent
   ],
   imports: [
     BrowserModule,
