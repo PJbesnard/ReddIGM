@@ -55,7 +55,6 @@ ex. [@DomPizzie](https://twitter.com/dompizzie)
 
 ## License
 //todo
-//todo
 
 This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
 
