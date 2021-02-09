@@ -10,6 +10,7 @@ import { CardCreatePostComponent } from './card-create-post/card-create-post.com
 import { BrowseSubsComponent } from './browse-subs/browse-subs.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { PostViewComponent } from './post-view/post-view.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { PostViewComponent } from './post-view/post-view.component';
     BrowserModule,
 	AppRoutingModule,
 	CKEditorModule,
+  FontAwesomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

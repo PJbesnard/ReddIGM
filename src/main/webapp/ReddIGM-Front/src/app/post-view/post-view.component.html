@@ -1,7 +1,11 @@
 <div class="card has-background-grey block" style="margin-bottom: 20px;">
   <div class="card-content">
-    <div class="columns">
-      <div class="column is-1"></div>
+    <div class="columns is-vcentered">
+      <div class="column is-1 has-text-centered">
+        <fa-icon [icon]="faPlusCircle" class="content is-clickable has-text-light" style="font-size: 24px;"></fa-icon>
+        <p class="has-text-light is-size-5" > {{rate}} </p>
+        <fa-icon [icon]="faMinusCircle"class="content is-clickable has-text-light" style="font-size: 24px;"></fa-icon>
+      </div>
       <div class="column is-10">
         <div class="content is-size-4 has-text-light has-text-weight-bold">
           {{ title }}
@@ -11,7 +15,17 @@
         </div>
         <div class="columns">
           <div class="column is-1">
-            <div class="content has-text-primary is-clickable has-text-left">{{ author }}</div>
+            <div class="columns is-vcentered">
+              <div class="column is-5">
+                <figure class="image is-32x32">
+                  <img class="is-rounded" src={{image}}>
+                </figure>
+              </div>
+              <div class="column is-2"></div>
+              <div class="column is-5">
+                <div class="content has-text-primary is-clickable has-text-left">{{ author }}</div>
+              </div>
+            </div>
           </div>
           <div class="column is-2"></div>
           <div class="column is-2">
