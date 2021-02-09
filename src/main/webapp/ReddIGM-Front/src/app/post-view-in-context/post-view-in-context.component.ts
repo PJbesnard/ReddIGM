@@ -1,17 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faPlusCircle, faMinusCircle, faCommentAlt, faChevronCircleDown } from '@fortawesome/free-solid-svg-icons';
 
+
 @Component({
-  selector: 'app-post-view',
-  templateUrl: './post-view.component.html',
-  styleUrls: ['./post-view.component.scss']
+  selector: 'app-post-view-in-context',
+  templateUrl: './post-view-in-context.component.html',
+  styleUrls: ['./post-view-in-context.component.scss']
 })
-export class PostViewComponent implements OnInit {
+export class PostViewInContextComponent implements OnInit {
+  isModalActive: boolean = false;
   faPlusCircle = faPlusCircle;
   faMinusCircle = faMinusCircle;
   faCommentAlt = faCommentAlt;
   faChevronCircleDown = faChevronCircleDown;
-
   @Input() author: string = "Michel"; //
   @Input() title: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
   @Input() content: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
@@ -25,5 +26,11 @@ export class PostViewComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  
+
+  openModalCreatePost() {
+    this.isModalActive = !this.isModalActive;
+  }
+
 
 }

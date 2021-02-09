@@ -3,37 +3,46 @@
     <div class="columns is-vcentered">
       <div class="column is-1 has-text-centered">
         <fa-icon [icon]="faPlusCircle" class="content is-clickable has-text-light" style="font-size: 24px;"></fa-icon>
-        <p class="has-text-light is-size-5" > {{rate}} </p>
+        <p class="has-text-light is-size-5" > {{ rate }} </p>
         <fa-icon [icon]="faMinusCircle"class="content is-clickable has-text-light" style="font-size: 24px;"></fa-icon>
       </div>
       <div class="column is-10">
         <div class="content is-size-4 has-text-light has-text-weight-bold">
-          {{ title }}
+          {{title}}
         </div>
         <div class="content has-text-light">
-          {{ content }}
+          {{content}}
         </div>
         <div class="columns">
           <div class="column is-1">
             <div class="columns is-vcentered">
               <div class="column is-5">
                 <figure class="image is-32x32">
-                  <img class="is-rounded" src={{image}}>
+                  <img class="is-rounded" src = {{image}}>
                 </figure>
               </div>
               <div class="column is-2"></div>
               <div class="column is-5">
-                <div class="content has-text-primary is-clickable has-text-left">{{ author }}</div>
+                <div class="content has-text-primary is-clickable has-text-left">{{author}}</div>
               </div>
             </div>
           </div>
           <div class="column is-2"></div>
           <div class="column is-2">
-            <div class="content has-text-light is-clickable has-text-left">{{ date }}</div>
+            <div class="content has-text-light is-clickable has-text-left">{{date}}</div>
           </div>
-          <div class="column is-5"></div>
+          <div class="column is-3"></div>
           <div class="column is-2">
-            <div class="content has-text-light is-clickable has-text-left has-text-weight-bold">{{ subName }}</div>
+            <div class="content has-text-light is-clickable has-text-left ">        
+              <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" (click)="openModalCreatePost()"style="font-size: 18px;"> </fa-icon>  
+                Comment
+            </div>  
+          </div>
+          <div class="column is-3">
+            <div class="content has-text-light is-clickable has-text-left ">        
+              <fa-icon [icon]="faChevronCircleDown"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
+                Show Responses
+            </div>  
           </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, OnInit} from '@angular/core';
+
 
 @Component({
   // nom du composant html appelé pour l'injection
@@ -12,4 +13,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'ReddIGM-Front';
+
 }

@@ -3,48 +3,22 @@
 <br>
 <br>
 <div class="container is-fluid">
-  <p class="title is-3 is-spaced has-text-light ">Reddigm posts</p>
+  <p class="title is-4 is-spaced has-text-light has-text-weight-semibold text-decoration: underline"  style="text-decoration: underline">r/wafwaf</p>
   <br>
-  <div class="columns">
-    <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-primary is-clickable">All</p>
-    </div>
-    <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-light is-clickable">Hot</p>
-    </div>
-    <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-light is-clickable">New</p>
-    </div>
-  </div>
+
   <div class="columns">
     <div class="column is-three-quarters ">
       
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view><app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view><app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view><app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view><app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
-      <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]="'122'"></app-post-view>
+      
+      <app-post-view-in-context [author]="'author'" [title]="'title'" [content]="'content'" [date]="'date'" [subName]="'truc'" [rate]="122"></app-post-view-in-context>
+      <app-post-view-in-context [author]="'author'" [title]="'title'" [content]="'content'" [date]="'date'" [subName]="'truc'" [rate]="122"></app-post-view-in-context>
+      <app-post-view-in-context [author]="'author'" [title]="'title'" [content]="'content'" [date]="'date'" [subName]="'truc'" [rate]="122"></app-post-view-in-context>
 
-    
     </div>
     
-    <div class="column is-one-quarter position:fixed" >
-      <div class="card has-background-grey block" >
-        <div class="card-content">
-          <div class="content is-size-4 has-text-centered has-text-light has-text-weight-bold">
-            Reddigm posts allows you to talk about whatever you want
-          </div>
-          <div class="box has-text-centered has-background-grey is-shadowless">
-            <a class="button is-primary has-text-weight-bold is-fullwidth"> CREATE POST </a>
-          </div>
-        </div>
-      </div>
+
+    <div class="column is-one-quarter position:" >
+      <app-titled-card-button></app-titled-card-button>
       <div class="card has-background-grey block" >
         <div class="card-content">
           <div class="content is-size-4 has-text-light has-text-weight-bold">
