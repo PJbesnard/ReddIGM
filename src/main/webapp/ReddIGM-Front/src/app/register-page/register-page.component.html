@@ -24,48 +24,68 @@
     <div class="column">
         <br />
 
-        <div class="field">
-            <label class="control has-text-white">&nbsp;&nbsp;Username <span class="has-text-danger">*</span>
-                <input class="input is-primary" placeholder="Username">
-            </label>
-        </div>
-
-        <div class="field">
-            <label class="control has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span>
-                <input class="input is-primary" placeholder="Email address">
-            </label>
-        </div>
-
-        <div class="field">
-            <label class="control has-text-white">&nbsp;&nbsp;Password <span class="has-text-danger">*</span>
-                <input class="input is-primary" placeholder="Password">
-            </label>
-        </div>
-
-        <div class="field">
-            <label class="control has-text-white">&nbsp;&nbsp;Confirm password <span class="has-text-danger">*</span>
-                <input class="input is-primary" placeholder="Confirm password">
-            </label>
-        </div>
-        
-        <div style="padding-left: 1%;">
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
             <div class="field">
-                <label class="checkbox has-text-light">
-                    <input type="checkbox" />
-                    I agree to get emails about cool stuff on Reddigm.
+                <label class="control has-text-white">&nbsp;&nbsp;Username <span class="has-text-danger">*</span>
+                    <input class="input is-primary" placeholder="Username" formControlName="username">
                 </label>
             </div>
     
-            <p class="has-text-light">By creating an account, you agree the <a href="#"><u>Terms of Service</u></a>.</p>
-        </div>
+            <div class="field">
+                <label class="control has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span>
+                    <input class="input is-primary" placeholder="Email address" formControlName="email">
+                </label>
+                <div *ngIf="registerForm.controls.email.errors" class="invalid-feedback">
+                    <div *ngIf="registerForm.controls.email.errors.email">
+                        <p class="subtitle has-text-danger is-6">Email address is incorrect</p>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="field">
+                <label class="control has-text-white">&nbsp;&nbsp;Password <span class="has-text-danger">*</span>
+                    <input class="input is-primary" placeholder="Password" type="password" formControlName="password">
+                </label>
+            </div>
+    
+            <div class="field">
+                <label class="control has-text-white">&nbsp;&nbsp;Confirm password <span class="has-text-danger">*</span>
+                    <input class="input is-primary" placeholder="Confirm password" type="password" formControlName="passwordConfirm">
+                </label>
+                <div *ngIf="!registerForm.controls.passwordConfirm.errors" class="invalid-feedback">
+                    <div *ngIf="registerForm.hasError('passwordConfirmValidator')">
+                        <p class="subtitle has-text-danger is-6">Passwords are differents</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding-left: 1%;">
+                <div class="field">
+                    <label class="checkbox has-text-light">
+                        <input type="checkbox" formControlName="subscribeNews" />
+                        I agree to get emails about cool stuff on Reddigm.
+                    </label>
+                </div>
+        
+                <p class="has-text-light">By creating an account, you agree the <a href="#"><u>Terms of Service</u></a>.</p>
+            </div>
+    
+            <br/>
 
-        <br/>
+            <ngx-recaptcha2 #captchaElem
+                [siteKey]="captchaKey"
+                formControlName="recaptcha">
+            </ngx-recaptcha2>
 
-        <div>
-            <p class="control is-expanded">
-                <button class="button is-primary">Create account</button>
-            </p>
-        </div>
+            <br/>
+    
+            <div>
+                <p class="control is-expanded">
+                    <button class="button is-primary" type="submit" [disabled]="registerForm.invalid">Create account</button>
+                </p>
+            </div>
+        </form>
+
     </div>
 
     <div class="column is-1"></div> <!-- Offset -->
