@@ -9,7 +9,11 @@ const BASE_ADDRESS = "http://localhost:8080/";
 })
 export class AuthenticationService {
 
-  constructor(private httpClient: HttpClient) { }
+  jwtToken: string;
+
+  constructor(private httpClient: HttpClient) {
+    this.jwtToken = "";
+  }
 
   register(username: String, password: String, email: String) {
     const body = {
@@ -18,12 +22,30 @@ export class AuthenticationService {
       email: email
     };
 
-    this.httpClient.post(BASE_ADDRESS + "register", body).subscribe(
+    this.httpClient.post<any>(BASE_ADDRESS + "register", body).subscribe(
       (response) => {
         // TODO : Redirection vers la home page
       },
       (response) => {
         // TODO : Rediriger vers une page d'erreur
+      }
+    );
+  }
+
+  login(username: String, password: String) {
+    const body = {
+      username: username,
+      password: password
+    };
+
+    this.httpClient.post<any>(BASE_ADDRESS + "login", body).subscribe(
+      (response) => {
+        this.jwtToken = response["jwt"];
+        // TODO : Redirection vers la home page
+      },
+      (response) => {
+        console.log(response);
+        // TODO : Rediriger vers la page de connexion avec une erreur d'authentification
       }
     );
   }

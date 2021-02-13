@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { ReCaptchaV3Service } from 'ngx-captcha';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -13,7 +12,7 @@ export class RegisterPageComponent implements OnInit {
   registerForm: FormGroup;
   captchaKey: string = "6LfYkVYaAAAAAH9i5Uz1x7UyraR2OQh11H30Toi3";
 
-  constructor(private authService: AuthenticationService, private formBuilder: FormBuilder, private recaptchaV3Service: ReCaptchaV3Service) {
+  constructor(private authService: AuthenticationService, private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -30,10 +29,6 @@ export class RegisterPageComponent implements OnInit {
 
   onSubmitForm() {
     const formValue = this.registerForm.value;
-
-    if (formValue['password'] != formValue['passwordConfirm']) {
-      return;
-    }
 
     this.authService.register(
       formValue['username'],
