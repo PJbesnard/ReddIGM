@@ -26,32 +26,48 @@
 
         <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
             <div class="field">
-                <label class="control has-text-white">&nbsp;&nbsp;Username <span class="has-text-danger">*</span>
+                <label class=" has-text-white">&nbsp;&nbsp;Username <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
                     <input class="input is-primary" placeholder="Username" formControlName="username">
-                </label>
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-user"></i>
+                  </span>
+                </div>
             </div>
-    
+
             <div class="field">
-                <label class="control has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span>
-                    <input class="input is-primary" type="email" placeholder="Email address" formControlName="email">
-                </label>
+                <label class=" has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input is-primary" placeholder="Email address" formControlName="email">
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
                 <div *ngIf="registerForm.controls.email.errors" class="invalid-feedback">
                     <div *ngIf="registerForm.controls.email.errors.email">
                         <p class="subtitle has-text-danger is-6">Email address is incorrect</p>
                     </div>
                 </div>
             </div>
-    
+
             <div class="field">
-                <label class="control has-text-white">&nbsp;&nbsp;Password <span class="has-text-danger">*</span>
+                <label class=" has-text-white">&nbsp;&nbsp;Password <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
                     <input class="input is-primary" placeholder="Password" type="password" formControlName="password">
-                </label>
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-lock"></i>
+                  </span>
+                </div>
             </div>
-    
+
             <div class="field">
-                <label class="control has-text-white">&nbsp;&nbsp;Confirm password <span class="has-text-danger">*</span>
+                <label class=" has-text-white">&nbsp;&nbsp;Confirm password <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
                     <input class="input is-primary" placeholder="Confirm password" type="password" formControlName="passwordConfirm">
-                </label>
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-lock"></i>
+                  </span>
+                </div>
                 <div *ngIf="!registerForm.controls.passwordConfirm.errors" class="invalid-feedback">
                     <div *ngIf="registerForm.hasError('passwordConfirmValidator')">
                         <p class="subtitle has-text-danger is-6">Passwords are differents</p>
@@ -81,7 +97,7 @@
     
             <div>
                 <p class="control is-expanded">
-                    <button class="button is-primary" type="submit" [disabled]="registerForm.invalid">Create account</button>
+                    <button class="button is-primary" type="submit" [ngClass]="{'is-loading': logging}" [disabled]="registerForm.invalid">Create account</button>
                 </p>
             </div>
         </form>

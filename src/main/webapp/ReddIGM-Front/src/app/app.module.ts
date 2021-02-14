@@ -4,6 +4,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule  } from '@angular/forms';
 import { NgxCaptchaModule } from 'ngx-captcha';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -28,7 +29,7 @@ import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FontAwesomeModule
+    FontAwesomeModule,
     HttpClientModule,
     ReactiveFormsModule,
     NgxCaptchaModule

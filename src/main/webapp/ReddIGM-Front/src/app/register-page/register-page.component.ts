@@ -11,6 +11,7 @@ export class RegisterPageComponent implements OnInit {
 
   registerForm: FormGroup;
   captchaKey: string = "6LfYkVYaAAAAAH9i5Uz1x7UyraR2OQh11H30Toi3";
+  logging: boolean = false;
 
   constructor(private authService: AuthenticationService, private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -28,6 +29,7 @@ export class RegisterPageComponent implements OnInit {
   ngOnInit(): void { }
 
   onSubmitForm() {
+    this.logging = true;
     const formValue = this.registerForm.value;
 
     this.authService.register(

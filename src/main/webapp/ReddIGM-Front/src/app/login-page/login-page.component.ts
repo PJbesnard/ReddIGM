@@ -10,6 +10,7 @@ import { AuthenticationService } from '../services/authentication.service';
 export class LoginPageComponent implements OnInit {
 
   registerForm: FormGroup;
+  logging: boolean = false;
 
   constructor(private authService: AuthenticationService, private formBuilder: FormBuilder) {
     this.registerForm = this.formBuilder.group({
@@ -22,6 +23,7 @@ export class LoginPageComponent implements OnInit {
   }
 
   onSubmitForm() {
+    this.logging = true;
     const formValue = this.registerForm.value;
 
     this.authService.login(
