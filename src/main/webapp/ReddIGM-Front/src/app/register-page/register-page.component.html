@@ -33,7 +33,7 @@
     
             <div class="field">
                 <label class="control has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span>
-                    <input class="input is-primary" placeholder="Email address" formControlName="email">
+                    <input class="input is-primary" type="email" placeholder="Email address" formControlName="email">
                 </label>
                 <div *ngIf="registerForm.controls.email.errors" class="invalid-feedback">
                     <div *ngIf="registerForm.controls.email.errors.email">
