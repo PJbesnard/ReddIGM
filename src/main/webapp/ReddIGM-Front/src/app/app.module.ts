@@ -12,7 +12,8 @@ import { PostViewComponent } from './post-view/post-view.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { CommentPreviewComponent } from './comment-preview/comment-preview.component';
 
-import { AuthenticationService } from './services/authentication.service'
+import { AuthenticationService } from './services/authentication.service';
+import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component'
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { AuthenticationService } from './services/authentication.service'
     RegisterPageComponent,
     PostViewComponent,
     ProfilePageComponent,
-    CommentPreviewComponent
+    CommentPreviewComponent,
+    EditProfilePageComponent
   ],
   imports: [
     BrowserModule,
