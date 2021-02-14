@@ -1,0 +1,64 @@
+<div class="container is-max-desktop">
+    <figure class="image" style="margin: auto; height: 192px; width: 192px;">
+        <img src="assets/icon_login.png" id="icone_login">
+    </figure>
+    <div class="card">
+        <header class="card-header">
+            <h1 class="card-header-title title is-size-2" style="margin-left: 5%; margin-top: 2%;"><span class="has-text-light">Sign</span><span class="has-text-primary">&nbsp;in</span></h1>
+            <br />
+        </header>
+        <div class="card-content">
+            <div class="content" style="padding-inline: 10%;">
+                
+                <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
+                    <div class="field">
+                        <label class=" has-text-white">&nbsp;&nbsp;Username</label>
+                        <div class="control has-icons-left">
+                            <input class="input is-primary" placeholder="Username" formControlName="username">
+                            <span class="icon is-small is-left" style="margin-block: 1%;">
+                                <i class="fas fa-user"></i>
+                          </span>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class=" has-text-white">&nbsp;&nbsp;Password</label>
+                        <div class="control has-icons-left">
+                            <input class="input is-primary" type="password" placeholder="Password" formControlName="password">
+                            <span class="icon is-small is-left" style="margin-block: 1%;">
+                                <i class="fas fa-lock"></i>
+                          </span>
+                        </div>
+                    </div>
+    
+                    <div class="field is-grouped" style="padding-inline: 1%;">
+                        <p class="control is-expanded">
+                            <label class="has-text-white">
+                                <input type="checkbox" /> Remember me
+                            </label>
+                        </p>
+                        <p class="control">
+                            <a href="#">
+                                Forgot your password ?
+                            </a>
+                        </p>
+                    </div>
+    
+                    <br />
+    
+                    <div class="field is-grouped" style="margin: auto; width: 50%;">
+                        <p class="control is-expanded">
+                            <button class="button is-primary" [ngClass]="{'is-loading': logging}" [disabled]="registerForm.invalid">Login</button>
+                        </p>
+                        <p class="control" style="margin: auto;">
+                            <a href="#" class="has-text-white">
+                                No account ? Join us !
+                            </a>
+                        </p>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

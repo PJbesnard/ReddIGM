@@ -1,0 +1,76 @@
+<div class="aligned" style="margin-left: 5%;">
+    <img class="is-rounded" src="{{ user.picture }}">
+    <h1 class="title is-1 has-text-light title-underlined">{{ username }}</h1>
+</div>
+
+<div class="columns">
+    <div class="column is-one-quarter" style="margin-top: 5em; margin-left: 3em;">
+        <h1 class="title inline has-text-light">About me</h1>
+        <a class="subtitle inline has-text-light" href="#">&nbsp;&nbsp;Edit</a>
+
+        <br />
+        <br />
+
+        <div *ngIf="user.description" class="box has-text-grey-lighter" style="background-color: #303336;">
+            <p>{{ user.description }}</p>
+        </div>
+
+        <div class="box has-text-grey-lighter" style="background-color: #303336;">
+            <ul>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Posts : </span>{{ nbPosts }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Comments : </span>{{ nbComments }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Likes : </span>{{ nbLikes }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Dislikes : </span>{{ nbDislikes }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="column">
+
+    </div>
+
+    <div class="column is-half">
+        <div style="overflow: auto;">
+            <label style="float: right;">
+                <h2 class="title has-text-light" style="display: inline;">Filter : </h2>
+                <div class="select">
+                    <select>
+                      <option>All</option>
+                      <option>Posts</option>
+                      <option>Comments</option>
+                      <option>Votes</option>
+                    </select>
+                </div>
+            </label>
+        </div>
+
+        <br />
+        <br />
+
+        <div *ngFor="let elem of chronologicalHistoryFiltered">
+            <div *ngIf="elem instanceof Post">
+                <p class="has-text-light">&nbsp;&nbsp;{{ username }} has posted</p>
+                <app-post-view></app-post-view>
+            </div>
+
+            <div *ngIf="elem instanceof Comment">
+                <p class="has-text-light">&nbsp;&nbsp;{{ username }} has commented this post</p>
+                <app-post-view></app-post-view>
+                <div style="margin-inline: auto; width: 98%;">
+                    <app-comment-preview></app-comment-preview>
+                </div>
+            </div>
+
+            <div *ngIf="elem instanceof Vote">
+                <p class="has-text-light">&nbsp;&nbsp;{{ username }} like this</p>
+                <app-post-view></app-post-view>
+            </div>
+
+            <br>
+        </div>
+    </div>
+
+    <div class="column">
+        
+    </div>
+</div>
