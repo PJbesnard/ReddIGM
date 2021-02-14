@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -41,6 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        //Error 403
+//        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf();
+
         http.csrf().disable().authorizeRequests()
 
                 // No need authentication.
@@ -50,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // No need authentication.
                 .antMatchers("/register").permitAll() //
                 .antMatchers(HttpMethod.POST, "/register").permitAll() //
+                .antMatchers("/register").permitAll() //
 
                 // Need authentication.
                 .anyRequest().authenticated()

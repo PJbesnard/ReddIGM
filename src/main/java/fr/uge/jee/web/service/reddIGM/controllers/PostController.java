@@ -1,5 +1,7 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
+import fr.uge.jee.web.service.reddIGM.dto.PostRequest;
+import fr.uge.jee.web.service.reddIGM.dto.PostResponse;
 import fr.uge.jee.web.service.reddIGM.models.Post;
 import fr.uge.jee.web.service.reddIGM.services.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,35 +14,35 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
-@RequestMapping("/posts/")
+@RequestMapping("/posts")
 public class PostController {
 
     @Autowired
     private PostService postService;
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody Post post) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(postService.save(post));
+    public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
+        postService.save(postRequest);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPost(id));
+    public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
+        return status(HttpStatus.OK).body(postService.getPost(id));
     }
 
     @GetMapping("by-subject/{id}")
-    public ResponseEntity<List<Post>> getPostsBySubject(Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsBySubject(id));
+    public ResponseEntity<List<PostResponse>> getPostsBySubject(Long id) {
+        return status(HttpStatus.OK).body(postService.getPostsBySubject(id));
     }
 
     @GetMapping("by-user/{name}")
-    public ResponseEntity<List<Post>> getPostsByUsername(String username) {
-        return ResponseEntity.status(HttpStatus.OK).body(postService.getPostsByUsername(username));
+    public ResponseEntity<List<PostResponse>> getPostsByUsername(String username) {
+        return status(HttpStatus.OK).body(postService.getPostsByUsername(username));
     }
 
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
-        return ResponseEntity.ok(postService.getAllPosts());
+    public ResponseEntity<List<PostResponse>> getAllPosts() {
+        return status(HttpStatus.OK).body(postService.getAllPosts());
     }
-
 }
