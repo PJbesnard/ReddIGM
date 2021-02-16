@@ -21,6 +21,20 @@ export class SubjectService {
         }
       )
     });
+  }
 
+  getSubject(): Observable<SubjectModel> {
+    return this.http.get<SubjectModel>(this.url, {
+      headers: new HttpHeaders(
+        {
+          'Access-Control-Allow-Origin':'*'
+        }
+      )
+    });
+  }
+
+  createSubreddit(subjectModel: SubjectModel): Observable<SubjectModel> {
+    return this.http.post<SubjectModel>(this.url,
+      subjectModel);
   }
 }
