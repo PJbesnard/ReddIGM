@@ -44,27 +44,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         //Error 403
-//        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf();
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and().csrf();
 
-        http.csrf().disable().authorizeRequests()
-
-                // No need authentication.
-                .antMatchers("/login").permitAll() //
-                .antMatchers(HttpMethod.POST, "/login").permitAll() //
-
-                // No need authentication.
-                .antMatchers("/register").permitAll() //
-                .antMatchers(HttpMethod.POST, "/register").permitAll() //
-                .antMatchers("/register").permitAll() //
-
-                // Need authentication.
-                .anyRequest().authenticated()
-
-                // Set the session security
-                .and().sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.csrf().disable().authorizeRequests()
+//
+//                // No need authentication.
+//                .antMatchers("/login").permitAll() //
+//                .antMatchers(HttpMethod.POST, "/login").permitAll() //
+//
+//                // No need authentication.
+//                .antMatchers("/register").permitAll() //
+//                .antMatchers(HttpMethod.POST, "/register").permitAll() //
+//                .antMatchers("/register").permitAll() //
+//
+//                // Need authentication.
+//                .anyRequest().authenticated()
+//
+//                // Set the session security
+//                .and().sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//
+//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
                }
 
 
@@ -78,4 +78,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

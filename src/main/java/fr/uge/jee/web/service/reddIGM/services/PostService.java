@@ -9,6 +9,7 @@ import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.repositories.PostRepository;
 import fr.uge.jee.web.service.reddIGM.repositories.SubjectRepository;
 import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +22,15 @@ import static java.util.stream.Collectors.toList;
 
 @Service
 public class PostService {
+    @Autowired
     private PostRepository postRepository;
+    @Autowired
     private SubjectRepository subjectRepository;
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private AuthenticationService authService;
+    @Autowired
     private PostMapper postMapper;
 
 
