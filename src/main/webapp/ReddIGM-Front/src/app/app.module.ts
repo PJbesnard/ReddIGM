@@ -11,6 +11,7 @@ import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { PostViewComponent } from './post-view/post-view.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HttpClientModule } from '@angular/common/http';
+import { ListSubsComponent } from './subs/list-subs/list-subs.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
     CardCreatePostComponent,
     BrowseSubsComponent,
     NavBarComponent,
-    PostViewComponent
+    PostViewComponent,
+    ListSubsComponent
   ],
   imports: [
     BrowserModule,
