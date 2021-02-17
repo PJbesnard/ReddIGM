@@ -7,15 +7,17 @@ public class CommentDto {
     private Instant creationDate;
     private Long postId;
     private String userName;
+    private Long superCommentId;
 
     public CommentDto() {
     }
 
-    public CommentDto(String text, Instant creationDate, Long postId, String userName) {
+    public CommentDto(String text, Instant creationDate, Long postId, String userName, Long superCommentId) {
         this.text = text;
         this.creationDate = creationDate;
         this.postId = postId;
         this.userName = userName;
+        this.superCommentId = superCommentId;
     }
 
     public String getText() {
@@ -48,5 +50,13 @@ public class CommentDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Long getSuperCommentId() {
+        return superCommentId;
+    }
+
+    public void setSuperCommentId(Long superCommentId) {
+        this.superCommentId = superCommentId;
     }
 }

@@ -46,6 +46,10 @@ public class Post {
 
     }
 
+    public Long getPostId() {
+        return postId;
+    }
+
     public void setCreationDate(LocalDateTime creationDate) {
         //this.creationDate = creationDate;
     }

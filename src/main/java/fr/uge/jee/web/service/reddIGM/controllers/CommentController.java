@@ -21,17 +21,22 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Comment> createComment(@Valid @RequestBody CommentDto comment) {
+    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto comment) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
     }
 
+    @GetMapping("/{commentId}")
+    public ResponseEntity<List<CommentDto>> getSubComments(@PathVariable Long commentId) {
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId));
+    }
+
     @GetMapping("/post/{postId}")
-    public ResponseEntity<List<Comment>> getAllCommentsForPost(@PathVariable Long postId) {
+    public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId));
     }
 
     @GetMapping("/user/{userName}")
-    public ResponseEntity<List<Comment>> getAllCommentsForUser(@PathVariable String userName) {
+    public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String userName) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForUser(userName));
     }
 }

@@ -4,6 +4,7 @@ import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
@@ -23,15 +24,19 @@ public class Comment {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "superCommentId", referencedColumnName = "id")
+    private Comment superComment;
 
     public Comment() {
     }
 
-    public Comment(String text, LocalDateTime creationDate, Post post, User user) {
+    public Comment(String text, LocalDateTime creationDate, Post post, User user, Comment superComment) {
         this.text = text;
         this.creationDate = creationDate;
         this.post = post;
         this.user = user;
+        this.superComment = superComment;
     }
 
     public Long getId() {
@@ -70,6 +75,14 @@ public class Comment {
         this.user = user;
     }
 
+    public Comment getSuperComment() {
+        return superComment;
+    }
+
+    public void setSuperComment(Comment superComment) {
+        this.superComment = superComment;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,6 +104,7 @@ public class Comment {
                 ", creationDate=" + creationDate +
                 ", post=" + post +
                 ", user=" + user +
+                ", superComment=" + superComment +
                 '}';
     }
 }
