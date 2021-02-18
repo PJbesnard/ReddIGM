@@ -32,6 +32,9 @@ public class User implements UserDetails {
     private String password;
 
     @NotNull
+    private String picture;
+
+    @NotNull
     @Email
     private String email;
 
@@ -41,11 +44,12 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String username, String password, String email, Authority authority) {
+    public User(String picture, String username, String password, String email, Authority authority) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.authority = authority;
+        this.picture = picture;
     }
 
     public long getId() {
@@ -123,7 +127,15 @@ public class User implements UserDetails {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, password, email, authority);
+        return Objects.hash(id);
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 
     @Override
@@ -132,6 +144,7 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", picture='" + picture + '\'' +
                 ", email='" + email + '\'' +
                 ", authority=" + authority +
                 '}';

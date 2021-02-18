@@ -8,16 +8,18 @@ public class CommentDto {
     private Long postId;
     private String userName;
     private Long superCommentId;
+    private String picture;
 
     public CommentDto() {
     }
 
-    public CommentDto(String text, Instant creationDate, Long postId, String userName, Long superCommentId) {
+    public CommentDto(String picture, String text, Instant creationDate, Long postId, String userName, Long superCommentId) {
         this.text = text;
         this.creationDate = creationDate;
         this.postId = postId;
         this.userName = userName;
         this.superCommentId = superCommentId;
+        this.picture = picture;
     }
 
     public String getText() {
@@ -58,5 +60,13 @@ public class CommentDto {
 
     public void setSuperCommentId(Long superCommentId) {
         this.superCommentId = superCommentId;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

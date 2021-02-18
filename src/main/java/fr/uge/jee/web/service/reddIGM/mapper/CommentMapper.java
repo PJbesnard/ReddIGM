@@ -12,6 +12,7 @@ public interface CommentMapper {
 
     @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())")
     @Mapping(target = "userName", expression = "java(comment.getUser().getUsername())")
+    @Mapping(target = "picture", expression = "java(comment.getUser().getPicture())")
     @Mapping(target = "superCommentId", expression = "java(comment.getSuperComment().getId())")
     @Mapping(target = "creationDate", expression = "java(java.time.Instant.now())")
     CommentDto toDto(Comment comment);

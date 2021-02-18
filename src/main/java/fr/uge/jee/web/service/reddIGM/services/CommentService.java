@@ -46,7 +46,9 @@ public class CommentService {
 
     public List<CommentDto> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NoSuchElementException("Post " + postId.toString() + " not found"));
-        return repository.findByPost(post).stream().map(CommentMapper.INSTANCE::toDto).collect(toList());
+        var truc = repository.findByPost(post).stream();
+        var machin = truc.map(CommentMapper.INSTANCE::toDto);
+        return machin.collect(toList());
     }
 
     public List<CommentDto> getAllCommentsForUser(String userName) {
