@@ -1,6 +1,7 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
 import com.sun.istack.NotNull;
+import com.sun.istack.Nullable;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class Comment {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
+    @Nullable
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "superCommentId", referencedColumnName = "id")
     private Comment superComment;

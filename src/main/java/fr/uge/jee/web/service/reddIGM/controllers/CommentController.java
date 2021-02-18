@@ -1,7 +1,9 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
 import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
+import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.models.Comment;
+import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,12 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
     }
 
-    @GetMapping("/{commentId}")
+    @PostMapping("/vote")
+    public ResponseEntity<VoteCommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote));
+    }
+
+    @GetMapping("/comment/{commentId}")
     public ResponseEntity<List<CommentDto>> getSubComments(@PathVariable Long commentId) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId));
     }
