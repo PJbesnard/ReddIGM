@@ -31,13 +31,14 @@ public class Post {
     @Nullable
     @Lob
     private String description;
+    @Builder.Default
     private Integer voteCount = 0;
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     private Instant createdDate;
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "subId", referencedColumnName = "id")
+    @JoinColumn(name = "sub_id", referencedColumnName = "id")
     private Subject subject;
 
     public Long getPostId() {

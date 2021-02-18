@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostRequest {
-    private Long postId;
-    private String subjectName;
+//    private Long postId;
+    private Long subjectId;
+    private Long userId;
     private String postName;
     private String url;
     private String description;

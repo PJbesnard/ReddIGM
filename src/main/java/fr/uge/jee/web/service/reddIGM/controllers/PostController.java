@@ -4,6 +4,7 @@ import fr.uge.jee.web.service.reddIGM.dto.PostRequest;
 import fr.uge.jee.web.service.reddIGM.dto.PostResponse;
 import fr.uge.jee.web.service.reddIGM.models.Post;
 import fr.uge.jee.web.service.reddIGM.services.PostService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +15,12 @@ import java.util.List;
 import static org.springframework.http.ResponseEntity.status;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/posts/")
 @CrossOrigin(origins = "http://localhost:4200/")
+@AllArgsConstructor
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
@@ -37,9 +38,9 @@ public class PostController {
         return status(HttpStatus.OK).body(postService.getPostsBySubject(id));
     }
 
-    @GetMapping("by-user/{name}")
-    public ResponseEntity<List<PostResponse>> getPostsByUsername(String username) {
-        return status(HttpStatus.OK).body(postService.getPostsByUsername(username));
+    @GetMapping("by-user/{id}")
+    public ResponseEntity<List<PostResponse>> getPostsById(Long id) {
+        return status(HttpStatus.OK).body(postService.getPostsById(id));
     }
 
     @GetMapping

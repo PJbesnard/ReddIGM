@@ -58,7 +58,4 @@ public class AuthenticationService {
         return new RegisterResponse(registerRequest.getUsername());
     }
 
-    public User getCurrentUser() {
-        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
 }

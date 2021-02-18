@@ -40,9 +40,9 @@ public abstract class PostMapper {
     @Mapping(target = "user", source = "user")
     public abstract Post map(PostRequest postRequest, Subject subject, User user);
 
-    @Mapping(target = "id", source = "postId")
-    @Mapping(target = "subjectName", source = "subject.name")
-    @Mapping(target = "userName", source = "user.username")
+//    @Mapping(target = "id", source = "postId")
+    @Mapping(target = "subjectId", source = "subject.id")
+    @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "commentCount", expression = "java(commentCount(post))")
     @Mapping(target = "duration", expression = "java(getDuration(post))")
     @Mapping(target = "upVote", expression = "java(isPostUpVoted(post))")
@@ -66,10 +66,10 @@ public abstract class PostMapper {
     }
 
     private boolean checkVoteType(Post post, Vote.Type voteType) {
-        if (authService.getCurrentUser() != null) {
+        if (post.getUser() != null) {
             Optional<Vote> voteForPostByUser =
                     voteRepository.findTopByPostAndUserOrderByIdDesc(post,
-                            authService.getCurrentUser());
+                            post.getUser());
             return voteForPostByUser.filter(vote -> vote.getType().equals(voteType))
                     .isPresent();
         }
