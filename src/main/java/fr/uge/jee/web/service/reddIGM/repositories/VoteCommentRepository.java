@@ -6,9 +6,11 @@ import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface VoteCommentRepository extends CrudRepository<VoteComment, Long> {
     Optional<VoteComment> findByCommentAndUser(Comment comment, User user);
+    List<VoteComment> findAllByComment(Comment comment);
 }

@@ -10,10 +10,12 @@ import org.mapstruct.factory.Mappers;
 public interface CommentMapper {
     CommentMapper INSTANCE = Mappers.getMapper(CommentMapper.class);
 
+    @Mapping(target = "commentId", expression = "java(comment.getId())")
     @Mapping(target = "postId", expression = "java(comment.getPost().getPostId())")
     @Mapping(target = "userName", expression = "java(comment.getUser().getUsername())")
     @Mapping(target = "picture", expression = "java(comment.getUser().getPicture())")
     @Mapping(target = "superCommentId", expression = "java(comment.getSuperComment() != null ? comment.getSuperComment().getId() : null)")
     @Mapping(target = "creationDate", expression = "java(java.time.Instant.now())")
-    CommentDto toDto(Comment comment);
+    @Mapping(target = "nbVote", expression = "java(nbVote)")
+    CommentDto toDto(Comment comment, int nbVote);
 }

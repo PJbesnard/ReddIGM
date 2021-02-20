@@ -28,7 +28,7 @@ public class CommentController {
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<VoteCommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
+    public ResponseEntity<CommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote));
     }
 
