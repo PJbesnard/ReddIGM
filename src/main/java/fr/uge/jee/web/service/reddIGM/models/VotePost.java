@@ -6,12 +6,8 @@ import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
 
-@Entity(name = "Votes")
-public class Vote {
-
-    public enum Type {
-        UPVOTE, DOWNVOTE
-    }
+@Entity(name = "post_votes")
+public class VotePost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,56 +15,32 @@ public class Vote {
 
     @NotNull
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private VoteType type;
 
     @NotNull
-    @ManyToOne
-    private User owner;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId", referencedColumnName = "postId")
-    private Post post;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    private User user;
+    private User owner;
 
-    public User getUser() {
-        return user;
+    @NotNull
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "commentId", referencedColumnName = "postId")
+    private Post post;
+
+    public VotePost() {
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
+    public VotePost(@NotNull VoteType type, @NotNull User owner, @NotNull Post post) {
+        this.type = type;
+        this.owner = owner;
         this.post = post;
     }
 
-    public Vote() {
-    }
-
-    public Vote(@NotNull Type type, @NotNull User owner) {
-        this.type = type;
-        this.owner = owner;
-    }
-
-    public Type getType() {
+    public VoteType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(VoteType type) {
         this.type = type;
     }
 
@@ -80,12 +52,21 @@ public class Vote {
         this.owner = owner;
     }
 
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
     @Override
     public String toString() {
-        return "Vote{" +
+        return "VotePost{" +
                 "id=" + id +
                 ", type=" + type +
                 ", owner=" + owner +
+                ", post=" + post +
                 '}';
     }
 
@@ -93,14 +74,15 @@ public class Vote {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Vote vote = (Vote) o;
-        return id == vote.id &&
-                type == vote.type &&
-                owner.equals(vote.owner);
+        VotePost votePost = (VotePost) o;
+        return id == votePost.id &&
+                type == votePost.type &&
+                owner.equals(votePost.owner) &&
+                post.equals(votePost.post);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, owner);
+        return Objects.hash(id, type, owner, post);
     }
 }

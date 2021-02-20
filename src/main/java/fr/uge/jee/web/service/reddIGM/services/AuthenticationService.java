@@ -53,6 +53,7 @@ public class AuthenticationService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setPicture(registerRequest.getPicture());
         user.setAuthority(User.Authority.USER);
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());

@@ -3,19 +3,35 @@ package fr.uge.jee.web.service.reddIGM.dto;
 import java.time.Instant;
 
 public class CommentDto {
+    private Long commentId;
     private String text;
     private Instant creationDate;
     private Long postId;
     private String userName;
+    private Long superCommentId;
+    private String picture;
+    private int nbVote;
 
     public CommentDto() {
     }
 
-    public CommentDto(String text, Instant creationDate, Long postId, String userName) {
+    public CommentDto(Long commentId, String picture, String text, Instant creationDate, Long postId, String userName, Long superCommentId, int nbVote) {
+        this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
         this.postId = postId;
         this.userName = userName;
+        this.superCommentId = superCommentId;
+        this.picture = picture;
+        this.nbVote = nbVote;
+    }
+
+    public Long getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 
     public String getText() {
@@ -24,6 +40,14 @@ public class CommentDto {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public int getNbVote() {
+        return nbVote;
+    }
+
+    public void setNbVote(int nbVote) {
+        this.nbVote = nbVote;
     }
 
     public Instant getCreationDate() {
@@ -48,5 +72,21 @@ public class CommentDto {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Long getSuperCommentId() {
+        return superCommentId;
+    }
+
+    public void setSuperCommentId(Long superCommentId) {
+        this.superCommentId = superCommentId;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }
