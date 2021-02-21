@@ -14,6 +14,7 @@ import { CKEditorModule } from 'ckeditor4-angular';
 import { CreatePostComponent } from './create-post/create-post.component';
 
 import { HttpClientModule } from '@angular/common/http';
+import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { HttpClientModule } from '@angular/common/http';
     TitledCardButtonComponent,
     PostViewInContextComponent,
     CardCreatePostComponent,
-    CreatePostComponent
+    CreatePostComponent,
+    DisplayPostPageComponent
   ],
   imports: [
     BrowserModule,

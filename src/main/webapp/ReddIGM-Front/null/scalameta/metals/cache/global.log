@@ -49,3 +49,20 @@
   bloop-port=default
 )[0m
 [0m2021.02.20 15:35:51 INFO  logging to file C:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front\.metals\metals.log[0m
+[0m2021.02.21 18:39:31 INFO  tracing is disabled for protocol LSP, to enable tracing of incoming and outgoing JSON messages create an empty file at c:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front\null\scalameta\metals\cache\lsp.trace.json[0m
+[0m2021.02.21 18:39:33 INFO  Starting Metals server with configuration: MetalsServerConfig(
+  glob-syntax=GlobSyntaxConfig(vscode),
+  status-bar=StatusBarConfig(off),
+  open-files-on-rename=false,
+  rename-file-threshold=300,
+  slow-task=SlowTaskConfig(off),
+  execute-client-command=ExecuteClientCommandConfig(off),
+  compilers=PresentationCompilerConfigImpl(false,Some(editor.action.triggerParameterHints),Some(editor.action.triggerSuggest),Map(scala/collection/mutable/ -> mutable., java/util/ -> ju.),Unicode,true,true,true,true,false,true,true,true,scala.meta.internal.pc.PresentationCompilerConfigImpl$$$Lambda$77/0x00000001001cec40@4dd6fd0a,20,SECONDS),
+  http=false,
+  input-box=false,
+  ask-to-reconnect=false,
+  icons=vscode,
+  statistics=StatisticsConfig(default),
+  bloop-port=default
+)[0m
+[0m2021.02.21 18:39:35 INFO  logging to file C:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front\.metals\metals.log[0m
