@@ -10,8 +10,10 @@ import { PostViewComponent } from './post-view/post-view.component';
 import { TitledCardButtonComponent } from './titled-card-button/titled-card-button.component';
 import { PostViewInContextComponent } from './post-view-in-context/post-view-in-context.component';
 import { CardCreatePostComponent } from './card-create-post/card-create-post.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { CKEditorModule } from 'ckeditor4-angular';
 import { CreatePostComponent } from './create-post/create-post.component';
+
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -28,7 +30,8 @@ import { CreatePostComponent } from './create-post/create-post.component';
     BrowserModule,
     AppRoutingModule,
     FontAwesomeModule,
-    CKEditorModule
+    CKEditorModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

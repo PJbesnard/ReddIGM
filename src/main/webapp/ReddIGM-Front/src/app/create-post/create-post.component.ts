@@ -20,10 +20,14 @@ export class CreatePostComponent implements OnInit {
   isDropdownActive: boolean = false;
   
   openDropdown() {
-	this.isDropdownActive = !this.isDropdownActive;
+  	this.isDropdownActive = !this.isDropdownActive;
   }
   closeModal() {
-	this.openModelChange.emit(!this.openModal);
+	  this.openModelChange.emit(!this.openModal);
+  }
+
+  saveChanges() {
+
   }
 
 }

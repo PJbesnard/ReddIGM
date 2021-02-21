@@ -13,35 +13,33 @@
         <div class="content has-text-light">
           {{content}}
         </div>
-        <div class="columns">
-          <div class="column is-1">
-            <div class="columns is-vcentered">
-              <div class="column is-5">
-                <figure class="image is-32x32">
-                  <img class="is-rounded" src = {{image}}>
-                </figure>
-              </div>
-              <div class="column is-2"></div>
-              <div class="column is-5">
-                <div class="content has-text-primary is-clickable has-text-left">{{author}}</div>
-              </div>
-            </div>
+        <div class="columns is-vcentered">
+
+          <div class="column is-1 ">
+            <figure class="image is-32x32">
+              <img class="is-rounded" src = {{image}}> 
+            </figure>
           </div>
-          <div class="column is-2"></div>
+          
+          <div class="column is-1 has-text-left">
+            <div class="content has-text-primary is-clickable ">{{author}}</div>
+          </div>
+
+          <div class="column is-1"></div>
           <div class="column is-2">
             <div class="content has-text-light is-clickable has-text-left">{{date}}</div>
           </div>
           <div class="column is-3"></div>
           <div class="column is-2">
-            <div class="content has-text-light is-clickable has-text-left ">        
-              <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" (click)="openModalCreatePost()"style="font-size: 18px;"> </fa-icon>  
-                Comment
+            <div class="content has-text-light is-clickable has-text-left " (click)="openModalCreatePost()">        
+              <fa-icon [icon]="faReply"class="content is-clickable has-text-light"  style="font-size: 18px;"> </fa-icon>  
+                Reply
             </div>  
           </div>
           <div class="column is-3">
-            <div class="content has-text-light is-clickable has-text-left ">        
-              <fa-icon [icon]="faChevronCircleDown"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
-                Show Responses
+            <div class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
+              <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
+               Comments ({{responseNb}})
             </div>  
           </div>
         </div>
@@ -49,4 +47,10 @@
       <div class="column is-1"></div>
     </div>
   </div>
+    <app-create-post [openModal]= "isModalActive" (openModelChange)="isModalActive = false"></app-create-post>
 </div>
+<div *ngFor="let c of comments">
+  <app-post-view-in-context [id] = c.commentId [type] = "'comment'" [author] = c.userName [title] = "''" [content] = c.text [date] = c.creationDate [subName] = "''" [rate] = c.nbVote></app-post-view-in-context>
+</div>
+
+
