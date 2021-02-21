@@ -15,5 +15,4 @@ export class ListSubsComponent implements OnInit {
   ngOnInit(): void {
     this.subjectService.getAllSubjects().subscribe(data =>this.subjects = data);
   }
-
 }

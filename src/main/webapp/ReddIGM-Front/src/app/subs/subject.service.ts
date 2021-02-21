@@ -33,7 +33,7 @@ export class SubjectService {
     });
   }
 
-  createSubreddit(subjectModel: SubjectModel): Observable<SubjectModel> {
+  createSubject(subjectModel: SubjectModel): Observable<SubjectModel> {
     return this.http.post<SubjectModel>(this.url,
       subjectModel);
   }
