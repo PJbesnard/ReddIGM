@@ -28,17 +28,26 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class PostService {
 
-    private final PostRepository postRepository;
-    private final SubjectRepository subjectRepository;
-    private final UserRepository userRepository;
-    private final AuthenticationService authService;
-    private final PostMapper postMapper;
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private AuthenticationService authService;
+
+    @Autowired
+    private PostMapper postMapper;
 
 
-    public void save(PostRequest postRequest){
+    public void save(PostRequest postRequest, Long userId){
         Subject subreddit = subjectRepository.findById(postRequest.getSubjectId())
                 .orElseThrow(() ->  new NoSuchElementException("Subject " + postRequest.getSubjectId() + " not found"));
-        User user = userRepository.findById(postRequest.getSubjectId()).orElseThrow(() -> new NoSuchElementException("User " + postRequest.getUserId().toString() + " not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
         postRepository.save(postMapper.map(postRequest, subreddit, user));
 
     }
