@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { CreatePostComponent } from './pages/modals/create-post/create-post.component';
 import { CKEditorModule } from 'ckeditor4-angular';
 import { CardCreatePostComponent } from './card-create-post/card-create-post.component';
-import { BrowseSubsComponent } from './browse-subs/browse-subs.component';
+import { BrowseSubsComponent } from './subs/browse-subs/browse-subs.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { PostViewComponent } from './post-view/post-view.component';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -20,6 +20,9 @@ import { CommentPreviewComponent } from './comment-preview/comment-preview.compo
 import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component'
 
 import { AuthenticationService } from './services/authentication.service';
+import { ListSubsComponent } from './subs/list-subs/list-subs.component';
+import { CardCreateSubComponent } from './subs/card-create-sub/card-create-sub.component';
+import { CreateSubComponent } from './subs/create-sub/create-sub.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +37,10 @@ import { AuthenticationService } from './services/authentication.service';
     PostViewComponent,
     ProfilePageComponent,
     CommentPreviewComponent,
-    EditProfilePageComponent
+    EditProfilePageComponent,
+    ListSubsComponent,
+    CardCreateSubComponent,
+    CreateSubComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,10 @@ import { AuthenticationService } from './services/authentication.service';
     NgxCaptchaModule
   ],
   providers: [
-    AuthenticationService
+    AuthenticationService,
+    ListSubsComponent,
+    CardCreateSubComponent,
+    CreateSubComponent
   ],
   bootstrap: [AppComponent]
 })
