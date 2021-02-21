@@ -23,6 +23,7 @@ import { AuthenticationService } from './services/authentication.service';
 import { ListSubsComponent } from './subs/list-subs/list-subs.component';
 import { CardCreateSubComponent } from './subs/card-create-sub/card-create-sub.component';
 import { CreateSubComponent } from './subs/create-sub/create-sub.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { CreateSubComponent } from './subs/create-sub/create-sub.component';
     EditProfilePageComponent,
     ListSubsComponent,
     CardCreateSubComponent,
-    CreateSubComponent
+    CreateSubComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,
