@@ -1,11 +1,11 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 public class CommentDto {
     private Long commentId;
     private String text;
-    private Instant creationDate;
+    private LocalDateTime creationDate;
     private Long postId;
     private String userName;
     private Long superCommentId;
@@ -15,7 +15,7 @@ public class CommentDto {
     public CommentDto() {
     }
 
-    public CommentDto(Long commentId, String picture, String text, Instant creationDate, Long postId, String userName, Long superCommentId, int nbVote) {
+    public CommentDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote) {
         this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
@@ -50,11 +50,11 @@ public class CommentDto {
         this.nbVote = nbVote;
     }
 
-    public Instant getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Instant creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
