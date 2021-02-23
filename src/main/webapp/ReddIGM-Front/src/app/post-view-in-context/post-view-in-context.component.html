@@ -1,4 +1,4 @@
-<div class="card has-background-grey block" style="margin-bottom: 20px;">
+<div class="card has-background-grey block" style="margin-bottom: 5px;">
   <div class="card-content">
     <div class="columns is-vcentered">
       <div class="column is-1 has-text-centered">
@@ -49,8 +49,13 @@
   </div>
     <app-create-post [openModal]= "isModalActive" (openModelChange)="isModalActive = false"></app-create-post>
 </div>
-<div *ngFor="let c of comments">
-  <app-post-view-in-context [id] = c.commentId [type] = "'comment'" [author] = c.userName [title] = "''" [content] = c.text [date] = c.creationDate [subName] = "''" [rate] = c.nbVote></app-post-view-in-context>
+<div class="columns" *ngFor="let c of comments">
+  <div class="column is-1" >
+  </div>
+  <div class="column is-11" >
+    <app-post-view-in-context [id] = c.commentId [type] = "'comment'" [author] = c.userName [title] = "''" [content] = c.text [date] = c.creationDate [subName] = "''" [rate] = c.nbVote></app-post-view-in-context>
+  </div>
+
 </div>
 
 

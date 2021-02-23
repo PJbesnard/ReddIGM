@@ -11,3 +11,8 @@
 [0m2021.02.20 15:36:05 WARN  Build server is not auto-connectable.[0m
 [0m2021.02.20 15:36:05 WARN  no build tool detected in workspace 'C:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
 [0m2021.02.21 18:29:37 INFO  shutting down Metals[0m
+[0m2021.02.21 18:39:35 INFO  Started: Metals version 0.9.10 in workspace 'C:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front' for client vscode 1.53.2.[0m
+[0m2021.02.21 18:39:45 INFO  time: initialize in 9.96s[0m
+[0m2021.02.21 18:39:48 WARN  Build server is not auto-connectable.[0m
+[0m2021.02.21 18:39:48 WARN  no build tool detected in workspace 'C:\Users\pjgal\OneDrive\Bureau\reddIGM_front-end\groupe-c\src\main\webapp\ReddIGM-Front'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.02.21 20:04:15 INFO  shutting down Metals[0m

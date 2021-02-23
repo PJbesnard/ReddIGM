@@ -43,7 +43,7 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    console.log ("id ", this.id ); // function called s
   }
 
   displayResponses(){
