@@ -1,9 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
-import fr.uge.jee.web.service.reddIGM.dto.LoginResponse;
-import fr.uge.jee.web.service.reddIGM.dto.LoginRequest;
-import fr.uge.jee.web.service.reddIGM.dto.RegisterRequest;
-import fr.uge.jee.web.service.reddIGM.dto.RegisterResponse;
+import fr.uge.jee.web.service.reddIGM.dto.*;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
 import fr.uge.jee.web.service.reddIGM.services.AuthenticationService;
@@ -26,6 +23,12 @@ public class AuthenticationController {
     @PostMapping
     public LoginResponse createAuthenticationToken(@RequestBody LoginRequest loginRequest) throws  Exception {
        return authenticationService.login(loginRequest);
+    }
+    @RequestMapping("/logout")
+    @GetMapping
+    public LogoutResponse deleteAuthenticationToken()  {
+        SecurityContextHolder.getContext().getAuthentication().setAuthenticated(false);
+        return null;
     }
 
     @RequestMapping("/register")
