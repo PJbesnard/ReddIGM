@@ -5,14 +5,12 @@ import fr.uge.jee.web.service.reddIGM.models.VoteType;
 public class VoteCommentDto {
     private Long commentId;
     private VoteType vote;
-    private String userName;
 
     public VoteCommentDto(){}
 
-    public VoteCommentDto(Long commentId, VoteType vote, String username) {
+    public VoteCommentDto(Long commentId, VoteType vote) {
         this.commentId = commentId;
         this.vote = vote;
-        this.userName = username;
     }
 
     public void setCommentId(Long commentId) {
@@ -23,9 +21,6 @@ public class VoteCommentDto {
         this.vote = vote;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public Long getCommentId() {
         return commentId;
@@ -35,7 +30,4 @@ public class VoteCommentDto {
         return vote;
     }
 
-    public String getUsername() {
-        return userName;
-    }
 }

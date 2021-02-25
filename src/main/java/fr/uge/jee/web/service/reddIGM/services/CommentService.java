@@ -34,9 +34,8 @@ public class CommentService {
     @Autowired
     private VoteCommentRepository voteCommentRepository;
 
-    public CommentDto save(CommentDto comment) {
+    public CommentDto save(CommentDto comment, User user) {
         Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + comment.getPostId().toString() + " not found"));
-        User user = userRepository.findByUsername(comment.getUserName()).orElseThrow(() -> new NoSuchElementException("User " + comment.getUserName() + " not found"));
         Comment superComment = null;
         if(comment.getSuperCommentId() != null) superComment = commentRepository.findById(comment.getSuperCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + comment.getSuperCommentId().toString() + " not found"));
         LocalDateTime creationDate = LocalDateTime.now();
@@ -65,9 +64,8 @@ public class CommentService {
         return res;
     }
 
-    public CommentDto vote(VoteCommentDto vote) {
+    public CommentDto vote(VoteCommentDto vote, User user) {
         Comment comment = commentRepository.findById(vote.getCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + vote.getCommentId().toString() + " not found"));
-        User user = userRepository.findByUsername(vote.getUsername()).orElseThrow(() -> new NoSuchElementException("User " + vote.getUsername() + " not found"));
         Optional<VoteComment> voteByCommentAndUser = voteCommentRepository.findByCommentAndUser(comment, user);
         if(voteByCommentAndUser.isPresent() && voteByCommentAndUser.get().getType().equals(vote.getVote())) {
             throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this comment");

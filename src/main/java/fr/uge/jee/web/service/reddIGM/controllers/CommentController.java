@@ -3,11 +3,13 @@ package fr.uge.jee.web.service.reddIGM.controllers;
 import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.models.Comment;
+import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,12 +26,14 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto comment) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment));
+        User principal =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment, principal));
     }
 
     @PostMapping("/vote")
     public ResponseEntity<CommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote));
+        User principal =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote, principal));
     }
 
     @GetMapping("/comment/{commentId}")
