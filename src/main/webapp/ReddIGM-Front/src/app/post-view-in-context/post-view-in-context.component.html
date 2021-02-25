@@ -37,9 +37,13 @@
             </div>  
           </div>
           <div class="column is-3">
-            <div class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
+            <div *ngIf = "showComments === false"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
               <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
                Comments ({{responseNb}})
+            </div>  
+            <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">        
+              <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
+               Hide
             </div>  
           </div>
         </div>

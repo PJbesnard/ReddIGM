@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faPlusCircle, faReply, faMinusCircle, faCommentAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleUp, faPlusCircle, faReply, faMinusCircle, faCommentAlt } from '@fortawesome/free-solid-svg-icons';
 
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -15,11 +15,12 @@ import { CommentService } from '../comment/comment.service';
 
 @Injectable()
 export class PostViewInContextComponent implements OnInit {
+ 
+  showComments = false;
 
   appareilsSubject = new Subject<any[]>();
 
   comments: Array<CommentModel> = [];
-
 
   isModalActive: boolean = false;
 
@@ -27,6 +28,7 @@ export class PostViewInContextComponent implements OnInit {
   faMinusCircle = faMinusCircle;
   faCommentAlt = faCommentAlt;
   faReply = faReply;
+  faChevronCircleUp = faChevronCircleUp;
 
   @Input() type: string = "post";
   @Input() id: number = 1;
@@ -39,6 +41,7 @@ export class PostViewInContextComponent implements OnInit {
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
   @Input() responseNb: number = 182; 
 
+  
   constructor(private commentService: CommentService) {
   }
 
@@ -47,6 +50,7 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   displayResponses(){
+    this.showComments = true
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.id).subscribe(data =>{
         this.comments = data;
@@ -61,10 +65,15 @@ export class PostViewInContextComponent implements OnInit {
   }
   
   openModalCreatePost() {
-    console.log("is modal active : " + this.isModalActive)
     this.isModalActive = !this.isModalActive;
   }
 
+  hideResponses() {
+    this.showComments = false
+    this.comments = [];
+  }
+
+  
   
 
 }
