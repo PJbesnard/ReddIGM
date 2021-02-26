@@ -9,40 +9,17 @@
 		<!-- Content ... -->
 		<div class="dropdown create-post" [ngClass]="{ 'is-active' : isDropdownActive } ">
 			<div class="dropdown-trigger">
-			  <button class="button" aria-haspopup="true" aria-controls="dropdown-menu" (click)="openDropdown()">
-				<span>Dropdown button</span>
-				<span class="icon is-small">
-				  <i class="fas fa-angle-down" aria-hidden="true"></i>
-				</span>
-			  </button>
+			  <span class="button" aria-haspopup="true" >
+				  {{subjectName}}
+			  </span>
 			</div>
-			<div class="dropdown-menu" id="dropdown-menu" role="menu">
-			  <div class="dropdown-content">
-				<a href="#" class="dropdown-item">
-				  Dropdown item
-				</a>
-				<a class="dropdown-item">
-				  Other dropdown item
-				</a>
-				<a href="#" class="dropdown-item is-active">
-				  Active dropdown item
-				</a>
-				<a href="#" class="dropdown-item">
-				  Other dropdown item
-				</a>
-				<hr class="dropdown-divider">
-				<a href="#" class="dropdown-item">
-				  With a divider
-				</a>
-			  </div>
-			</div>
-		  </div>
-
-		<input class="input is-primary title-post" type="text" placeholder="Title (Expected)">
-		<ckeditor class="cke_contents" tagName="textarea" data="<p>Description(Expected)</p>"></ckeditor>
+			
+		</div>
+		<input [(ngModel)]="postName" class="input is-primary title-post" type="text" placeholder="Title (Expected)">
+		<ckeditor [(ngModel)]="description" class="cke_contents" tagName="textarea" data="<p>Description(Expected)</p>"></ckeditor>
 	  </section>
 	  <footer class="modal-card-foot">
-		<button class="button is-success" (click)="closeModal()">Save changes</button>
+		<button class="button is-success" (click)="createPost()">Save changes</button>
 		<button class="button" (click)="closeModal()">Cancel</button>
 	  </footer>
 	</div>

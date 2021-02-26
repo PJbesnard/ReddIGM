@@ -1,5 +1,5 @@
 export class SubjectModel {
-  name?: string;
+  name: string = "";
   description?: string;
   posts?: any[];
 }

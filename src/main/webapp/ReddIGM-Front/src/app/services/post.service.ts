@@ -32,7 +32,7 @@ export class PostService {
   }
 
   createPost(postPayload: CreatePostPayload): Observable<any> {
-    return this.httpClient.post("posts/", postPayload);
+    return this.httpClient.post(BASE_ADDRESS+"posts/", postPayload);
   }
 
 }
