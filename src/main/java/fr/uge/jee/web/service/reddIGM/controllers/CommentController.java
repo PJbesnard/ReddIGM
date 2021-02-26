@@ -6,6 +6,7 @@ import fr.uge.jee.web.service.reddIGM.models.Comment;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
+import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +27,26 @@ public class CommentController {
 
     @PostMapping
     public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto comment) {
-        User principal =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment, principal));
     }
 
     @PostMapping("/vote")
     public ResponseEntity<CommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
-        User principal =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote, principal));
     }
 
-    @GetMapping("/comment/{commentId}")
-    public ResponseEntity<List<CommentDto>> getSubComments(@PathVariable Long commentId) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId));
+    @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
+    public ResponseEntity<List<CommentDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
+        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
+    }
+
+    @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
+    public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
+        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(postId));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
     }
 
     @GetMapping("/post/{postId}")

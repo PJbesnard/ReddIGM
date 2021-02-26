@@ -52,9 +52,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/login").permitAll() //
 
 
-                .antMatchers("/comments/**").permitAll() //
-                .antMatchers("/posts/**").permitAll() //
-                .antMatchers("/subjects/**").permitAll() //
+                .antMatchers(HttpMethod.GET,"/comments/**").permitAll() //
+                .antMatchers(HttpMethod.GET,"/posts/**").permitAll() //
+                .antMatchers(HttpMethod.GET,"/subjects/**").permitAll() //
 
 
 
