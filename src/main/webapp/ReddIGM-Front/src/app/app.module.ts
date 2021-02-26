@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { CreatePostComponent } from './pages/modals/create-post/create-post.component';
 import { CKEditorModule } from 'ckeditor4-angular';
 import { CardCreatePostComponent } from './card-create-post/card-create-post.component';
-import { BrowseSubsComponent } from './browse-subs/browse-subs.component';
+import { BrowseSubsComponent } from './subs/browse-subs/browse-subs.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { PostViewComponent } from './post-view/post-view.component';
 import { LoginPageComponent } from './login-page/login-page.component';
@@ -21,7 +21,10 @@ import { CommentPreviewComponent } from './comment-preview/comment-preview.compo
 import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component'
 
 import { AuthenticationService } from './services/authentication.service';
-import { FilterPipe } from './filter.pipe';
+import { ListSubsComponent } from './subs/list-subs/list-subs.component';
+import { CardCreateSubComponent } from './subs/card-create-sub/card-create-sub.component';
+import { CreateSubComponent } from './subs/create-sub/create-sub.component';
+import { HomePageComponent } from './home-page/home-page.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { FilterPipe } from './filter.pipe';
     ProfilePageComponent,
     CommentPreviewComponent,
     EditProfilePageComponent,
-    FilterPipe
+    ListSubsComponent,
+    CardCreateSubComponent,
+    CreateSubComponent,
+    HomePageComponent
   ],
   imports: [
     BrowserModule,
@@ -51,7 +57,10 @@ import { FilterPipe } from './filter.pipe';
   ],
   providers: [
     AuthenticationService,
-	DataService
+	DataService,
+    ListSubsComponent,
+    CardCreateSubComponent,
+    CreateSubComponent
   ],
   bootstrap: [AppComponent]
 })

@@ -20,5 +20,5 @@ export class AppComponent implements OnInit {
 //   openModalInMainComponent(id: number | undefined): void {
 // 	this.openModalEvent.emit(id);
 //  }
-  
+
 }
