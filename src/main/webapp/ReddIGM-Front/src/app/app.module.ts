@@ -1,8 +1,9 @@
+import { DataService } from './services/data.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
-import { ReactiveFormsModule  } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -20,6 +21,7 @@ import { CommentPreviewComponent } from './comment-preview/comment-preview.compo
 import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component'
 
 import { AuthenticationService } from './services/authentication.service';
+import { FilterPipe } from './filter.pipe';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import { AuthenticationService } from './services/authentication.service';
     PostViewComponent,
     ProfilePageComponent,
     CommentPreviewComponent,
-    EditProfilePageComponent
+    EditProfilePageComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -43,10 +46,12 @@ import { AuthenticationService } from './services/authentication.service';
     FontAwesomeModule,
     HttpClientModule,
     ReactiveFormsModule,
-    NgxCaptchaModule
+    NgxCaptchaModule,
+	FormsModule
   ],
   providers: [
-    AuthenticationService
+    AuthenticationService,
+	DataService
   ],
   bootstrap: [AppComponent]
 })

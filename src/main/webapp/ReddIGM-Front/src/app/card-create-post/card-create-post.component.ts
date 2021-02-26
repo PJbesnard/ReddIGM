@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { PostService } from '../services/post.service';
+import { PostModel} from '../models/post.model'
 @Component({
   selector: 'app-card-create-post',
   templateUrl: './card-create-post.component.html',
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CardCreatePostComponent implements OnInit {
   isModalActive: boolean = false;
-  constructor() { }
+  test: any;
+  post!: PostModel;
+  constructor(
+	  private postService: PostService
+  ) { }
 
   ngOnInit(): void {
+	  this.postService.getPost("1").subscribe( reponse => {this.post = reponse})
+
   }
 
   openModalCreatePost() {

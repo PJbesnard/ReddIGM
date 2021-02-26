@@ -26,4 +26,19 @@ export class CreatePostComponent implements OnInit {
 	this.openModelChange.emit(!this.openModal);
   }
 
+//   createPost() {
+//     this.postPayload.postName = this.createPostForm.get('postName').value;
+//     this.postPayload.subredditName = this.createPostForm.get('subredditName').value;
+//     this.postPayload.url = this.createPostForm.get('url').value;
+//     this.postPayload.description = this.createPostForm.get('description').value;
+
+//     this.postService.createPost(this.postPayload).subscribe((data) => {
+//       this.router.navigateByUrl('/');
+//     }, error => {
+//       throwError(error);
+//     })
+//   }
+
+
+
 }
