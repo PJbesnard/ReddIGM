@@ -4,11 +4,11 @@
       Browse subs
     </div>
     <div *ngFor="let s of subjects">
-      <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">{{s.name}}</div>
+      <div class="content is-size-5 has-text-light has-text-weight-light is-clickable" (click)="showSub(s.id)">{{s.name}}</div>
     </div>
     <br>
     <div *ngIf="viewAll">
-      <div class="content is-size-5 has-text-centered has-text-light has-text-weight-semibold is-clickable">view all</div>
+      <div class="content is-size-5 has-text-centered has-text-light has-text-weight-semibold is-clickable" (click)="viewAllClick()">view all</div>
     </div>
   </div>
 </div>
