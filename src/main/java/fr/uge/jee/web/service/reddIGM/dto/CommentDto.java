@@ -1,5 +1,7 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
+import fr.uge.jee.web.service.reddIGM.models.VoteType;
+
 import java.time.LocalDateTime;
 
 public class CommentDto {
@@ -11,11 +13,12 @@ public class CommentDto {
     private Long superCommentId;
     private String picture;
     private int nbVote;
+    private VoteType myVote;
 
     public CommentDto() {
     }
 
-    public CommentDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote) {
+    public CommentDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote) {
         this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
@@ -24,6 +27,7 @@ public class CommentDto {
         this.superCommentId = superCommentId;
         this.picture = picture;
         this.nbVote = nbVote;
+        this.myVote = myVote;
     }
 
     public Long getCommentId() {
@@ -88,5 +92,13 @@ public class CommentDto {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public VoteType getMyVote() {
+        return myVote;
+    }
+
+    public void setMyVote(VoteType myVote) {
+        this.myVote = myVote;
     }
 }

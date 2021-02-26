@@ -39,14 +39,16 @@ public class CommentController {
 
     @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
-        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId));
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, principal));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType, principal));
     }
 
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
-        if(orderType == null)return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId));
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(orderType == null)return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, principal));
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType, principal));
     }
 
     @GetMapping("/user/{userName}")
