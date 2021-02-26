@@ -12,6 +12,7 @@ import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,6 +35,9 @@ public class CommentService {
         Comment superComment = null;
         if (comment.getSuperCommentId() != null)
             superComment = commentRepository.findById(comment.getSuperCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + comment.getSuperCommentId().toString() + " not found"));
+            Post superCommentPost = superComment.getPost();
+            if(superCommentPost == null) throw new NoSuchElementException("Post of comment " + superComment.getId() + " not found");
+            if(!post.getPostId().equals(superCommentPost.getPostId())) throw new InvalidParameterException("super comment " + superComment.getId() + " is not a comment of post " + post.getPostId());
         LocalDateTime creationDate = LocalDateTime.now();
         Comment newComment = new Comment(comment.getText(), creationDate, post, user, superComment);
         return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0);
@@ -76,7 +80,10 @@ public class CommentService {
 
     public List<CommentDto> getAllCommentsForPost(Long postId, OrderType orderType) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new NoSuchElementException("Post " + postId.toString() + " not found"));
-        List<CommentDto> commentDtos = computeVote(repository.findByPost(post));
+        List<Comment> commentsForPost = repository.findByPost(post);
+        List<Comment> onlySuperComments = new ArrayList<>();
+        commentsForPost.forEach(com -> {if(com.getSuperComment() == null) onlySuperComments.add(com);});
+        List<CommentDto> commentDtos = computeVote(onlySuperComments);
         return sortComments(commentDtos, orderType);
     }
 

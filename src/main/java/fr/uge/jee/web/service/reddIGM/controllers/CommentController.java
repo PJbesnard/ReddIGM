@@ -45,13 +45,8 @@ public class CommentController {
 
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
-        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(postId));
+        if(orderType == null)return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId));
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
-    }
-
-    @GetMapping("/post/{postId}")
-    public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId));
     }
 
     @GetMapping("/user/{userName}")
