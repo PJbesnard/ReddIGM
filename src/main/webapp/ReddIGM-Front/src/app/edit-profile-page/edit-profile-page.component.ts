@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 
@@ -10,20 +11,15 @@ import { UserService } from '../services/user.service';
 })
 export class EditProfilePageComponent implements OnInit {
 
-  @Input()
-  username!: string;
-
   user: User = new User();
   registerForm: FormGroup;
 
-  constructor(private userService: UserService, private formBuilder: FormBuilder) {
-    // TODO Récupérer les infos du user
-    userService.getUser(this.username).subscribe(
+  constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+    let userId = this.route.snapshot.params['id'];
+
+    userService.getUserById(userId).subscribe(
       (response) => {
         this.user = response;
-      },
-      (error) => {
-        console.error(error);
       }
     );
 
@@ -46,7 +42,7 @@ export class EditProfilePageComponent implements OnInit {
       // TODO : Mettre à jour formValue.description
     }
 
-    if ( formValue.picture !== this.user.picture ) {
+    if ( formValue.picture !== this.user.getPicture() ) {
       // TODO : Mettre à jour formValue.picture
     }
 

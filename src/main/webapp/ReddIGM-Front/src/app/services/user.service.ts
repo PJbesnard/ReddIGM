@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
 
-const BASE_ADDRESS = "http://localhost:8080/";
+const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
   providedIn: 'root'
@@ -12,17 +13,20 @@ export class UserService {
 
   constructor(private httpClient: HttpClient) { }
 
-  getUser(username: string): Observable<User> {
-    const body = {
-      username: username
-    };
-
-    // TODO
-    // A commenter lorsque la fonction du back sera dispo
-    return new Observable<User>();
-
-    /* A décommenter lorsque la fonction du back sera dispo
-    return this.httpClient.post<User>(BASE_ADDRESS + "???", body);
-    */
+  getUserById(userId: number): Observable<User> {
+    return this.httpClient.get<User>(BASE_ADDRESS + "users/" + userId);
   }
+
+  getUserByUsername(username: string): Observable<User> {
+    return this.httpClient.get<User>(BASE_ADDRESS + "users/usernames/" + username);
+  }
+
+  getUserByUsernameWithJwt(username: string, jwt: string): Observable<User> {
+    return this.httpClient.get<User>(BASE_ADDRESS + "users/usernames/" + username, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
+  }
+
+  getUserByEmail(email: string): Observable<User> {
+    return this.httpClient.get<User>(BASE_ADDRESS + "users/emails/" + email);
+  }
+  
 }

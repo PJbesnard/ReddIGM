@@ -1,6 +1,8 @@
+<router-outlet></router-outlet>
+
 <div class="aligned" style="margin-left: 5%;">
-    <img class="is-rounded" src="{{ user.picture }}">
-    <h1 class="title is-1 has-text-light title-underlined">{{ username }}</h1>
+    <img class="is-rounded" src="{{ user.getPicture() }}">
+    <h1 class="title is-1 has-text-light title-underlined">{{ user.username }}</h1>
 </div>
 
 <div class="columns">
@@ -49,12 +51,12 @@
 
         <div *ngFor="let elem of chronologicalHistoryFiltered">
             <div *ngIf="elem instanceof Post">
-                <p class="has-text-light">&nbsp;&nbsp;{{ username }} has posted</p>
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has posted</p>
                 <app-post-view></app-post-view>
             </div>
 
             <div *ngIf="elem instanceof Comment">
-                <p class="has-text-light">&nbsp;&nbsp;{{ username }} has commented this post</p>
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has commented this post</p>
                 <app-post-view></app-post-view>
                 <div style="margin-inline: auto; width: 98%;">
                     <app-comment-preview></app-comment-preview>
@@ -62,7 +64,7 @@
             </div>
 
             <div *ngIf="elem instanceof Vote">
-                <p class="has-text-light">&nbsp;&nbsp;{{ username }} like this</p>
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} like this</p>
                 <app-post-view></app-post-view>
             </div>
 

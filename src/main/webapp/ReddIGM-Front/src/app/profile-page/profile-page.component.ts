@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
 
@@ -9,9 +10,6 @@ import { UserService } from '../services/user.service';
 })
 export class ProfilePageComponent implements OnInit {
 
-  @Input()
-  username!: string;
-
   user: User = new User();
   chronologicalHistory: Object[] = []
   chronologicalHistoryFiltered: Object[] = []
@@ -20,13 +18,15 @@ export class ProfilePageComponent implements OnInit {
   nbLikes: number = 0;
   nbDislikes: number = 0;
 
-  constructor(private userService: UserService) {
-    userService.getUser(this.username).subscribe(
+  constructor(private userService: UserService, private route: ActivatedRoute) {
+    let userId = this.route.snapshot.params['id'];
+
+    this.userService.getUserById(userId).subscribe(
       (response) => {
-        this.user = response;
+        this.user = new User().deserialize(response);
       },
-      (error) => {
-        console.error(error);
+      (response) => {
+        console.error(response);
       }
     );
   }
