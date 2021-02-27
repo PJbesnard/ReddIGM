@@ -31,11 +31,15 @@ public class User implements UserDetails {
     @NotNull
     private String password;
 
-    @NotNull
     private String picture;
+
+    private String description;
+
+    private boolean newsletterSubscriber;
 
     @NotNull
     @Email
+    @Column(unique = true)
     private String email;
 
     @Enumerated(EnumType.STRING)
@@ -44,12 +48,14 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String picture, String username, String password, String email, Authority authority) {
+    public User(String username, String password, String email, Authority authority, String picture, String description, boolean newsletterSubscriber) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.authority = authority;
         this.picture = picture;
+        this.description = description;
+        this.newsletterSubscriber = newsletterSubscriber;
     }
 
     public long getId() {
@@ -88,6 +94,30 @@ public class User implements UserDetails {
         this.authority = authority;
     }
 
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isNewsletterSubscriber() {
+        return newsletterSubscriber;
+    }
+
+    public void setNewsletterSubscriber(boolean newsletterSubscriber) {
+        this.newsletterSubscriber = newsletterSubscriber;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -119,23 +149,18 @@ public class User implements UserDetails {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id == user.id &&
+                newsletterSubscriber == user.newsletterSubscriber &&
                 username.equals(user.username) &&
                 password.equals(user.password) &&
+                Objects.equals(picture, user.picture) &&
+                Objects.equals(description, user.description) &&
                 email.equals(user.email) &&
                 authority == user.authority;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
+        return Objects.hash(id, username, password, picture, description, newsletterSubscriber, email, authority);
     }
 
     @Override
@@ -145,6 +170,8 @@ public class User implements UserDetails {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", picture='" + picture + '\'' +
+                ", description='" + description + '\'' +
+                ", newsletterSubscriber=" + newsletterSubscriber +
                 ", email='" + email + '\'' +
                 ", authority=" + authority +
                 '}';

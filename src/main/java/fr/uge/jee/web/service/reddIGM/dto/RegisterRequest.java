@@ -5,13 +5,11 @@ public class RegisterRequest {
     private String email;
     private String username;
     private String password;
-    private String picture;
 
     public RegisterRequest(String email, String username, String password, String picture) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.picture = picture;
     }
 
     public RegisterRequest() {
@@ -39,13 +37,5 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
     }
 }
