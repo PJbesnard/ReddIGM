@@ -2,7 +2,7 @@ import { DataService } from './services/data.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { NgxCaptchaModule } from 'ngx-captcha';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -26,6 +26,7 @@ import { CardCreateSubComponent } from './subs/card-create-sub/card-create-sub.c
 import { CreateSubComponent } from './subs/create-sub/create-sub.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PostsFromSubComponent } from './posts-from-sub/posts-from-sub.component';
+import { AuthenticationInterceptor } from './services/authentication.interceptor';
 
 @NgModule({
   declarations: [
@@ -55,11 +56,12 @@ import { PostsFromSubComponent } from './posts-from-sub/posts-from-sub.component
     HttpClientModule,
     ReactiveFormsModule,
     NgxCaptchaModule,
-	FormsModule
+	  FormsModule
   ],
   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthenticationInterceptor, multi: true },
     AuthenticationService,
-	DataService,
+    DataService,
     ListSubsComponent,
     CardCreateSubComponent,
     CreateSubComponent

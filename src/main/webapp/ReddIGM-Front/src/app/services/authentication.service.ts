@@ -1,21 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
+import { User } from '../models/user.model';
+import { UserService } from './user.service';
 
-const BASE_ADDRESS = "http://localhost:8080/";
+const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  jwtToken: string;
+  constructor(private httpClient: HttpClient, private router: Router, private userService: UserService) { }
 
-  constructor(private httpClient: HttpClient) {
-    this.jwtToken = "";
-  }
-
-  register(username: String, password: String, email: String) {
+  register(username: string, password: string, email: string) {
     const body = {
       username: username,
       password: password,
@@ -24,15 +23,16 @@ export class AuthenticationService {
 
     this.httpClient.post<any>(BASE_ADDRESS + "register", body).subscribe(
       (response) => {
-        // TODO : Redirection vers la home page
+        this.router.navigate(["/home"]);
       },
       (response) => {
+        console.error(response);
         // TODO : Rediriger vers une page d'erreur
       }
     );
   }
 
-  login(username: String, password: String) {
+  login(username: string, password: string) {
     const body = {
       username: username,
       password: password
@@ -40,49 +40,20 @@ export class AuthenticationService {
 
     this.httpClient.post<any>(BASE_ADDRESS + "login", body).subscribe(
       (response) => {
-        this.jwtToken = response["jwt"];
-        // TODO : Redirection vers la home page
+        localStorage.setItem("jwt", response["jwt"]);
+
+        this.userService.getUserByUsernameWithJwt(username, response["jwt"]).subscribe(
+          (response) => {
+            localStorage.setItem("currentUser", JSON.stringify(response));
+          }
+        );
+
+        this.router.navigate(["/home"]);
       },
       (response) => {
-        console.log(response);
+        console.error(response);
         // TODO : Rediriger vers la page de connexion avec une erreur d'authentification
       }
     );
-  }
-
-  isUserExists(username: string): Observable<Boolean> {
-    let params = new HttpParams();
-
-    params = params.append('username', username);
-
-    // TODO
-    // A commenter lorsque la fonction du back sera dispo
-    return new Observable(observer => {
-      setTimeout(() => {
-        return true;
-      }, 1000);
-    })
-
-    /* A décommenter lorsque la fonction du back sera dispo
-    return this.httpClient.get(BASE_ADDRESS + "???", { params: params });
-    */
-  }
-
-  isEmailExists(email: string): Observable<Boolean> {
-    let params = new HttpParams();
-
-    params = params.append('email', email);
-
-    // TODO
-    // A commenter lorsque la fonction du back sera dispo
-    return new Observable(observer => {
-      setTimeout(() => {
-        return true;
-      }, 1000);
-    })
-
-    /* A décommenter lorsque la fonction du back sera dispo
-    return this.httpClient.get(BASE_ADDRESS + "???", { params: params });
-    */
   }
 }
