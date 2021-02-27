@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { SubjectModel } from './subject-response';
+import { SubjectModel } from '../models/subject-response';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -23,8 +23,8 @@ export class SubjectService {
     });
   }
 
-  getSubject(): Observable<SubjectModel> {
-    return this.http.get<SubjectModel>(this.url, {
+  getSubject(id: number): Observable<SubjectModel> {
+    return this.http.get<SubjectModel>(this.url + id, {
       headers: new HttpHeaders(
         {
           'Access-Control-Allow-Origin':'*'

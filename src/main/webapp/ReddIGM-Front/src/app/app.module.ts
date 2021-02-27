@@ -25,6 +25,7 @@ import { ListSubsComponent } from './subs/list-subs/list-subs.component';
 import { CardCreateSubComponent } from './subs/card-create-sub/card-create-sub.component';
 import { CreateSubComponent } from './subs/create-sub/create-sub.component';
 import { HomePageComponent } from './home-page/home-page.component';
+import { PostsFromSubComponent } from './posts-from-sub/posts-from-sub.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { HomePageComponent } from './home-page/home-page.component';
     ListSubsComponent,
     CardCreateSubComponent,
     CreateSubComponent,
-    HomePageComponent
+    HomePageComponent,
+    PostsFromSubComponent
   ],
   imports: [
     BrowserModule,

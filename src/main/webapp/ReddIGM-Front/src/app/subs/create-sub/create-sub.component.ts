@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {SubjectService} from "../subject.service";
-import {SubjectModel} from "../subject-response";
+import {SubjectService} from "../../services/subject.service";
+import {SubjectModel} from "../../models/subject-response";
 import { throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -19,7 +19,6 @@ export class CreateSubComponent implements OnInit {
   }
 
   create(): void {
-    console.log("wesh alors");
     let subName = (<HTMLInputElement>document.getElementById('subName')).value;
     let subDesc = (<HTMLInputElement>document.getElementById('subDesc')).value;
     let subjectModel: SubjectModel = {

@@ -3,19 +3,17 @@
 <br>
 <br>
 <div class="container is-fluid">
-  <p class="title is-3 is-spaced has-text-light ">Reddigm posts</p>
+  <p class="title is-3 is-spaced has-text-light ">{{sub}}</p>
   <br>
   <div class="columns">
     <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-primary is-clickable">All</p>
-    </div>
-    <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-light is-clickable">Hot</p>
+      <p class="title is-5 is-spaced has-text-primary is-clickable">Hot</p>
     </div>
     <div class="column is-1">
       <p class="title is-5 is-spaced has-text-light is-clickable">New</p>
     </div>
   </div>
+
   <div class="columns">
     <div class="column is-three-quarters ">
 
@@ -31,12 +29,8 @@
       <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]=12></app-post-view>
       <app-post-view [author]="'truc'" [title]="'truc'" [content]="'truc'" [date]="'truc'" [subName]="'truc'" [rate]=12></app-post-view>
 
-
     </div>
-
     <div class="column is-one-quarter">
-      <app-card-create-sub></app-card-create-sub>
-      <app-browse-subs></app-browse-subs>
+      <app-card-create-post></app-card-create-post>
     </div>
-  </div>
 </div>

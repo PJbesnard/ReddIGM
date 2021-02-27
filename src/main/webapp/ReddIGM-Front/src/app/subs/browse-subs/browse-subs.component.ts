@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { SubjectService } from '../subject.service';
-import { SubjectModel } from '../subject-response';
+import { SubjectService } from '../../services/subject.service';
+import { SubjectModel } from '../../models/subject-response';
+import { Router } from "@angular/router"
 
 @Component({
   selector: 'app-browse-subs',
@@ -10,7 +11,7 @@ import { SubjectModel } from '../subject-response';
 export class BrowseSubsComponent implements OnInit {
   subjects: Array<SubjectModel> = [];
   viewAll: boolean = false;
-  constructor(private subjectService: SubjectService) {
+  constructor(private router: Router, private subjectService: SubjectService) {
   }
 
   ngOnInit(): void {
@@ -22,5 +23,14 @@ export class BrowseSubsComponent implements OnInit {
         this.subjects = data;
       }
     });
+  }
+
+  showSub(id?: number): void {
+    console.log("click on sub : " + id);
+    this.router.navigateByUrl('/list-subs');
+  }
+
+  viewAllClick(): void {
+    this.router.navigateByUrl('/list-subs');
   }
 }

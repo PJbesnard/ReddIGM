@@ -14,6 +14,6 @@ export class CardCreateSubComponent implements OnInit {
   }
 
   onClick(): void {
-    this.router.navigateByUrl('');
+    this.router.navigateByUrl('create-sub');
   }
 }
