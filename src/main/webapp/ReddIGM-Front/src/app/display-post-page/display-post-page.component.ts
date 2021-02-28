@@ -13,6 +13,7 @@ import { PostModel } from '../models/post.model';
 })
 export class DisplayPostPageComponent implements OnInit {
   post: PostModel = new PostModel();
+  subjectName: string = "";
 
 
   constructor(private route: ActivatedRoute,
@@ -24,6 +25,7 @@ export class DisplayPostPageComponent implements OnInit {
         this.post = response;
       }
     );
+    this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();
   }
 
 }

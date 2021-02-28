@@ -3,13 +3,12 @@
 <br>
 <br>
 <div class="container is-fluid">
-  <p class="title is-4 is-spaced has-text-light has-text-weight-semibold text-decoration: underline"  style="text-decoration: underline">r/wafwaf</p>
+  <p class="title is-4 is-spaced has-text-light has-text-weight-semibold text-decoration: underline"  style="text-decoration: underline">{{subjectName}}</p>
   <br>
 
   <div class="columns">
     <div class="column is-three-quarters ">
-      <app-post-view-in-context [author]="post.userId" [title]="post.postName" [content]="post.description" [date]="post.createdDate" [subName]="post.subjectId" [rate]="post.voteCount"></app-post-view-in-context>
-     
+      <app-post-view-in-context [author]="'wsh'" [title]="post.postName" [content]="post.description" [date]="post.createdDate" [subName]="'{{subjectName}}'" [rate]="post.voteCount"></app-post-view-in-context>     
     </div>
     
 

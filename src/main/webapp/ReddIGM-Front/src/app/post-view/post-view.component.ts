@@ -27,7 +27,7 @@ export class PostViewComponent implements OnInit {
   }
   
   displayPost(){
-    this.router.navigate(['posts-from-sub/display-post', { id: this.id }]);
+    this.router.navigate(['posts-from-sub/display-post', { id: this.id, subName: this.subName }]);
   }
 
 }
