@@ -57,6 +57,7 @@ public class PostService {
     public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
+        post.getUser().getUsername();
         return postMapper.mapToDto(post);
     }
 

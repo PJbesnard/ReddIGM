@@ -29,6 +29,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest httpServletRequest, @NonNull HttpServletResponse httpServletResponse, @NonNull FilterChain filterChain) throws ServletException, IOException {
+        System.out.println("JWT REQUEST ACtiVATED");
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
         String username = null;
