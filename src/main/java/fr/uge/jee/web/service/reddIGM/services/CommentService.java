@@ -33,12 +33,12 @@ public class CommentService {
     public CommentDto save(CommentDto comment, User user) {
         Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + comment.getPostId().toString() + " not found"));
         Comment superComment = null;
-        System.out.println("comment : " + comment.toString());
-        if (comment.getSuperCommentId() != null)
+        if (comment.getSuperCommentId() != null) {
             superComment = commentRepository.findById(comment.getSuperCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + comment.getSuperCommentId().toString() + " not found"));
             Post superCommentPost = superComment.getPost();
             if(superCommentPost == null) throw new NoSuchElementException("Post of comment " + superComment.getId() + " not found");
             if(!post.getPostId().equals(superCommentPost.getPostId())) throw new InvalidParameterException("super comment " + superComment.getId() + " is not a comment of post " + post.getPostId());
+        }
         LocalDateTime creationDate = LocalDateTime.now();
         Comment newComment = new Comment(comment.getText(), creationDate, post, user, superComment);
         return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0, null);
