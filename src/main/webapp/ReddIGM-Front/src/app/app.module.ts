@@ -27,6 +27,8 @@ import { CreateSubComponent } from './subs/create-sub/create-sub.component';
 import { HomePageComponent } from './home-page/home-page.component';
 import { PostsFromSubComponent } from './posts-from-sub/posts-from-sub.component';
 import { AuthenticationInterceptor } from './services/authentication.interceptor';
+import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
+import { PostViewInContextComponent } from './post-view-in-context/post-view-in-context.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import { AuthenticationInterceptor } from './services/authentication.interceptor
     CardCreateSubComponent,
     CreateSubComponent,
     HomePageComponent,
-    PostsFromSubComponent
+    PostsFromSubComponent,
+    DisplayPostPageComponent,
+    PostViewInContextComponent
   ],
   imports: [
     BrowserModule,

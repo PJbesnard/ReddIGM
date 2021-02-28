@@ -9,6 +9,7 @@ import { RegisterPageComponent } from './register-page/register-page.component';
 import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component';
 import { AuthGuardService } from './services/auth-guard.service';
+import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -19,7 +20,9 @@ const routes: Routes = [
   {path: 'users/:id/edit', component: EditProfilePageComponent, canActivate: [AuthGuardService]},
   {path: 'create-sub', component: CreateSubComponent, canActivate: [AuthGuardService]},
   {path: 'posts-from-sub', component: PostsFromSubComponent},
-  {path: 'list-subs', component: ListSubsComponent}
+  {path: 'list-subs', component: ListSubsComponent},
+  {path: 'posts-from-sub/display-post', component: DisplayPostPageComponent}
+
 ];
 
 @NgModule({
