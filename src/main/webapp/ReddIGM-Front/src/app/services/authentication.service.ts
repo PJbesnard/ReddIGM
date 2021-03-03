@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user.model';
+import { JwtService } from './jwt.service';
 import { UserService } from './user.service';
 
 const BASE_ADDRESS = environment.baseURL;
@@ -12,27 +12,52 @@ const BASE_ADDRESS = environment.baseURL;
 })
 export class AuthenticationService {
 
-  constructor(private httpClient: HttpClient, private router: Router, private userService: UserService) { }
+  constructor(private httpClient: HttpClient, private userService: UserService, private jwtService: JwtService) { }
 
-  register(username: string, password: string, email: string) {
+  register(username: string, password: string, email: string, successCallback?: () => void, failureCallback?: (errorMsg: string) => void) {
     const body = {
       username: username,
       password: password,
       email: email
     };
 
-    this.httpClient.post<any>(BASE_ADDRESS + "register", body).subscribe(
+    this.userService.getUserByUsername(username).subscribe(
       (response) => {
-        this.router.navigate(["/home"]);
+        if (failureCallback != undefined) {
+          failureCallback("Register failed : Username already taken");
+        }
       },
       (response) => {
-        console.error(response);
-        // TODO : Rediriger vers une page d'erreur
+
+        this.userService.getUserByEmail(email).subscribe(
+          (response) => {
+            if (failureCallback != undefined) {
+              failureCallback("Register failed : Email address already taken");
+            }
+          },
+          (response) => {
+
+            this.httpClient.post<any>(BASE_ADDRESS + "register", body).subscribe(
+              (response) => {
+                if (successCallback != undefined) {
+                  successCallback();
+                }
+              },
+              (response) => {
+                if (failureCallback != undefined) {
+                  failureCallback("Register failed : " + response.message);
+                }
+              }
+            )
+
+          }
+        )
+
       }
-    );
+    )
   }
 
-  login(username: string, password: string) {
+  login(username: string, password: string, successCallback?: () => void, failureCallback?: (errorMsg: string) => void) {
     const body = {
       username: username,
       password: password
@@ -40,20 +65,36 @@ export class AuthenticationService {
 
     this.httpClient.post<any>(BASE_ADDRESS + "login", body).subscribe(
       (response) => {
-        localStorage.setItem("jwt", response["jwt"]);
+        this.jwtService.setToken(response["jwt"]);
 
-        this.userService.getUserByUsernameWithJwt(username, response["jwt"]).subscribe(
+        this.userService.getUserByUsername(username).subscribe(
           (response) => {
-            localStorage.setItem("currentUser", JSON.stringify(response));
+            this.jwtService.setUser(response);
           }
         );
 
-        this.router.navigate(["/home"]);
+        if (successCallback != undefined) {
+          successCallback();
+        }
       },
       (response) => {
-        console.error(response);
-        // TODO : Rediriger vers la page de connexion avec une erreur d'authentification
+        if (failureCallback != undefined) {
+          failureCallback("Authentication failed : Invalid username or password");
+        }
       }
     );
+  }
+
+  logout(): void {
+    this.jwtService.removeToken();
+    this.jwtService.removeUser();
+  }
+
+  isLoggedIn(): boolean {
+    return this.jwtService.getToken() != null;
+  }
+
+  getCurrentUser(): User | null {
+    return this.jwtService.getUser();
   }
 }

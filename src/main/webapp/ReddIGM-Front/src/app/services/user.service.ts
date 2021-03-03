@@ -21,10 +21,6 @@ export class UserService {
     return this.httpClient.get<User>(BASE_ADDRESS + "users/usernames/" + username);
   }
 
-  getUserByUsernameWithJwt(username: string, jwt: string): Observable<User> {
-    return this.httpClient.get<User>(BASE_ADDRESS + "users/usernames/" + username, {headers: new HttpHeaders().set('Authorization', 'Bearer ' + jwt)});
-  }
-
   getUserByEmail(email: string): Observable<User> {
     return this.httpClient.get<User>(BASE_ADDRESS + "users/emails/" + email);
   }

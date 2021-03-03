@@ -10,24 +10,31 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 import { Router } from '@angular/router';
+import { JwtService } from './jwt.service';
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthenticationService, private router: Router) {}
+  constructor(private authService: AuthenticationService, private jwtService: JwtService, private router: Router) {}
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     /* If the user is authenticated, we put the JWT token in each request's header */
-    if (localStorage.getItem("currentUser")) {
+    if (this.authService.isLoggedIn()) {
       request = request.clone({
         setHeaders: {
-          "Authorization": 'Bearer ' + localStorage.getItem("jwt")
+          "Authorization": 'Bearer ' + this.jwtService.getToken()
         }
       });
     }
 
     return next.handle(request).pipe(catchError((response: HttpResponse<any>) => {
       if (response.status === 403) {
+        if (this.authService.isLoggedIn()) {
+          // Invalid token in memory
+          this.authService.logout();
+        }
+
+        // Redirecting user to login page
         this.router.navigate(["/login"]);
       }
       
