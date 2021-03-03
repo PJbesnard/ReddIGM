@@ -29,6 +29,7 @@ import { PostsFromSubComponent } from './posts-from-sub/posts-from-sub.component
 import { AuthenticationInterceptor } from './services/authentication.interceptor';
 import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
 import { PostViewInContextComponent } from './post-view-in-context/post-view-in-context.component';
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { PostViewInContextComponent } from './post-view-in-context/post-view-in-
     HomePageComponent,
     PostsFromSubComponent,
     DisplayPostPageComponent,
-    PostViewInContextComponent
+    PostViewInContextComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

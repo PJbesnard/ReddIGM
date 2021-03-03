@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ReCaptcha2Component } from 'ngx-captcha';
+import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -8,12 +11,14 @@ import { AuthenticationService } from '../services/authentication.service';
   styleUrls: ['./register-page.component.scss']
 })
 export class RegisterPageComponent implements OnInit {
+  @ViewChild('captchaElem')
+  captchaElem!: ReCaptcha2Component;
 
   registerForm: FormGroup;
   captchaKey: string = "6LfYkVYaAAAAAH9i5Uz1x7UyraR2OQh11H30Toi3";
   logging: boolean = false;
 
-  constructor(private authService: AuthenticationService, private formBuilder: FormBuilder) {
+  constructor(private authService: AuthenticationService, private formBuilder: FormBuilder, private router: Router, private alertService: AlertService) {
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required],
@@ -32,10 +37,20 @@ export class RegisterPageComponent implements OnInit {
     this.logging = true;
     const formValue = this.registerForm.value;
 
+    // Reset alert
+    this.alertService.clear();
+
     this.authService.register(
       formValue['username'],
       formValue['password'],
       formValue['email'],
+      () => this.router.navigate(["/home"]),
+      (errorMsg) => {
+        this.logging = false;
+        this.alertService.error(errorMsg);
+        this.registerForm.reset();
+        this.captchaElem.resetCaptcha();
+      }
     );
   }
 }
