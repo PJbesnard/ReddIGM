@@ -10,6 +10,10 @@
         <div class="card-content">
             <div class="content" style="padding-inline: 10%;">
                 
+                <div class="content" style="margin-inline: auto; width: 90%;">
+                    <app-alert></app-alert>
+                </div>
+                
                 <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
                     <div class="field">
                         <label class=" has-text-white">&nbsp;&nbsp;Username</label>
@@ -51,7 +55,7 @@
                             <button class="button is-primary" [ngClass]="{'is-loading': logging}" [disabled]="registerForm.invalid">Login</button>
                         </p>
                         <p class="control" style="margin: auto;">
-                            <a href="#" class="has-text-white">
+                            <a href="/register" class="has-text-white">
                                 No account ? Join us !
                             </a>
                         </p>

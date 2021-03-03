@@ -17,12 +17,6 @@ export class EditProfilePageComponent implements OnInit {
   constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
     let userId = this.route.snapshot.params['id'];
 
-    userService.getUserById(userId).subscribe(
-      (response) => {
-        this.user = response;
-      }
-    );
-
     this.registerForm = this.formBuilder.group({
       description: '',
       picture: '',
@@ -30,6 +24,20 @@ export class EditProfilePageComponent implements OnInit {
       newsletters: '',
       password: ''
     });
+
+    userService.getUserById(userId).subscribe(
+      (response) => {
+        this.user = new User().deserialize(response);
+
+        this.registerForm = this.formBuilder.group({
+          description: this.user.description,
+          picture: this.user.getPicture() === User.defaultPicture ? '' : this.user.getPicture(),
+          email: this.user.email,
+          newsletters: this.user.newsletterSubscriber,
+          password: ''
+        });
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -46,7 +54,7 @@ export class EditProfilePageComponent implements OnInit {
       // TODO : Mettre à jour formValue.picture
     }
 
-    if ( formValue.newsletters !== this.user.newsletters ) {
+    if ( formValue.newsletters !== this.user.newsletterSubscriber ) {
       // TODO : Mettre à jour formValue.newsletters
     }
 

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
+import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -17,13 +18,15 @@ export class ProfilePageComponent implements OnInit {
   nbComments: number = 0;
   nbLikes: number = 0;
   nbDislikes: number = 0;
+  isMe: boolean = false;
 
-  constructor(private userService: UserService, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private route: ActivatedRoute, private authService: AuthenticationService, private router: Router) {
     let userId = this.route.snapshot.params['id'];
 
     this.userService.getUserById(userId).subscribe(
       (response) => {
         this.user = new User().deserialize(response);
+        this.isMe = userId == this.authService.getCurrentUser()?.id;
       },
       (response) => {
         console.error(response);
@@ -51,6 +54,10 @@ export class ProfilePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  onEdit() {
+    this.router.navigate(["/users/" + this.user.id + "/edit"], {skipLocationChange: true});
   }
 
 }

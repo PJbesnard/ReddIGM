@@ -8,7 +8,7 @@
 <div class="columns">
     <div class="column is-one-quarter" style="margin-top: 5em; margin-left: 3em;">
         <h1 class="title inline has-text-light">About me</h1>
-        <a class="subtitle inline has-text-light" href="#">&nbsp;&nbsp;Edit</a>
+        <a class="subtitle inline has-text-light" (click)="onEdit()" *ngIf="isMe">&nbsp;&nbsp;Edit</a>
 
         <br />
         <br />

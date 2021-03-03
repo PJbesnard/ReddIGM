@@ -8,7 +8,7 @@ export class User implements Deserializable {
   email!: string;
   description!: string;
   private picture!: string;
-  newsletters!: boolean;
+  newsletterSubscriber!: boolean;
 
   deserialize(input: any): this {
     Object.assign(this, input);
