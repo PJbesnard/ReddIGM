@@ -95,6 +95,20 @@ public class PostService {
         return computeVote;
     }
 
+//    private List<PostResponse> computeVote(List<Post> posts, User user){
+//        List<PostResponse> res = new ArrayList<>();
+//        posts.forEach(p -> {
+//            int voteNb = 0;
+//            List<VotePost> votes = votePostRepository.findAllByPost(p);
+//            for (VotePost vote : votes) {
+//                if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
+//                else voteNb++;
+//            }
+//            res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
+//        });
+//        return res;
+//    }
+
     private List<PostResponse> computeVote(List<Post> posts, User user){
         List<PostResponse> res = new ArrayList<>();
         posts.forEach(p -> {
@@ -104,7 +118,8 @@ public class PostService {
                 if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
                 else voteNb++;
             }
-            res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
+            if (user == null) res.add(postMapper.mapToDto(p, voteNb, VoteType.NOVOTE));
+            else  res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
         });
         return res;
     }
@@ -117,10 +132,11 @@ public class PostService {
     }
 
     public PostResponse vote(VotePostDto vote, User user) {
+        System.out.println("TEST"+vote.getPostId());
         Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Comment " + vote.getPostId().toString() + " not found"));
         Optional<VotePost> voteByPostAndUser = votePostRepository.findByPostAndUser(post, user);
         if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getType().equals(vote.getVote())) {
-            throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this comment");
+            throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this post");
         }
         voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
         votePostRepository.save(new VotePost(vote.getVote(), user, post));

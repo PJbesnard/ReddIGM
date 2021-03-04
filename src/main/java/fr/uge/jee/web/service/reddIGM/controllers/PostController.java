@@ -34,6 +34,7 @@ public class PostController {
     @PostMapping("/vote")
     public ResponseEntity<PostResponse> voteForPost(@Valid @RequestBody VotePostDto vote) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal);
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.vote(vote, principal));
     }
 

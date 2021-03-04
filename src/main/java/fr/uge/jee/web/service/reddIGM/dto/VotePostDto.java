@@ -3,18 +3,18 @@ package fr.uge.jee.web.service.reddIGM.dto;
 import fr.uge.jee.web.service.reddIGM.models.VoteType;
 
 public class VotePostDto {
-    private Long commentId;
+    private Long postId;
     private VoteType vote;
 
     public VotePostDto(){}
 
-    public VotePostDto(Long commentId, VoteType vote) {
-        this.commentId = commentId;
+    public VotePostDto(Long postId, VoteType vote) {
+        this.postId = postId;
         this.vote = vote;
     }
 
     public void setCommentId(Long commentId) {
-        this.commentId = commentId;
+        this.postId = postId;
     }
 
     public void setVote(VoteType vote) {
@@ -23,7 +23,7 @@ public class VotePostDto {
 
 
     public Long getPostId() {
-        return commentId;
+        return postId;
     }
 
     public VoteType getVote() {
