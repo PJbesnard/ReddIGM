@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
+import com.sun.xml.bind.v2.runtime.output.SAXOutput;
 import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.models.Comment;
@@ -41,27 +42,27 @@ public class CommentController {
     @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST));
-            else return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
+            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
         }
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST));
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType, principal));
+        return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST, principal)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType, principal));
     }
 
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            if (orderType == null) ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST));
-            else ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
+            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
         }
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(orderType == null)return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST));
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType, principal));
+        return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST, principal)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType, principal));
     }
 
     @GetMapping("/user/{userName}")
     public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String userName) {
-        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForUser(userName));
+        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForUser(userName));
+        }
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForUser(userName, principal));
     }
 }
