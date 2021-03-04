@@ -1,11 +1,9 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
-import com.sun.xml.bind.v2.runtime.output.SAXOutput;
-import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
+import fr.uge.jee.web.service.reddIGM.dto.CommentRequestDto;
+import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
-import fr.uge.jee.web.service.reddIGM.models.Comment;
 import fr.uge.jee.web.service.reddIGM.models.User;
-import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +26,19 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto comment) {
+    public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto comment) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment, principal));
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<CommentDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
+    public ResponseEntity<CommentResponseDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote, principal));
     }
 
     @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
-    public ResponseEntity<List<CommentDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
+    public ResponseEntity<List<CommentResponseDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
             return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
         }
@@ -49,7 +47,7 @@ public class CommentController {
     }
 
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
-    public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
             return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
         }
@@ -58,7 +56,7 @@ public class CommentController {
     }
 
     @GetMapping("/user/{userName}")
-    public ResponseEntity<List<CommentDto>> getAllCommentsForUser(@PathVariable String userName) {
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForUser(@PathVariable String userName) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
             return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForUser(userName));
         }

@@ -1,14 +1,11 @@
 package fr.uge.jee.web.service.reddIGM.mapper;
 
-import fr.uge.jee.web.service.reddIGM.dto.CommentDto;
+import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
 import fr.uge.jee.web.service.reddIGM.models.Comment;
-import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.models.VoteType;
-import fr.uge.jee.web.service.reddIGM.repositories.VoteCommentRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
@@ -22,5 +19,5 @@ public interface CommentMapper {
     @Mapping(target = "creationDate", expression = "java(comment.getCreationDate())")
     @Mapping(target = "nbVote", expression = "java(nbVote)")
     @Mapping(target = "myVote", expression = "java(voteType)")
-    CommentDto toDto(Comment comment, int nbVote, VoteType voteType);
+    CommentResponseDto toDto(Comment comment, int nbVote, VoteType voteType);
 }
