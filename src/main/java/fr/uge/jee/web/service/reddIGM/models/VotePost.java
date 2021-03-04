@@ -20,7 +20,7 @@ public class VotePost {
     @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    private User owner;
+    private User user;
 
     @NotNull
     @ManyToOne(fetch = LAZY)
@@ -30,10 +30,26 @@ public class VotePost {
     public VotePost() {
     }
 
-    public VotePost(@NotNull VoteType type, @NotNull User owner, @NotNull Post post) {
+    public VotePost(@NotNull VoteType type, @NotNull User user, @NotNull Post post) {
         this.type = type;
-        this.owner = owner;
+        this.user = user;
         this.post = post;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public VoteType getType() {
@@ -44,13 +60,7 @@ public class VotePost {
         this.type = type;
     }
 
-    public User getOwner() {
-        return owner;
-    }
 
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 
     public Post getPost() {
         return post;
@@ -65,7 +75,7 @@ public class VotePost {
         return "VotePost{" +
                 "id=" + id +
                 ", type=" + type +
-                ", owner=" + owner +
+                ", user=" + user +
                 ", post=" + post +
                 '}';
     }
@@ -77,12 +87,12 @@ public class VotePost {
         VotePost votePost = (VotePost) o;
         return id == votePost.id &&
                 type == votePost.type &&
-                owner.equals(votePost.owner) &&
+                user.equals(votePost.user) &&
                 post.equals(votePost.post);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, owner, post);
+        return Objects.hash(id, type, user, post);
     }
 }
