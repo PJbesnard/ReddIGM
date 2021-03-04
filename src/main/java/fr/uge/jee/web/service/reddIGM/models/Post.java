@@ -19,9 +19,10 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity(name = "Posts")
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = IDENTITY)
     private Long postId;
     @NotBlank(message = "Post Name cannot be empty or Null")
     private String postName;
@@ -35,23 +36,10 @@ public class Post {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    private LocalDateTime createdDate;
+    private Instant createdDate;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "sub_id", referencedColumnName = "id")
     private Subject subject;
-
-    public Post(@NotBlank(message = "Post Name cannot be empty or Null") String postName, @Nullable String url, @Nullable String description, Integer voteCount, User user, LocalDateTime createdDate, Subject subject) {
-        this.postName = postName;
-        this.url = url;
-        this.description = description;
-        this.voteCount = voteCount;
-        this.user = user;
-        this.createdDate = createdDate;
-        this.subject = subject;
-    }
-
-    public Post() {
-    }
 
     public Long getPostId() {
         return postId;
@@ -103,11 +91,11 @@ public class Post {
         this.user = user;
     }
 
-    public LocalDateTime getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(LocalDateTime createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 
