@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,19 +40,22 @@ public class AuthenticationService {
         } catch (BadCredentialsException e){
             throw new Exception("Incorrect username or password", e);
         }
-        System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
-        return new LoginResponse(jtwToken);
+        boolean res = false;
+        if (user.getAuthorities().contains(User.Authority.ADMIN)) res = true;
+        return new LoginResponse(jtwToken, res);
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
         User user = new User();
-        System.out.println("username : " + registerRequest.getUsername() + " " + "email : " + registerRequest.getEmail() + " " + "password : " + registerRequest.getPassword());
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setAuthority(User.Authority.USER);
+        user.setDescription(registerRequest.getDescription());
+        user.setPicture(registerRequest.getPicture());
+        user.setNewsletterSubscriber(registerRequest.isNewsletterSubscriber());
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());
     }

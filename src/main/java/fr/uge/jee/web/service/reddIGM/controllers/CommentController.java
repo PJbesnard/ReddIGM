@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @Validated
@@ -41,8 +42,7 @@ public class CommentController {
     @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST));
-            else return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, Objects.requireNonNullElse(orderType, OrderType.NEWEST)));
         }
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (orderType == null) return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST));
@@ -52,9 +52,9 @@ public class CommentController {
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            if (orderType == null) ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST));
-            else ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType));
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, Objects.requireNonNullElse(orderType, OrderType.NEWEST)));
         }
+        System.out.println("oklmmmmm");
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(orderType == null)return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, OrderType.NEWEST));
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getAllCommentsForPost(postId, orderType, principal));
