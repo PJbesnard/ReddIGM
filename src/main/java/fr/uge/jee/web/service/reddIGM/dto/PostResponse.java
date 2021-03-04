@@ -1,8 +1,11 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
+import fr.uge.jee.web.service.reddIGM.models.VoteType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,8 +18,6 @@ public class PostResponse {
     private String description;
     private Long subjectId;
     private Integer voteCount;
-    private Integer commentCount;
-    private String duration;
-    private boolean upVote;
-    private boolean downVote;
+    private LocalDateTime duration;
+    private VoteType myVote;
 }
