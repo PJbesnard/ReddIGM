@@ -41,10 +41,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             username = jwtUtil.extractUserName(jwt);
         }
         // Si pas déjà authentifié
-        System.out.println("authentication : " + SecurityContextHolder.getContext().getAuthentication());
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             User user = this.userService.loadUserByUsername(username);
-            System.out.println("PAS DEJA AUTHENTIFIAK");
 
             // vérification du token
             if (jwtUtil.validateToken(jwt, user)){

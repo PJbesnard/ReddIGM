@@ -111,7 +111,7 @@ public class CommentService {
                 if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
                 else voteNb++;
             }
-            if (user == null) res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE));
+            if (user == null)res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE));
             else  res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user)));
         });
         return res;

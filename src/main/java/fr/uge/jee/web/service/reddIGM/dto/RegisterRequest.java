@@ -5,16 +5,11 @@ public class RegisterRequest {
     private String email;
     private String username;
     private String password;
-    private String picture;
-    private String description;
-    private boolean newsletterSubscriber;
 
-    public RegisterRequest(String email, String username, String password, String picture, String description, boolean newsletterSubscriber) {
+    public RegisterRequest(String email, String username, String password, String picture) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.description = description;
-        this.newsletterSubscriber = newsletterSubscriber;
     }
 
     public RegisterRequest() {
@@ -42,28 +37,5 @@ public class RegisterRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isNewsletterSubscriber() {
-        return newsletterSubscriber;
-    }
-
-    public void setNewsletterSubscriber(boolean newsletterSubscriber) {
-        this.newsletterSubscriber = newsletterSubscriber;
     }
 }
