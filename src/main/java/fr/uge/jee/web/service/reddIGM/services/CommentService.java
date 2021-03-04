@@ -36,10 +36,8 @@ public class CommentService {
         if (comment.getSuperCommentId() != null) {
             superComment = commentRepository.findById(comment.getSuperCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + comment.getSuperCommentId().toString() + " not found"));
             Post superCommentPost = superComment.getPost();
-            if (superCommentPost == null)
-                throw new NoSuchElementException("Post of comment " + superComment.getId() + " not found");
-            if (!post.getPostId().equals(superCommentPost.getPostId()))
-                throw new InvalidParameterException("super comment " + superComment.getId() + " is not a comment of post " + post.getPostId());
+            if(superCommentPost == null) throw new NoSuchElementException("Post of comment " + superComment.getId() + " not found");
+            if(!post.getPostId().equals(superCommentPost.getPostId())) throw new InvalidParameterException("super comment " + superComment.getId() + " is not a comment of post " + post.getPostId());
         }
         LocalDateTime creationDate = LocalDateTime.now();
         Comment newComment = new Comment(comment.getText(), creationDate, post, user, superComment);
@@ -52,8 +50,8 @@ public class CommentService {
         return sortComments(res, orderType);
     }
 
-    public List<CommentDto> getSubComments(Long commentId, User user) {
-        return getSubComments(commentId, OrderType.NEWEST, user);
+    public List<CommentDto> getSubComments(Long commentId, OrderType orderType) {
+        return getSubComments(commentId, orderType, null);
     }
 
 
@@ -90,16 +88,19 @@ public class CommentService {
         return sortComments(commentDtos, orderType);
     }
 
-    private VoteType getVoteForCommentAndUser(Comment comment,User user) {
+    public List<CommentDto> getAllCommentsForPost(Long postId, OrderType orderType) {
+        return  getAllCommentsForPost(postId, orderType, null);
+    }
+
+    private VoteType getVoteForCommentAndUser(Comment comment, User user) {
         Optional<VoteComment> myVote = voteCommentRepository.findByCommentAndUser(comment, user);
         VoteType v = null;
         if(myVote.isPresent()) v = myVote.get().getType();
         return v;
     }
 
-    public List<CommentDto> getAllCommentsForPost(Long postId, User user) {
-        return  getAllCommentsForPost(postId, OrderType.NEWEST, user);
-    }
+
+
 
     private List<CommentDto> computeVote(List<Comment> comments, User user){
         List<CommentDto> res = new ArrayList<>();
@@ -110,7 +111,8 @@ public class CommentService {
                 if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
                 else voteNb++;
             }
-            res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user)));
+            if (user == null)res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE));
+            else  res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user)));
         });
         return res;
     }
