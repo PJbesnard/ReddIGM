@@ -30,6 +30,7 @@ import { AuthenticationInterceptor } from './services/authentication.interceptor
 import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
 import { PostViewInContextComponent } from './post-view-in-context/post-view-in-context.component';
 import { AlertComponent } from './alert/alert.component';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,8 @@ import { AlertComponent } from './alert/alert.component';
     PostsFromSubComponent,
     DisplayPostPageComponent,
     PostViewInContextComponent,
-    AlertComponent
+    AlertComponent,
+    NotFoundPageComponent
   ],
   imports: [
     BrowserModule,

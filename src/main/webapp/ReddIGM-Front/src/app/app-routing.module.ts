@@ -10,6 +10,7 @@ import { ProfilePageComponent } from './profile-page/profile-page.component';
 import { EditProfilePageComponent } from './edit-profile-page/edit-profile-page.component';
 import { AuthGuardService } from './services/auth-guard.service';
 import { DisplayPostPageComponent } from './display-post-page/display-post-page.component';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
@@ -21,8 +22,9 @@ const routes: Routes = [
   {path: 'create-sub', component: CreateSubComponent, canActivate: [AuthGuardService]},
   {path: 'posts-from-sub', component: PostsFromSubComponent},
   {path: 'list-subs', component: ListSubsComponent},
-  {path: 'posts-from-sub/display-post', component: DisplayPostPageComponent}
-
+  {path: 'posts-from-sub/display-post', component: DisplayPostPageComponent},
+  {path: 'not-found', component: NotFoundPageComponent},
+  {path: '**', redirectTo: 'not-found'}
 ];
 
 @NgModule({
