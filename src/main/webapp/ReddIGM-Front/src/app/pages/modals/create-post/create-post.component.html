@@ -1,0 +1,26 @@
+<div class="modal" [ngClass]="{ 'is-active' : openModal }">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+	  <header class="modal-card-head">
+		<p class="modal-card-title">CREATE POST</p>
+		<button class="delete" aria-label="close" (click)="closeModal()"></button>
+	  </header>
+	  <section class="modal-card-body">
+		<!-- Content ... -->
+		<div class="dropdown create-post" [ngClass]="{ 'is-active' : isDropdownActive } ">
+			<div class="dropdown-trigger">
+			  <span class="button" aria-haspopup="true" >
+				  {{subjectName}}
+			  </span>
+			</div>
+			
+		</div>
+		<input [(ngModel)]="postName" class="input is-primary title-post" type="text" placeholder="Title (Expected)">
+		<ckeditor [(ngModel)]="description" class="cke_contents" tagName="textarea" data="<p>Description(Expected)</p>"></ckeditor>
+	  </section>
+	  <footer class="modal-card-foot">
+		<button class="button is-success" (click)="createPost()">Save changes</button>
+		<button class="button" (click)="closeModal()">Cancel</button>
+	  </footer>
+	</div>
+  </div>

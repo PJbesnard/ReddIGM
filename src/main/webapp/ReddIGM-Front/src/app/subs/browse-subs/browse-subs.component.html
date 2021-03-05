@@ -1,0 +1,14 @@
+<div class="card has-background-grey block" style="margin-bottom: 20px;">
+  <div class="card-content">
+    <div class="content is-size-4 has-text-light has-text-weight-bold">
+      Browse subs
+    </div>
+    <div *ngFor="let s of subjects">
+      <div class="content is-size-5 has-text-light has-text-weight-light is-clickable" (click)="showSub(s.id)">{{s.name}}</div>
+    </div>
+    <br>
+    <div *ngIf="viewAll">
+      <div class="content is-size-5 has-text-centered has-text-light has-text-weight-semibold is-clickable" (click)="viewAllClick()">view all</div>
+    </div>
+  </div>
+</div>
