@@ -88,20 +88,68 @@ public class PostService {
     }
 
 
+    private int calcScore(List<VotePost> votes) {
+        int voteNb = 0;
+        for (VotePost vote : votes) {
+            if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
+            else voteNb++;
+        }
+        return voteNb;
+    }
     private List<PostResponse> computeVote(List<Post> posts, User user){
         List<PostResponse> res = new ArrayList<>();
         posts.forEach(p -> {
-            int voteNb = 0;
-            List<VotePost> votes = votePostRepository.findAllByPost(p);
-            for (VotePost vote : votes) {
-                if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
-                else voteNb++;
-            }
-            if (user == null) res.add(postMapper.mapToDto(p, voteNb, VoteType.NOVOTE));
+            int voteNb = calcScore(votePostRepository.findAllByPost(p));
+            if (user == null)res.add(postMapper.mapToDto(p, voteNb, VoteType.NOVOTE));
             else  res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
         });
         return res;
     }
+
+//    private List<PostResponse> computeVote(List<Post> posts, User user){
+//        List<PostResponse> res = new ArrayList<>();
+//        posts.forEach(p -> {
+//            int voteNb = 0;
+//            List<VotePost> votes = votePostRepository.findAllByPost(p);
+//            for (VotePost vote : votes) {
+//                if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
+//                else voteNb++;
+//            }
+//            if (user == null) res.add(postMapper.mapToDto(p, voteNb, VoteType.NOVOTE));
+//            else  res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
+//        });
+//        return res;
+//    }
+
+
+
+    private List<PostResponse> sortPosts(List<PostResponse> postsDtos, OrderType orderType) {
+        switch (orderType) {
+            case ASCENDING:
+                postsDtos.sort((o1, o2) -> {
+                    if (o1.getVoteCount() < o2.getVoteCount()) return 1;
+                    return 0;
+                });
+                break;
+            case DESCENDING:
+                postsDtos.sort((o1, o2) -> {
+                    if (o1.getVoteCount() > o2.getVoteCount()) return 1;
+                    return 0;
+                });
+                break;
+            default:
+                postsDtos.sort((o1, o2) -> {
+                    if (o1.getDuration().isBefore(o2.getDuration())) return 1;
+                    return 0;
+                });
+                break;
+        }
+        return postsDtos;
+    }
+
+
+
+
 
     private VoteType getVoteForPostAndUser(Post post,User user) {
         Optional<VotePost> myVote = votePostRepository.findByPostAndUser(post, user);
@@ -111,15 +159,14 @@ public class PostService {
     }
 
     public PostResponse vote(VotePostDto vote, User user) {
-        System.out.println("TEST"+vote.getPostId());
-        Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Comment " + vote.getPostId().toString() + " not found"));
+        Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + vote.getPostId().toString() + " not found"));
         Optional<VotePost> voteByPostAndUser = votePostRepository.findByPostAndUser(post, user);
         if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getType().equals(vote.getVote())) {
             throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this post");
         }
         voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
         votePostRepository.save(new VotePost(vote.getVote(), user, post));
-        return postMapper.mapToDto(post, votePostRepository.findAllByPost(post).size(), getVoteForPostAndUser(post, user));
+        return postMapper.mapToDto(post, calcScore(votePostRepository.findAllByPost(post)), getVoteForPostAndUser(post, user));
     }
 
 
