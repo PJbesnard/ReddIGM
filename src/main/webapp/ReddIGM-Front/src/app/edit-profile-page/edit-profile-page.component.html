@@ -1,0 +1,57 @@
+<div class="aligned" style="margin-left: 5%;">
+    <img class="is-rounded" src="{{ user.getPicture() }}">
+    <h1 class="title is-1 has-text-light title-underlined">{{ user.username }}</h1>
+</div>
+
+<div class="container is-max-desktop">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
+        <div class="field">
+            <label class="subtitle has-text-light">
+                &nbsp;What about you ? Give us a short description of you
+                <div class="control">
+                    <textarea class="textarea is-primary" placeholder="Don't be shy" formControlName="description"></textarea>
+                </div>
+            </label>
+          </div>
+    
+          <div class="field">
+            <label class="subtitle has-text-light">
+                &nbsp;Link to your profile picture
+                <div class="control">
+                    <input class="input is-primary" placeholder="URL to an image" formControlName="picture">
+                </div>
+            </label>
+          </div>
+    
+          <div class="field">
+            <label class="subtitle has-text-light">
+                &nbsp;Email address
+                <div class="control">
+                    <input class="input is-primary" type="email" formControlName="email" readonly>
+                </div>
+            </label>
+          </div>
+    
+          <div class="field">
+            <div class="control">
+                <label class="checkbox has-text-light">
+                    <input type="checkbox" formControlName="newsletters">
+                    Subscribe to our newsletters
+                </label>
+            </div>
+          </div>
+    
+          <div class="field">
+            <label class="subtitle has-text-light">
+                &nbsp;Edit your password
+                <div class="control">
+                    <input class="input is-primary" placeholder="Leave it empty if you don't want to change" formControlName="password">
+                </div>
+            </label>
+          </div>
+    
+          <div class="control is-expanded">
+            <button class="button is-primary" type="submit">Submit</button>
+          </div>
+    </form>
+</div>

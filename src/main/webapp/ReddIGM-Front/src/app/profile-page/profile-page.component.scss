@@ -1,0 +1,17 @@
+@import '/src/styles.scss';
+
+.title-underlined {
+    margin-left: 2%;
+    border-color: $primary;
+    border-bottom-width: 4px;
+    border-bottom-style: solid;
+}
+
+.aligned { 
+    display: flex;
+    align-items:center;
+}
+
+.inline {
+    display: inline;
+}

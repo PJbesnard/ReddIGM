@@ -1,8 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
-import fr.uge.jee.web.service.reddIGM.dto.PostRequest;
-import fr.uge.jee.web.service.reddIGM.dto.PostResponse;
-import fr.uge.jee.web.service.reddIGM.models.Post;
+import fr.uge.jee.web.service.reddIGM.dto.*;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.PostService;
 import lombok.AllArgsConstructor;
@@ -12,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.status;
@@ -30,19 +29,27 @@ public class PostController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @PostMapping("/vote")
+    public ResponseEntity<PostResponse> voteForPost(@Valid @RequestBody VotePostDto vote) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(principal);
+        return ResponseEntity.status(HttpStatus.CREATED).body(postService.vote(vote, principal));
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
         return status(HttpStatus.OK).body(postService.getPost(id));
     }
 
     @GetMapping("by-subject/{id}")
-    public ResponseEntity<List<PostResponse>> getPostsBySubject(@PathVariable String id) {
-        return status(HttpStatus.OK).body(postService.getPostsBySubject(Long.getLong(id)));
+    public ResponseEntity<List<PostResponse>> getPostsBySubject(@PathVariable Long id) {
+        return status(HttpStatus.OK).body(postService.getPostsBySubjectId(id));
     }
 
     @GetMapping("by-user/{id}")
-    public ResponseEntity<List<PostResponse>> getPostsById(@PathVariable String id) {
-        return status(HttpStatus.OK).body(postService.getPostsById(Long.getLong(id)));
+    public ResponseEntity<List<PostResponse>> getPostsById(@PathVariable Long id) {
+        return status(HttpStatus.OK).body(postService.getPostsById(id));
     }
 
     @GetMapping

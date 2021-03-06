@@ -4,7 +4,7 @@ import fr.uge.jee.web.service.reddIGM.models.VoteType;
 
 import java.time.LocalDateTime;
 
-public class CommentDto {
+public class CommentResponseDto {
     private Long commentId;
     private String text;
     private LocalDateTime creationDate;
@@ -15,10 +15,10 @@ public class CommentDto {
     private int nbVote;
     private VoteType myVote;
 
-    public CommentDto() {
+    public CommentResponseDto() {
     }
 
-    public CommentDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote) {
+    public CommentResponseDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote) {
         this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
