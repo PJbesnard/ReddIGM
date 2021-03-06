@@ -27,14 +27,27 @@
   </div>
 
     <div class="navbar-end">
-      <div class="navbar-item">
-        <div class="buttons">
-          <a class="button is-primary is-outlined" href="/register">
-            <strong>Sign up</strong>
-          </a>
-          <a class="button is-primary" href="/login"> Log in </a>
+        <div class="navbar-item" *ngIf="!isAuthentified">
+          <div class="buttons">
+            <a class="button is-primary is-outlined" href="/register">
+              <strong>Sign up</strong>
+            </a>
+            <a class="button is-primary" href="/login"> Log in </a>
+          </div>
         </div>
-      </div>
+        <div class="navbar-item is-clickable" *ngIf="isAuthentified">
+          <figure class="image is-28x28">
+            <img class="is-rounded" src="https://pbs.twimg.com/media/EeU1cJzX0AAHUUO.jpg">
+          </figure>
+          <div class="columns is-vcentered">
+            <div class="column">
+              <div class="content has-text-primary is-clickable has-text-left has-text-weight-bold">shrekos</div>
+            </div>
+          </div>
+        </div>
+        <div class="navbar-item is-clickable" *ngIf="isAuthentified">
+          <a class="button is-primary" (click)="logout()" href="/home"> Log out </a>
+        </div>
     </div>
-    
+
 </nav>
