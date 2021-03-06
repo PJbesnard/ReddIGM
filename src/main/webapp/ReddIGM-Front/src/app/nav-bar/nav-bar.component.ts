@@ -17,17 +17,16 @@ export class NavBarComponent {
   isAuthentified: boolean = false;
   name: string | undefined;
   user: User | null = new User();
-  picture: string = "";
+  picture: string | undefined = "";
 
   constructor(private dataService: DataService, private authenticationService: AuthenticationService, private userService: UserService) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
   }
 
   ngOnInit(): void {
-    this.user = this.authenticationService.getCurrentUser();
-    let p = this.user?.getPicture();
-    if(p != null){
-      this.picture = p;
+    if(this.isAuthentified) {
+      this.user = this.authenticationService.getCurrentUser();
+      this.picture = this.user?.getPicture();
       this.name = this.user?.username;
     }
   }
