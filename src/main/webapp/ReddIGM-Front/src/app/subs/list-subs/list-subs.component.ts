@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SubjectService } from '../../services/subject.service';
 import { SubjectModel } from '../../models/subject-response';
 import { DataService } from '../../services/data.service';
+import { Router } from "@angular/router"
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,7 +16,7 @@ export class ListSubsComponent implements OnInit {
   subscription!: Subscription;
   currentSubjects: Array<SubjectModel> = [];
 
-  constructor(private dataService: DataService, private subjectService: SubjectService) { }
+  constructor(private router: Router, private dataService: DataService, private subjectService: SubjectService) { }
 
   ngOnInit(): void {
     this.subjectService.getAllSubjects().subscribe(data => {
@@ -30,6 +31,10 @@ export class ListSubsComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  showSub(id?: number): void {
+    this.router.navigateByUrl('/posts-from-sub/'+id);
+  }
+
   search(searchText : string){
 	if (!this.subjects) {
 		this.currentSubjects = [];
@@ -40,10 +45,10 @@ export class ListSubsComponent implements OnInit {
 		console.log(this.currentSubjects)
 	  }
 	  searchText = searchText.toLocaleLowerCase();
-  
+
 	  this.currentSubjects = this.subjects.filter(it => {
 		return it.name.toLocaleLowerCase().includes(searchText);
-	  
+
 	  })
   }
 

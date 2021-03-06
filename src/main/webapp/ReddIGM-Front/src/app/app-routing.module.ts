@@ -20,7 +20,7 @@ const routes: Routes = [
   {path: 'users/:id', component: ProfilePageComponent},
   {path: 'users/:id/edit', component: EditProfilePageComponent, canActivate: [AuthGuardService]},
   {path: 'create-sub', component: CreateSubComponent, canActivate: [AuthGuardService]},
-  {path: 'posts-from-sub', component: PostsFromSubComponent},
+  {path: 'posts-from-sub/:id', component: PostsFromSubComponent},
   {path: 'list-subs', component: ListSubsComponent},
   {path: 'posts-from-sub/display-post', component: DisplayPostPageComponent},
   {path: 'not-found', component: NotFoundPageComponent},
