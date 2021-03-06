@@ -17,7 +17,7 @@ public class User implements UserDetails {
 
     public enum Authority {
         USER,
-        ADMIN;
+        ADMIN
     }
 
     @Id
@@ -28,7 +28,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    @NotNull
+    //@NotNull
     private String password;
 
     private String picture;
@@ -37,7 +37,7 @@ public class User implements UserDetails {
 
     private boolean newsletterSubscriber;
 
-    @NotNull
+    //@NotNull
     @Email
     @Column(unique = true)
     private String email;
@@ -161,6 +161,10 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password, picture, description, newsletterSubscriber, email, authority);
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     @Override

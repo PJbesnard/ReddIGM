@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,9 @@ public class AuthenticationService {
         System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
-        return new LoginResponse(jtwToken);
+        boolean isAdmin = false;
+        if (user.getAuthority().equals(User.Authority.ADMIN)) isAdmin = true;
+        return new LoginResponse(jtwToken, isAdmin);
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
