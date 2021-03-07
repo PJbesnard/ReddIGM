@@ -53,13 +53,13 @@ public class PostController {
         return status(HttpStatus.OK).body(postService.getPostsById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
+    @GetMapping(value = {"all", "all/{orderType}"})
+    public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
+            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(orderType));
         }
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return status(HttpStatus.OK).body(postService.getAllPosts(principal));
+        return orderType == null ? status(HttpStatus.OK).body(postService.getAllPosts(principal, OrderType.NEWEST)) : status(HttpStatus.OK).body(postService.getAllPosts(principal, orderType));
     }
 
     @GetMapping(value = {"by-subject/{id}", "/by-subject/{id}/{orderType}"})

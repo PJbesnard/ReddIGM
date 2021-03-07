@@ -58,15 +58,15 @@ public class PostService {
         return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, post.getUser()), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
     }
 
-    public List<PostResponse> getAllPosts() {
-        List<PostResponse> res = new ArrayList<>();
-        return computeVote(postRepository.findAll(), null);
+    public List<PostResponse> getAllPosts(OrderType orderType) {
+        List<PostResponse> postResponses = computeVote(postRepository.findAll(), null);
+        return sortPosts(postResponses, orderType);
 
     }
 
-    public List<PostResponse> getAllPosts(User user) {
-        List<PostResponse> res = new ArrayList<>();
-        return computeVote(postRepository.findAll(), user);
+    public List<PostResponse> getAllPosts(User user, OrderType orderType) {
+        List<PostResponse> postResponses = computeVote(postRepository.findAll(), user);
+        return sortPosts(postResponses, orderType);
 
     }
 
