@@ -1,6 +1,6 @@
-import { User } from "./user.model";
+import { Datable } from "./datable.model";
 
-export class Comment {
+export class Comment implements Datable {
     postId: number = 0;
     commentId: number = 0;
     text: string = "";
@@ -9,4 +9,7 @@ export class Comment {
     nbVote: number = 0;
     picture: string = "";
 
+    getDate(): Date {
+        return new Date(this.creationDate);
+    }
 }

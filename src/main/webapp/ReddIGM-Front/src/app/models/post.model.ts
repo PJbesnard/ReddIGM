@@ -1,7 +1,7 @@
-import { VoteType } from "./vote-type.enum";
+import { Datable } from "./datable.model";
 
-export class PostModel {
-    id!: number;
+export class PostModel implements Datable {
+    postId!: string;
     postName!: string;
 	url!: string;
 	description!: string;
@@ -9,5 +9,10 @@ export class PostModel {
 	userId!:number;
 	createdDate! : string;
 	subjectId!:number;
-	myVote!: VoteType;
+	upVote!: boolean;
+    downVote!: boolean;
+
+	getDate(): Date {
+        return new Date(this.createdDate);
+    }
   }
