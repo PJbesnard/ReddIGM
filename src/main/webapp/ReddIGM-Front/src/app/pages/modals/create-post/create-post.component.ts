@@ -1,6 +1,6 @@
 import { PostService } from './../../../services/post.service';
 import { CreatePostPayload } from './create-post.payload';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
@@ -20,6 +20,7 @@ export class CreatePostComponent implements OnInit {
   ngOnInit(): void {
   }
 
+
   isModalActive: boolean = false;
   isDropdownActive: boolean = false;
   
@@ -32,13 +33,24 @@ export class CreatePostComponent implements OnInit {
 
   createPost(){
 	    let payload  = new CreatePostPayload();
+		let pathname = window.location.pathname
+		let id = pathname.substring(pathname.lastIndexOf('/') + 1)
+		payload.subjectId = id
 		payload.postName = this.postName
 		payload.description = this.description
-		this.postService.createPost(payload).subscribe((data) => this.closeModal())
+		this.postService.createPost(payload).subscribe((data) => {
+			this.closeModal()
+			this.reset()
+		} )
   }
 
+  reset(){
+	let payload  = new CreatePostPayload();
+	payload.postName = ""
+	payload.description = ""
+	this.postName= ""
+	this.description= ""
 
-
-
+  }
 
 }

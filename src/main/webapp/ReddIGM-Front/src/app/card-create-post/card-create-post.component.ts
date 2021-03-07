@@ -15,7 +15,8 @@ export class CardCreatePostComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-	  this.postService.getPost("1").subscribe( reponse => {this.post = reponse})
+	  //test
+	//   this.postService.getPost("1").subscribe( reponse => {this.post = reponse})
 
   }
 

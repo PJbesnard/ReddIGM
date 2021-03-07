@@ -3,4 +3,5 @@ export class CreatePostPayload {
     subredditName: string = "";
     url: string= "";
     description!: string;
+	subjectId:string ="";
 }
