@@ -3,6 +3,7 @@ package fr.uge.jee.web.service.reddIGM.controllers;
 import fr.uge.jee.web.service.reddIGM.dto.*;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.PostService;
+import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,10 +43,10 @@ public class PostController {
         return status(HttpStatus.OK).body(postService.getPost(id));
     }
 
-    @GetMapping("by-subject/{id}")
-    public ResponseEntity<List<PostResponse>> getPostsBySubject(@PathVariable Long id) {
-        return status(HttpStatus.OK).body(postService.getPostsBySubjectId(id));
-    }
+//    @GetMapping("by-subject/{id}")
+//    public ResponseEntity<List<PostResponse>> getPostsBySubject(@PathVariable Long id) {
+//        return status(HttpStatus.OK).body(postService.getPostsBySubjectId(id));
+//    }
 
     @GetMapping("by-user/{id}")
     public ResponseEntity<List<PostResponse>> getPostsById(@PathVariable Long id) {
@@ -60,4 +61,14 @@ public class PostController {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return status(HttpStatus.OK).body(postService.getAllPosts(principal));
     }
+
+    @GetMapping(value = {"by-subject/{id}", "/by-subject/{id}/{orderType}"})
+    public ResponseEntity<List<PostResponse>> getAllPostsForSubject(@PathVariable Long id, @PathVariable(required = false) OrderType orderType) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, orderType));
+        }
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, OrderType.NEWEST, principal)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, orderType, principal));
+    }
+
 }

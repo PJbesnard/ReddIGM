@@ -87,8 +87,6 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsById(Long userId) {
-        System.out.println("TESTTTTTT"+userRepository.findById(userId));
-        System.out.println("TEST"+userId);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("Username " + userId.toString() + " not found"));
         return computeVote(postRepository.findByUser(user), null);
@@ -112,21 +110,6 @@ public class PostService {
         });
         return res;
     }
-
-//    private List<PostResponse> computeVote(List<Post> posts, User user){
-//        List<PostResponse> res = new ArrayList<>();
-//        posts.forEach(p -> {
-//            int voteNb = 0;
-//            List<VotePost> votes = votePostRepository.findAllByPost(p);
-//            for (VotePost vote : votes) {
-//                if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
-//                else voteNb++;
-//            }
-//            if (user == null) res.add(postMapper.mapToDto(p, voteNb, VoteType.NOVOTE));
-//            else  res.add(postMapper.mapToDto(p, voteNb, getVoteForPostAndUser(p, user)));
-//        });
-//        return res;
-//    }
 
 
 
@@ -174,6 +157,17 @@ public class PostService {
         voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
         votePostRepository.save(new VotePost(vote.getVote(), user, post));
         return postMapper.mapToDto(post, calcScore(votePostRepository.findAllByPost(post)), getVoteForPostAndUser(post, user));
+    }
+
+    public List<PostResponse> getAllPostsForSubject(Long subjectId, OrderType orderType, User user) {
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new NoSuchElementException("Subject " + subjectId.toString() + " not found"));
+        List<Post> postsForSubject = postRepository.findAllPostBySubject(subject);
+        List<PostResponse> PostResponseDtos = computeVote(postsForSubject, user);
+        return sortPosts(PostResponseDtos, orderType);
+    }
+
+    public List<PostResponse> getAllPostsForSubject(Long subjectId, OrderType orderType) {
+        return  getAllPostsForSubject(subjectId, orderType, null);
     }
 
 
