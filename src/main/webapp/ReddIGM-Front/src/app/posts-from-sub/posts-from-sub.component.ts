@@ -20,7 +20,7 @@ export class PostsFromSubComponent implements OnInit {
 
   constructor(private postService: PostService, private subjectService: SubjectService, private userService: UserService, private route: ActivatedRoute) {
     this.subId = this.route.snapshot.params['id'];
-    this.postService.getPostsBySubject(this.subId).subscribe(data => this.posts = data);
+    this.postService.getPostsBySubject(this.subId).subscribe(data => {this.posts = data;});
     this.subjectService.getSubject(this.subId).subscribe(data => {this.subName = data.name; this.subDescription = data.description;});
   }
 

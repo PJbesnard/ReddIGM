@@ -11,7 +11,7 @@ export class HomePageComponent implements OnInit {
   posts: Array<PostModel> = [];
 
   constructor(private postService: PostService) {
-    this.postService.getAllPosts().subscribe(data => {this.posts = data; data.forEach(p => console.log(p))});
+    this.postService.getAllPosts().subscribe(data => {this.posts = data;});
   }
 
   ngOnInit(): void {
