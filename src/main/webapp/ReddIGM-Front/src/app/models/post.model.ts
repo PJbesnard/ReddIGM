@@ -1,3 +1,4 @@
+import { Datable } from "./datable.model";
 
 export class PostModel {
     id!: number;
@@ -10,4 +11,8 @@ export class PostModel {
 	subjectId!:number;
 	upVote!: boolean;
     downVote!: boolean;
+
+	getDate(): Date {
+        return new Date(this.createdDate);
+    }
   }

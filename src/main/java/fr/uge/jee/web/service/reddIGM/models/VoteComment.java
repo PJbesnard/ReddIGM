@@ -2,6 +2,7 @@ package fr.uge.jee.web.service.reddIGM.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
@@ -18,6 +19,9 @@ public class VoteComment {
     private VoteType type;
 
     @NotNull
+    private LocalDateTime creationDate;
+
+    @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
@@ -30,10 +34,11 @@ public class VoteComment {
     public VoteComment() {
     }
 
-    public VoteComment(@NotNull VoteType type, @NotNull User user, @NotNull Comment comment) {
+    public VoteComment(VoteType type, User user, Comment comment, LocalDateTime creationDate) {
         this.type = type;
         this.user = user;
         this.comment = comment;
+        this.creationDate = creationDate;
     }
 
     public long getId() {
@@ -46,6 +51,14 @@ public class VoteComment {
 
     public void setType(VoteType type) {
         this.type = type;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public User getUser() {
@@ -65,28 +78,30 @@ public class VoteComment {
     }
 
     @Override
-    public String toString() {
-        return "VoteComment{" +
-                "id=" + id +
-                ", type=" + type +
-                ", owner=" + user +
-                ", comment=" + comment +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VoteComment that = (VoteComment) o;
         return id == that.id &&
                 type == that.type &&
+                creationDate.equals(that.creationDate) &&
                 user.equals(that.user) &&
                 comment.equals(that.comment);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, user, comment);
+        return Objects.hash(id, type, creationDate, user, comment);
+    }
+
+    @Override
+    public String toString() {
+        return "VoteComment{" +
+                "id=" + id +
+                ", type=" + type +
+                ", creationDate=" + creationDate +
+                ", user=" + user +
+                ", comment=" + comment +
+                '}';
     }
 }

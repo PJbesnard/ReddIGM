@@ -1,9 +1,8 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
-import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.models.VotePost;
-import fr.uge.jee.web.service.reddIGM.repositories.VoteCommentRepository;
 import fr.uge.jee.web.service.reddIGM.repositories.VotePostRepository;
+import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,18 @@ public class VotePostService {
     }
 
     public List<VotePost> getAll() {
-        List<VotePost> votes = (List<VotePost>) repository.findAll();
-        return votes;
+        return (List<VotePost>) repository.findAll();
+    }
+
+    public List<VotePost> getAllByUserId(long userId) {
+        return repository.findAllByUserId(userId);
+    }
+
+    public List<VotePost> getAllByUserIdOrdered(long userId, OrderType order) {
+        if (order == OrderType.ASCENDING) {
+            return repository.findAllByUserIdOrderByCreationDateAsc(userId);
+        } else {
+            return repository.findAllByUserIdOrderByCreationDateDesc(userId);
+        }
     }
 }

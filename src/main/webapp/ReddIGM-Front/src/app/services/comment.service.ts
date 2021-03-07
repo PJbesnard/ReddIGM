@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +12,12 @@ import { Observable } from 'rxjs';
 export class CommentService {
   private urlComment: string;
   private urlPost: string;
-
+  private urlUser: string;
 
   constructor(private http: HttpClient) {
-    this.urlComment = 'http://localhost:8080/comments/comment/'
-    this.urlPost = 'http://localhost:8080/comments/post/'
+    this.urlComment = BASE_ADDRESS + 'comments/comment/';
+    this.urlPost = BASE_ADDRESS + 'comments/post/';
+    this.urlUser = BASE_ADDRESS + 'comments/user/';
   }
 
   getCommentsFromPost(sort: String, id: number): Observable<Array<Comment>> {
@@ -35,6 +39,9 @@ export class CommentService {
         }
       )
     });
+  }
 
+  getCommentsByUsername(username: string): Observable<Array<Comment>> {
+    return this.http.get<Array<Comment>>(this.urlUser + username);
   }
 }
