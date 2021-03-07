@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -44,7 +45,7 @@ public class CommentService {
         }
         LocalDateTime creationDate = LocalDateTime.now();
         Comment newComment = new Comment(comment.getText(), creationDate, post, user, superComment);
-        return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0, null);
+        return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0, null, 0);
     }
 
     public List<CommentResponseDto> getSubComments(Long commentId, OrderType orderType, User user) {
@@ -106,6 +107,11 @@ public class CommentService {
         return VoteType.NOVOTE;
     }
 
+    private Integer nbCommentsInComment(Comment comment){
+        List<Comment> comments = commentRepository.findAllBySuperComment(comment);
+        return comments.stream().filter(c -> c.getSuperComment() != null).collect(Collectors.toList()).size();
+    }
+
     private int calcScore(List<VoteComment> votes) {
         int voteNb = 0;
         for (VoteComment vote : votes) {
@@ -120,9 +126,9 @@ public class CommentService {
         comments.forEach(c -> {
             int voteNb = calcScore(voteCommentRepository.findAllByComment(c));
             if (user == null) {
-                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE));
+                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE, nbCommentsInComment(c)));
             } else {
-                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user)));
+                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user), nbCommentsInComment(c)));
             }
         });
         return res;
@@ -147,6 +153,6 @@ public class CommentService {
         }
         voteByCommentAndUser.ifPresent(voteComment -> voteCommentRepository.deleteById(voteComment.getId()));
         voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
-        return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user));
+        return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user), nbCommentsInComment(comment));
     }
 }

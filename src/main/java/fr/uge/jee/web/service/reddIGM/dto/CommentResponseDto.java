@@ -14,11 +14,12 @@ public class CommentResponseDto {
     private String picture;
     private int nbVote;
     private VoteType myVote;
+    private Integer nbComments;
 
     public CommentResponseDto() {
     }
 
-    public CommentResponseDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote) {
+    public CommentResponseDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote, Integer nbComments) {
         this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
@@ -28,6 +29,15 @@ public class CommentResponseDto {
         this.picture = picture;
         this.nbVote = nbVote;
         this.myVote = myVote;
+        this.nbComments = nbComments;
+    }
+
+    public Integer getNbComments() {
+        return nbComments;
+    }
+
+    public void setNbComments(Integer nbComments) {
+        this.nbComments = nbComments;
     }
 
     public Long getCommentId() {
@@ -114,6 +124,7 @@ public class CommentResponseDto {
                 ", picture='" + picture + '\'' +
                 ", nbVote=" + nbVote +
                 ", myVote=" + myVote +
+                ", nbComments=" + nbComments +
                 '}';
     }
 }

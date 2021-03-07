@@ -19,5 +19,6 @@ public interface CommentMapper {
     @Mapping(target = "creationDate", expression = "java(comment.getCreationDate())")
     @Mapping(target = "nbVote", expression = "java(nbVote)")
     @Mapping(target = "myVote", expression = "java(voteType)")
-    CommentResponseDto toDto(Comment comment, int nbVote, VoteType voteType);
+    @Mapping(target = "nbComments", expression = "java(nbComments)")
+    CommentResponseDto toDto(Comment comment, int nbVote, VoteType voteType, Integer nbComments);
 }
