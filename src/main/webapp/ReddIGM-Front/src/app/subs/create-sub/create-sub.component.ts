@@ -23,8 +23,7 @@ export class CreateSubComponent implements OnInit {
     let subDesc = (<HTMLInputElement>document.getElementById('subDesc')).value;
     let subjectModel: SubjectModel = {
       name: subName,
-      description: subDesc,
-      posts: []
+      description: subDesc
     }
     this.subjectService.createSubject(subjectModel).subscribe(data => {
       this.router.navigateByUrl('/list-subs');

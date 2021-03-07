@@ -45,8 +45,10 @@ export class PostViewInContextComponent implements OnInit {
   novote: VoteType = VoteType.NOVOTE;
   isAuthentified: boolean = false;
 
+  
 
 
+  @Input() authorId: number = 1;
   @Input() type: string = "post";
   @Input() id: number = 1;
   @Input() author: string = "Michel"; //
@@ -67,6 +69,7 @@ export class PostViewInContextComponent implements OnInit {
 
   ngOnInit(): void {
     console.log ("id ", this.id ); // function called s
+    console.log ("vote ", this.vote);
   }
 
   displayResponses(){
@@ -96,7 +99,7 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   displayAuthor(){
-    this.router.navigate(['users/1', { id: this.id, subName: this.subName }]);
+    this.router.navigate(['users/' + this.authorId, { id: this.id, subName: this.subName }]);
   }
 
   newOnclick(){

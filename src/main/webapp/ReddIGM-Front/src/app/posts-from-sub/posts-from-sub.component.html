@@ -17,7 +17,7 @@
 
   <div class="columns">
     <div class="column is-three-quarters ">
-      <app-post-view [id]="p.id" [title]="p.postName" [content]="p.description" [date]="p.createdDate" [rate]="p.voteCount" [vote]="p.myVote" *ngFor="let p of posts"></app-post-view>
+      <app-post-view [id]="p.id" [title]="p.postName" [content]="p.description" [date]="p.duration" [rate]="p.voteCount" [vote]="p.myVote" *ngFor="let p of posts"></app-post-view>
 
     </div>
     <div class="column is-one-quarter">

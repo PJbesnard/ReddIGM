@@ -8,7 +8,7 @@
 
   <div class="columns">
     <div class="column is-three-quarters ">
-      <app-post-view-in-context [id]="post.id" [author]="'wsh'" [title]="post.postName" [content]="post.description" [date]="post.createdDate" [subName]="'{{subjectName}}'" [rate]="post.voteCount"></app-post-view-in-context>     
+      <app-post-view-in-context [vote]="post.myVote" [id]="post.id" [author]="post.user.username" [title]="post.postName" [content]="post.description" [authorId]="post.user.id" [date]="post.duration" [subName]="post.sub.name" [rate]="post.voteCount"></app-post-view-in-context>     
     </div>
     
 

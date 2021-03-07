@@ -1,4 +1,6 @@
 import { Datable } from "./datable.model";
+import { SubjectModel } from "./subject-response";
+import { User } from "./user.model";
 import { VoteType } from "./vote-type.enum";
 
 export class PostModel {
@@ -7,12 +9,16 @@ export class PostModel {
 	url!: string;
 	description!: string;
 	voteCount!: number;
-	userId!:number;
-	createdDate! : string;
-	subjectId!:number;
+	//userId!:number;
+	sub!: SubjectModel;
+	duration! : string;
+	//subjectId!:number;
+	user!: User;
 	myVote!: VoteType;
+	nbComments!: number;
+
 
 	getDate(): Date {
-        return new Date(this.createdDate);
+        return new Date(this.duration);
     }
   }
