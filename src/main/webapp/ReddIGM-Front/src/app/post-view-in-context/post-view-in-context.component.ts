@@ -44,10 +44,9 @@ export class PostViewInContextComponent implements OnInit {
   downvote: VoteType = VoteType.DOWNVOTE;
   novote: VoteType = VoteType.NOVOTE;
   isAuthentified: boolean = false;
-
   
 
-
+  @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
   @Input() type: string = "post";
   @Input() id: number = 1;
@@ -77,7 +76,6 @@ export class PostViewInContextComponent implements OnInit {
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
         console.log("data " + data)
-
         this.comments = data;
       });
     }
@@ -118,7 +116,12 @@ export class PostViewInContextComponent implements OnInit {
     if(!this.isAuthentified) {
       this.router.navigateByUrl('/login');
     }
-    this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
+    if (this.type === "post"){
+      this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
+    }else{
+      console.log("clic vote comment")
+      this.commentService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.nbVote;});
+    }
   }
   
   

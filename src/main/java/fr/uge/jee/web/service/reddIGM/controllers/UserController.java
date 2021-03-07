@@ -1,10 +1,11 @@
 package fr.uge.jee.web.service.reddIGM.controllers;
 
+import fr.uge.jee.web.service.reddIGM.dto.UserDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.dto.VotePostDto;
+import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.VoteCommentMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.VotePostMapper;
-import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.UserService;
 import fr.uge.jee.web.service.reddIGM.services.VoteCommentService;
 import fr.uge.jee.web.service.reddIGM.services.VotePostService;
@@ -30,23 +31,33 @@ public class UserController {
     private VoteCommentService voteCommentService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return ResponseEntity.of(userService.getById(id));
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        var user = userService.getById(id);
+
+        return user.map(value -> ResponseEntity.ok(UserMapper.INSTANCE.toDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/usernames/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        return ResponseEntity.of(userService.getByUsername(username));
+    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
+        var user = userService.getByUsername(username);
+
+        return user.map(value -> ResponseEntity.ok(UserMapper.INSTANCE.toDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/emails/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return ResponseEntity.of(userService.getByEmail(email));
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+        var user = userService.getByEmail(email);
+
+        return user.map(value -> ResponseEntity.ok(UserMapper.INSTANCE.toDto(value)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAll());
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll()
+                .stream().map(UserMapper.INSTANCE::toDto).collect(Collectors.toList()));
     }
 
     @GetMapping(value = {"/{id}/votes/posts", "/{id}/votes/posts/{orderType}"})

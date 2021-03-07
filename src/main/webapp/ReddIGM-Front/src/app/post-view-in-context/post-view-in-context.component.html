@@ -41,7 +41,7 @@
             <div class="column is-3">
               <div *ngIf = "showComments === false"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
                 <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
-                 Comments
+                 Comments ( {{commentNumber}} ) 
               </div>  
               <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">        
                 <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
@@ -69,7 +69,8 @@
     <div class="column is-1" >
     </div>
     <div class="column is-11" >
-      <app-post-view-in-context [id] = c.commentId [type] = "'comment'" [author] = c.userName [title] = "''" [content] = c.text [date] = c.creationDate [subName] = "''" [rate] = c.nbVote></app-post-view-in-context>
+      <app-post-view-in-context [image]="'{{ c.user.getPicture() }}'" [type]="'comment'" [commentNumber]=c.nbComments [vote]=c.myVote [id]=c.commentId [author]=c.user.username [title]="''" [content]=c.text [authorId]=c.user.id [date]=c.creationDate [subName]="''" [rate]=c.nbVote></app-post-view-in-context>     
+
     </div>
   
   </div>
