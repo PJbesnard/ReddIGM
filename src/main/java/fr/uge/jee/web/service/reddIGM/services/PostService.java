@@ -55,8 +55,16 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
         int voteNb = calcScore(votePostRepository.findAllByPost(post));
-        return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, post.getUser()), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
+        return PostMapper.INSTANCE.mapToDto(post, voteNb, VoteType.NOVOTE, SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
     }
+
+    public PostResponse getPost(Long id, User user) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
+        int voteNb = calcScore(votePostRepository.findAllByPost(post));
+        return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
+    }
+
 
     public List<PostResponse> getAllPosts(OrderType orderType) {
         List<PostResponse> postResponses = computeVote(postRepository.findAll(), null);

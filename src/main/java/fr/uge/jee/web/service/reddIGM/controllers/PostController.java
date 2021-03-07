@@ -40,13 +40,12 @@ public class PostController {
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
-        return status(HttpStatus.OK).body(postService.getPost(id));
+        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            return status(HttpStatus.OK).body(postService.getPost(id));
+        }
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return status(HttpStatus.OK).body(postService.getPost(id, principal));
     }
-
-//    @GetMapping("by-subject/{id}")
-//    public ResponseEntity<List<PostResponse>> getPostsBySubject(@PathVariable Long id) {
-//        return status(HttpStatus.OK).body(postService.getPostsBySubjectId(id));
-//    }
 
     @GetMapping("by-user/{id}")
     public ResponseEntity<List<PostResponse>> getPostsById(@PathVariable Long id) {
