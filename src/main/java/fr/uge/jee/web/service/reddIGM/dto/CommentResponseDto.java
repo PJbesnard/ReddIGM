@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
+import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.models.VoteType;
 
 import java.time.LocalDateTime;
@@ -9,27 +10,33 @@ public class CommentResponseDto {
     private String text;
     private LocalDateTime creationDate;
     private Long postId;
-    private String userName;
     private Long superCommentId;
-    private String picture;
     private int nbVote;
     private VoteType myVote;
     private Integer nbComments;
+    private UserDto user;
 
     public CommentResponseDto() {
     }
 
-    public CommentResponseDto(Long commentId, String picture, String text, LocalDateTime creationDate, Long postId, String userName, Long superCommentId, int nbVote, VoteType myVote, Integer nbComments) {
+    public CommentResponseDto(Long commentId, String text, LocalDateTime creationDate, Long postId, Long superCommentId, int nbVote, VoteType myVote, Integer nbComments, UserDto user) {
         this.commentId = commentId;
         this.text = text;
         this.creationDate = creationDate;
         this.postId = postId;
-        this.userName = userName;
         this.superCommentId = superCommentId;
-        this.picture = picture;
         this.nbVote = nbVote;
         this.myVote = myVote;
         this.nbComments = nbComments;
+        this.user = user;
+    }
+
+    public UserDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserDto user) {
+        this.user = user;
     }
 
     public Integer getNbComments() {
@@ -80,14 +87,6 @@ public class CommentResponseDto {
         this.postId = postId;
     }
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public Long getSuperCommentId() {
         return superCommentId;
     }
@@ -96,35 +95,11 @@ public class CommentResponseDto {
         this.superCommentId = superCommentId;
     }
 
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
     public VoteType getMyVote() {
         return myVote;
     }
 
     public void setMyVote(VoteType myVote) {
         this.myVote = myVote;
-    }
-
-    @Override
-    public String toString() {
-        return "CommentResponseDto{" +
-                "commentId=" + commentId +
-                ", text='" + text + '\'' +
-                ", creationDate=" + creationDate +
-                ", postId=" + postId +
-                ", userName='" + userName + '\'' +
-                ", superCommentId=" + superCommentId +
-                ", picture='" + picture + '\'' +
-                ", nbVote=" + nbVote +
-                ", myVote=" + myVote +
-                ", nbComments=" + nbComments +
-                '}';
     }
 }

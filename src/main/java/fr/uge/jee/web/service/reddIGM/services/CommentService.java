@@ -4,6 +4,7 @@ import fr.uge.jee.web.service.reddIGM.dto.CommentRequestDto;
 import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.mapper.CommentMapper;
+import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.models.*;
 import fr.uge.jee.web.service.reddIGM.repositories.CommentRepository;
 import fr.uge.jee.web.service.reddIGM.repositories.PostRepository;
@@ -45,7 +46,8 @@ public class CommentService {
         }
         LocalDateTime creationDate = LocalDateTime.now();
         Comment newComment = new Comment(comment.getText(), creationDate, post, user, superComment);
-        return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0, null, 0);
+        User actualUser = userRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException("user " + user.getUsername() + " not found"));
+        return CommentMapper.INSTANCE.toDto(repository.save(newComment), 0, null, 0, UserMapper.INSTANCE.toDto(actualUser));
     }
 
     public List<CommentResponseDto> getSubComments(Long commentId, OrderType orderType, User user) {
@@ -126,9 +128,9 @@ public class CommentService {
         comments.forEach(c -> {
             int voteNb = calcScore(voteCommentRepository.findAllByComment(c));
             if (user == null) {
-                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE, nbCommentsInComment(c)));
+                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, VoteType.NOVOTE, nbCommentsInComment(c),UserMapper.INSTANCE.toDto(c.getUser())));
             } else {
-                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user), nbCommentsInComment(c)));
+                res.add(CommentMapper.INSTANCE.toDto(c, voteNb, getVoteForCommentAndUser(c, user), nbCommentsInComment(c),UserMapper.INSTANCE.toDto(c.getUser())));
             }
         });
         return res;
@@ -153,6 +155,6 @@ public class CommentService {
         }
         voteByCommentAndUser.ifPresent(voteComment -> voteCommentRepository.deleteById(voteComment.getId()));
         voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
-        return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user), nbCommentsInComment(comment));
+        return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user), nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()));
     }
 }
