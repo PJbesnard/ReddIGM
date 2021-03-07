@@ -9,6 +9,7 @@ export class User implements Deserializable {
   description!: string;
   private picture!: string;
   newsletterSubscriber!: boolean;
+  authorities!: string[];
 
   deserialize(input: any): this {
     Object.assign(this, input);
@@ -21,5 +22,9 @@ export class User implements Deserializable {
     }
 
     return this.picture;
+  }
+
+  public isAdmin(): boolean {
+    return this.authorities.indexOf("ADMIN") != -1;
   }
 }
