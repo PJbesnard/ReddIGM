@@ -63,21 +63,18 @@ public class CommentService {
     private List<CommentResponseDto> sortComments(List<CommentResponseDto> commentsDtos, OrderType orderType) {
         switch (orderType) {
             case ASCENDING:
-                System.out.println("sortComments methode called : ASCENDING");
-                commentsDtos.sort((o1, o2) -> {
-                    System.out.println("nbvote 1 : " + o1.getNbVote() + " nbvote2 :" + o2.getNbVote());
-                    return o1.getNbVote() - o2.getNbVote();
-                });
+                commentsDtos.sort(Comparator.comparingInt(CommentResponseDto::getNbVote));
                 break;
             case DESCENDING:
-                commentsDtos.sort((o1, o2) -> {
-                    return o1.getNbVote() - o2.getNbVote();
-                });
+                commentsDtos.sort((o1, o2) -> o2.getNbVote() - o1.getNbVote());
                 break;
             default:
                 commentsDtos.sort((o1, o2) -> {
                     if (o1.getCreationDate().isBefore(o2.getCreationDate())) {
                         return 1;
+                    }
+                    else if(o1.getCreationDate().isEqual(o2.getCreationDate())) {
+                        return 0;
                     }
                     return -1;
                 });
@@ -152,7 +149,7 @@ public class CommentService {
             throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this comment");
         }
         voteByCommentAndUser.ifPresent(voteComment -> voteCommentRepository.deleteById(voteComment.getId()));
-        voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment));
+        voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
         return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user));
     }
 }
