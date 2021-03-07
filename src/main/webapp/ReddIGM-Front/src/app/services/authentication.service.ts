@@ -70,12 +70,11 @@ export class AuthenticationService {
         this.userService.getUserByUsername(username).subscribe(
           (response) => {
             this.jwtService.setUser(response);
+            if (successCallback != undefined) {
+              successCallback();
+            }
           }
         );
-
-        if (successCallback != undefined) {
-          successCallback();
-        }
       },
       (response) => {
         if (failureCallback != undefined) {
