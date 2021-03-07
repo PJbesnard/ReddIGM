@@ -2,15 +2,19 @@ package fr.uge.jee.web.service.reddIGM.dto;
 
 import fr.uge.jee.web.service.reddIGM.models.VoteType;
 
+import java.time.LocalDateTime;
+
 public class VotePostDto {
     private Long postId;
     private VoteType vote;
+    private LocalDateTime creationDate;
 
     public VotePostDto(){}
 
-    public VotePostDto(Long postId, VoteType vote) {
+    public VotePostDto(Long postId, VoteType vote, LocalDateTime creationDate) {
         this.postId = postId;
         this.vote = vote;
+        this.creationDate = creationDate;
     }
 
     public void setPostId(Long postId) {
@@ -30,5 +34,12 @@ public class VotePostDto {
         return vote;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }
 

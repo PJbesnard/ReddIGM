@@ -69,14 +69,21 @@ public class PostService {
 
     }
 
-//    @Transactional(readOnly = true)
-//    public List<PostResponse> getPostsBySubjectId(Long subjectId) {
-//        Subject subreddit = subjectRepository.findById(subjectId)
-//                .orElseThrow(() -> new NoSuchElementException("Subject " + subjectId.toString() + " not found"));
-//        List<Post> posts = postRepository.findAllPostBySubject(subreddit);
-//        return computeVote(posts, null);
-//
-//    }
+    @Transactional(readOnly = true)
+    public List<PostResponse> getAllPosts(User user) {
+        List<PostResponse> res = new ArrayList<>();
+        return computeVote(postRepository.findAll(), user);
+
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostResponse> getPostsBySubjectId(Long subjectId) {
+        Subject subreddit = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new NoSuchElementException("Subject " + subjectId.toString() + " not found"));
+        List<Post> posts = postRepository.findAllPostBySubject(subreddit);
+        return computeVote(posts, null);
+
+    }
 
     @Transactional(readOnly = true)
     public List<PostResponse> getPostsById(Long userId) {

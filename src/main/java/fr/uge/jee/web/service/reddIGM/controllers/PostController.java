@@ -34,7 +34,6 @@ public class PostController {
     @PostMapping("/vote")
     public ResponseEntity<PostResponse> voteForPost(@Valid @RequestBody VotePostDto vote) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println(principal);
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.vote(vote, principal));
     }
 
@@ -56,7 +55,11 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getAllPosts() {
-        return status(HttpStatus.OK).body(postService.getAllPosts());
+        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
+            return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts());
+        }
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return status(HttpStatus.OK).body(postService.getAllPosts(principal));
     }
 
     @GetMapping(value = {"by-subject/{id}", "/by-subject/{id}/{orderType}"})

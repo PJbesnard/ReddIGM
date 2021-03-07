@@ -19,8 +19,8 @@
 
         <div class="box has-text-grey-lighter" style="background-color: #303336;">
             <ul>
-                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Posts : </span>{{ nbPosts }}</li>
-                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Comments : </span>{{ nbComments }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Posts : </span>{{ posts.length }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Comments : </span>{{ comments.length }}</li>
                 <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Likes : </span>{{ nbLikes }}</li>
                 <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Dislikes : </span>{{ nbDislikes }}</li>
             </ul>
@@ -36,7 +36,7 @@
             <label style="float: right;">
                 <h2 class="title has-text-light" style="display: inline;">Filter : </h2>
                 <div class="select">
-                    <select>
+                    <select #filterSelector (change)="onFilterChange(filterSelector.value)">
                       <option>All</option>
                       <option>Posts</option>
                       <option>Comments</option>
@@ -50,7 +50,7 @@
         <br />
 
         <div *ngFor="let elem of chronologicalHistoryFiltered">
-            <div *ngIf="elem instanceof Post">
+            <div *ngIf="elem instanceof PostModel">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has posted</p>
                 <app-post-view></app-post-view>
             </div>
@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <div *ngIf="elem instanceof Vote">
+            <div *ngIf="elem instanceof VotePost || elem instanceof VoteComment">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} like this</p>
                 <app-post-view></app-post-view>
             </div>

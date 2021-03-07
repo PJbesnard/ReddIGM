@@ -3,6 +3,7 @@ package fr.uge.jee.web.service.reddIGM.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -21,6 +23,7 @@ public class User implements UserDetails {
     private long id;
 
     @NotNull
+    @Size(min = 3, max = 20)
     @Column(unique = true)
     private String username;
 
@@ -38,7 +41,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(cascade=CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
     private Set<Authority> authorities;
 
     public User() {}

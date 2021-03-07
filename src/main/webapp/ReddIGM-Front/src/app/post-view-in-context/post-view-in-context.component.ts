@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
+import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-post-view-in-context',
@@ -29,6 +31,9 @@ export class PostViewInContextComponent implements OnInit {
   faCommentAlt = faCommentAlt;
   faReply = faReply;
   faChevronCircleUp = faChevronCircleUp;
+  sort: String = "DESCENDING";
+  hot: boolean = true;
+
 
   @Input() type: string = "post";
   @Input() id: number = 1;
@@ -42,7 +47,7 @@ export class PostViewInContextComponent implements OnInit {
   @Input() responseNb: number = 182; 
 
   
-  constructor(private commentService: CommentService) {
+  constructor(private commentService: CommentService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -52,13 +57,15 @@ export class PostViewInContextComponent implements OnInit {
   displayResponses(){
     this.showComments = true
     if (this.type === "post"){
-      this.commentService.getCommentsFromPost(this.id).subscribe(data =>{
+      this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
+        console.log("data " + data)
+
         this.comments = data;
       });
     }
     
     if (this.type === "comment"){
-      this.commentService.getCommentsForComment(this.id).subscribe(data =>{
+      this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
         this.comments = data;
       });
     }
@@ -69,10 +76,25 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   hideResponses() {
-    this.showComments = false
+    this.showComments = false;
     this.comments = [];
   }
 
+  displayAuthor(){
+    this.router.navigate(['users/1', { id: this.id, subName: this.subName }]);
+  }
+
+  newOnclick(){
+    this.sort = "NEWEST";
+    this.hot = false;
+    this.displayResponses();
+  }
+
+  hotOnclick(){
+    this.sort = "DESCENDING";
+    this.hot = true;
+    this.displayResponses();
+  }
   
   
 
