@@ -2,6 +2,7 @@ package fr.uge.jee.web.service.reddIGM.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
@@ -18,6 +19,9 @@ public class VotePost {
     private VoteType type;
 
     @NotNull
+    private LocalDateTime creationDate;
+
+    @NotNull
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
@@ -30,10 +34,11 @@ public class VotePost {
     public VotePost() {
     }
 
-    public VotePost(@NotNull VoteType type, @NotNull User user, @NotNull Post post) {
+    public VotePost(VoteType type, User user, Post post, LocalDateTime creationDate) {
         this.type = type;
         this.user = user;
         this.post = post;
+        this.creationDate = creationDate;
     }
 
     public User getUser() {
@@ -52,14 +57,20 @@ public class VotePost {
         this.id = id;
     }
 
-
-
     public VoteType getType() {
         return type;
     }
 
     public void setType(VoteType type) {
         this.type = type;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public User getOwner() {
@@ -79,28 +90,30 @@ public class VotePost {
     }
 
     @Override
-    public String toString() {
-        return "VotePost{" +
-                "id=" + id +
-                ", type=" + type +
-                ", owner=" + user +
-                ", post=" + post +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VotePost votePost = (VotePost) o;
         return id == votePost.id &&
                 type == votePost.type &&
+                creationDate.equals(votePost.creationDate) &&
                 user.equals(votePost.user) &&
                 post.equals(votePost.post);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, user, post);
+        return Objects.hash(id, type, creationDate, user, post);
+    }
+
+    @Override
+    public String toString() {
+        return "VotePost{" +
+                "id=" + id +
+                ", type=" + type +
+                ", creationDate=" + creationDate +
+                ", user=" + user +
+                ", post=" + post +
+                '}';
     }
 }

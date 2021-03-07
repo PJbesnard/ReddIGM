@@ -28,4 +28,10 @@ export class DisplayPostPageComponent implements OnInit {
     this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();
   }
 
+  displaySub(){
+    this.router.navigateByUrl('/posts-from-sub/'+1);
+  }
+
+
+
 }

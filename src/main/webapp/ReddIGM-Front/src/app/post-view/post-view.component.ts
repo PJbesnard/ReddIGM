@@ -38,7 +38,7 @@ export class PostViewComponent implements OnInit {
   }
 
   displayPost(){
-    this.router.navigate(['posts-from-sub/display-post', { id: this.id, subName: this.subName }]);
+    this.router.navigate(['display-post', { id: this.id, subName: this.subName }]);
   }
 
   clickVote(userVote: VoteType) {
