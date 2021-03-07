@@ -42,6 +42,7 @@ export class CreatePostComponent implements OnInit {
 			this.closeModal()
 			this.reset()
 		} )
+		
   }
 
   reset(){
