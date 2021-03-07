@@ -20,6 +20,10 @@ export class PostService {
     return this.httpClient.get<PostModel>(BASE_ADDRESS+"posts/"+id);
   }
 
+  deletePost(id: number): Observable<PostModel> {
+    return this.httpClient.get<PostModel>(BASE_ADDRESS+"posts/delete/"+id);
+  }
+
   getAllPosts(sort: String): Observable<PostModel[]> {
     return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/all/" + sort);
   }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { faChevronCircleUp, faPlusCircle, faReply, faMinusCircle, faCommentAlt } from '@fortawesome/free-solid-svg-icons';
+import { faChevronCircleUp, faPlusCircle, faReply, faMinusCircle, faCommentAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -24,7 +24,7 @@ import { CreateCommentComponent} from "../create-comment/create-comment.componen
 
 @Injectable()
 export class PostViewInContextComponent implements OnInit {
- 
+
   showComments = false;
 
   appareilsSubject = new Subject<any[]>();
@@ -38,6 +38,7 @@ export class PostViewInContextComponent implements OnInit {
   faCommentAlt = faCommentAlt;
   faReply = faReply;
   faChevronCircleUp = faChevronCircleUp;
+  faTimesCircle = faTimesCircle;
   sort: String = "DESCENDING";
   hot: boolean = true;
 
@@ -45,7 +46,9 @@ export class PostViewInContextComponent implements OnInit {
   downvote: VoteType = VoteType.DOWNVOTE;
   novote: VoteType = VoteType.NOVOTE;
   isAuthentified: boolean = false;
-  
+
+  crossComment: boolean = false;
+
 
   @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
@@ -58,18 +61,18 @@ export class PostViewInContextComponent implements OnInit {
   @Input() subName: string = "r/truc"; //
   @Input() rate: number = 14; //utiliser number
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
-  @Input() responseNb: number = 182; 
+  @Input() responseNb: number = 182;
   @Input() postId: number = 0;
   @Input() vote: VoteType = VoteType.NOVOTE;
+  @Input() isAdmin: boolean = false;
 
-  
+
   constructor(private commentService: CommentService, private postService: PostService, private authenticationService: AuthenticationService, private router: Router) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
   }
 
   ngOnInit(): void {
-    console.log ("id ", this.id ); // function called s
-    console.log ("vote ", this.vote);
+    if(this.authenticationService.getCurrentUser()?.username === this.author || this.isAdmin) this.crossComment = true;
   }
 
   displayResponses(){
@@ -80,14 +83,19 @@ export class PostViewInContextComponent implements OnInit {
         this.comments = data;
       });
     }
-    
+
     if (this.type === "comment"){
       this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
         this.comments = data;
       });
     }
   }
-  
+
+  deleteId(id: number) {
+    if(this.type === "post") this.postService.deletePost(id);
+    this.commentService.deleteComment(id);
+  }
+
   openModalCreatePost() {
     this.isModalActive = !this.isModalActive;
   }
@@ -124,7 +132,4 @@ export class PostViewInContextComponent implements OnInit {
       this.commentService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.nbVote;});
     }
   }
-  
-  
-
 }
