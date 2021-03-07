@@ -20,16 +20,16 @@ export class PostService {
     return this.httpClient.get<PostModel>(BASE_ADDRESS+"posts/"+id);
   }
 
-  getAllPosts(): Observable<PostModel[]> {
-    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/");
+  getAllPosts(sort: String): Observable<PostModel[]> {
+    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/all/" + sort);
   }
 
   getPostsByUserId(id: number): Observable<PostModel[]> {
     return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-user/" + id);
   }
 
-  getPostsBySubject(id: number): Observable<PostModel[]> {
-    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-subject/" + id);
+  getPostsBySubject(id: number, sort: String): Observable<PostModel[]> {
+    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-subject/" + id+ "/" + sort);
   }
 
   createPost(postPayload: CreatePostPayload): Observable<any> {

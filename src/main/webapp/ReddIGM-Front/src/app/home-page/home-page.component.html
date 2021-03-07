@@ -7,18 +7,17 @@
   <br>
   <div class="columns">
     <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-primary is-clickable">All</p>
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "hotOnclick()">Hot</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-light is-clickable" (click) = "hotOnclick()">Hot</p>
     </div>
     <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-light is-clickable">Hot</p>
-    </div>
-    <div class="column is-1">
-      <p class="title is-5 is-spaced has-text-light is-clickable">New</p>
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-light is-clickable" (click) = "newOnclick()">New</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "newOnclick()">New</p>
     </div>
   </div>
   <div class="columns">
     <div class="column is-three-quarters ">
-      <app-post-view [id]="p.id" [title]="p.postName" [content]="p.description" [date]="p.duration" [rate]="p.voteCount" [vote]="p.myVote" *ngFor="let p of posts"></app-post-view>
+      <app-post-view [id]="p.id" [title]="p.postName" [content]="p.description" [date]="p.duration" [rate]="p.voteCount" [vote]="p.myVote" [subName]="p.sub.name" [author]="p.user.username" [image]="'{{ p.user.getPicture() }}'" [authorId]="p.user.id" [subId]="p.sub.id" *ngFor="let p of posts"></app-post-view>
 
     </div>
 

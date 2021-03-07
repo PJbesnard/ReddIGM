@@ -15,7 +15,7 @@ export class User implements Deserializable {
     return this;
   }
 
-  getPicture(): string {
+  public getPicture(): string {
     if (!this.picture) {
       this.picture = User.defaultPicture;
     }

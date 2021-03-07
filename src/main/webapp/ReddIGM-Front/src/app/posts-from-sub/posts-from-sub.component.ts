@@ -17,10 +17,12 @@ export class PostsFromSubComponent implements OnInit {
   subId: number;
   subName: string = "";
   subDescription: string = "";
+  hot: boolean = true;
+  sort: String = "DESCENDING";
 
   constructor(private postService: PostService, private subjectService: SubjectService, private userService: UserService, private route: ActivatedRoute) {
     this.subId = this.route.snapshot.params['id'];
-    this.postService.getPostsBySubject(this.subId).subscribe(data => {this.posts = data;});
+    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});
     this.subjectService.getSubject(this.subId).subscribe(data => {this.subName = data.name; this.subDescription = data.description;});
   }
 
@@ -31,5 +33,17 @@ export class PostsFromSubComponent implements OnInit {
     let user: User = new User();
     this.userService.getUserById(userId).subscribe(data => user = data);
     return user;
+  }
+
+  newOnclick(){
+    this.sort = "NEWEST";
+    this.hot = false;
+    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});
+  }
+
+  hotOnclick(){
+    this.sort = "DESCENDING";
+    this.hot = true;
+    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});
   }
 }
