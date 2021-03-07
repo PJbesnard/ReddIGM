@@ -4,6 +4,7 @@ import fr.uge.jee.web.service.reddIGM.dto.LoginResponse;
 import fr.uge.jee.web.service.reddIGM.dto.LoginRequest;
 import fr.uge.jee.web.service.reddIGM.dto.RegisterRequest;
 import fr.uge.jee.web.service.reddIGM.dto.RegisterResponse;
+import fr.uge.jee.web.service.reddIGM.models.Authority;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
 import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
@@ -13,6 +14,9 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -43,9 +47,7 @@ public class AuthenticationService {
         System.out.println("received Username : " + loginRequest.getUsername() + " password : " + loginRequest.getPassword());
         User user = userService.loadUserByUsername(loginRequest.getUsername());
         final String jtwToken = jwtUtil.generateToken(user);
-        boolean isAdmin = false;
-        if (user.getAuthority().equals(User.Authority.ADMIN)) isAdmin = true;
-        return new LoginResponse(jtwToken, isAdmin);
+        return new LoginResponse(jtwToken);
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
@@ -54,7 +56,9 @@ public class AuthenticationService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAuthority(User.Authority.USER);
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(new Authority("USER"));
+        user.setAuthorities(authorities);
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());
     }

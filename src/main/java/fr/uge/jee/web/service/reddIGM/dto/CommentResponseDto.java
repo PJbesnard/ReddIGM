@@ -101,4 +101,19 @@ public class CommentResponseDto {
     public void setMyVote(VoteType myVote) {
         this.myVote = myVote;
     }
+
+    @Override
+    public String toString() {
+        return "CommentResponseDto{" +
+                "commentId=" + commentId +
+                ", text='" + text + '\'' +
+                ", creationDate=" + creationDate +
+                ", postId=" + postId +
+                ", userName='" + userName + '\'' +
+                ", superCommentId=" + superCommentId +
+                ", picture='" + picture + '\'' +
+                ", nbVote=" + nbVote +
+                ", myVote=" + myVote +
+                '}';
+    }
 }

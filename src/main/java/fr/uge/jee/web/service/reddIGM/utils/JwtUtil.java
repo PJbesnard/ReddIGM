@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.utils;
 
+import fr.uge.jee.web.service.reddIGM.models.Authority;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,13 +43,15 @@ public class JwtUtil {
 
     // Générer un token
     public String generateToken(User user){
-        User.Authority authority = user.getAuthority();
-        return createToken(authority, user.getUsername(), user.getId());
+        String authorities = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        return createToken(authorities, user.getUsername(), user.getId());
     }
 
     // Création du token, claims = ce qu'on veut stocker à l'intérieur
-    private String createToken(User.Authority authority, String subject, Long id){
-        return Jwts.builder().claim("auth", authority).claim("id", id).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+    private String createToken(String authorities, String subject, Long id){
+        return Jwts.builder().claim("auth", authorities).claim("id", id).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
@@ -64,14 +67,14 @@ public class JwtUtil {
     public Authentication getAuthentication(String token) {
 
         Claims claims = extractAllClaims(token);
-        User.Authority authority = (User.Authority.valueOf(claims.get("auth").toString()));
+        Set<Authority> authorities =
+                Arrays.stream(claims.get("auth").toString().split(","))
+                        .map(Authority::new)
+                        .collect(Collectors.toSet());
         Long userId = (Long.valueOf(claims.get("id").toString()));
-
-
-        //auth pas bonnes ici
-        User principal = new User(claims.getSubject(), null, null, authority, null, null, false);
+        User principal = new User(claims.getSubject(), null, null, authorities, null, null, false);
         principal.setId(userId);
-        return new UsernamePasswordAuthenticationToken(principal, token, null);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
 }

@@ -40,10 +40,17 @@ public class CommentController {
     @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
     public ResponseEntity<List<CommentResponseDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
         if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
+            if (orderType == null){
+               return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType));
         }
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST, principal)) : ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType, principal));
+        if (orderType == null){
+            return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, OrderType.NEWEST, principal));
+        }
+        System.out.println("odertype : " + orderType);
+        return ResponseEntity.status(HttpStatus.OK).body(commentService.getSubComments(commentId, orderType, principal));
     }
 
     @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
