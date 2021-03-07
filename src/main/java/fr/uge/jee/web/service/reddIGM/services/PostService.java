@@ -136,7 +136,7 @@ public class PostService {
 
     private VoteType getVoteForPostAndUser(Post post,User user) {
         Optional<VotePost> myVote = votePostRepository.findByPostAndUser(post, user);
-        VoteType v = null;
+        VoteType v = VoteType.NOVOTE;
         if(myVote.isPresent()) v = myVote.get().getType();
         return v;
     }
