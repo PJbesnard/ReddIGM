@@ -1,4 +1,5 @@
 import { Datable } from "./datable.model";
+import { VoteType } from "./vote-type.enum";
 
 export class PostModel {
     id!: number;
@@ -9,8 +10,7 @@ export class PostModel {
 	userId!:number;
 	createdDate! : string;
 	subjectId!:number;
-	upVote!: boolean;
-    downVote!: boolean;
+	myVote!: VoteType;
 
 	getDate(): Date {
         return new Date(this.createdDate);
