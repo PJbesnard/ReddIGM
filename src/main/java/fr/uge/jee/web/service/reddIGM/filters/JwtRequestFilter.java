@@ -6,9 +6,11 @@ import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -33,16 +35,24 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = httpServletRequest.getHeader("Authorization");
 
         String username = null;
-        String jwt = null;
+        String jwt;
 
         // Extraction du token depuis le header
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer")){
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUserName(jwt);
+            if (StringUtils.hasText(jwt) && this.jwtUtil.validateToken(jwt)) {
+                System.out.println("okkkkkkk validééééééé");
+                Authentication authentication = this.jwtUtil.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         // Si pas déjà authentifié
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            User user = this.userService.loadUserByUsername(username);
+        System.out.println("authentication : " + SecurityContextHolder.getContext().getAuthentication());
+        /*if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+            //User user = this.userService.loadUserByUsername(username);
+            User user = new User(username, )
+            System.out.println("PAS DEJA AUTHENTIFIAK");
 
             // vérification du token
             if (jwtUtil.validateToken(jwt, user)){
@@ -53,7 +63,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 // Ajout de la connexion au SecurityContextHolder
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
-        }
+        }*/
+
         // Continue the chain
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }

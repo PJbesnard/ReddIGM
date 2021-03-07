@@ -4,6 +4,7 @@ import fr.uge.jee.web.service.reddIGM.dto.LoginResponse;
 import fr.uge.jee.web.service.reddIGM.dto.LoginRequest;
 import fr.uge.jee.web.service.reddIGM.dto.RegisterRequest;
 import fr.uge.jee.web.service.reddIGM.dto.RegisterResponse;
+import fr.uge.jee.web.service.reddIGM.models.Authority;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
 import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
@@ -11,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class AuthenticationService {
@@ -53,7 +56,9 @@ public class AuthenticationService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setAuthority(User.Authority.USER);
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(new Authority("USER"));
+        user.setAuthorities(authorities);
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());
     }

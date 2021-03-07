@@ -1,6 +1,8 @@
 package fr.uge.jee.web.service.reddIGM.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,17 +10,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity(name = "Users")
 public class User implements UserDetails {
-
-    public enum Authority {
-        USER,
-        ADMIN;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,7 +24,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
-    @NotNull
+    //@NotNull
     private String password;
 
     private String picture;
@@ -37,22 +33,21 @@ public class User implements UserDetails {
 
     private boolean newsletterSubscriber;
 
-    @NotNull
+    //@NotNull
     @Email
     @Column(unique = true)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @NotNull
-    private Authority authority;
+    @ManyToMany(cascade=CascadeType.PERSIST)
+    private Set<Authority> authorities;
 
     public User() {}
 
-    public User(String username, String password, String email, Authority authority, String picture, String description, boolean newsletterSubscriber) {
+    public User(String username, String password, String email, Set<Authority> authorities, String picture, String description, boolean newsletterSubscriber) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.authority = authority;
+        this.authorities = authorities;
         this.picture = picture;
         this.description = description;
         this.newsletterSubscriber = newsletterSubscriber;
@@ -86,13 +81,6 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public Authority getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(Authority authority) {
-        this.authority = authority;
-    }
 
     public String getPicture() {
         return picture;
@@ -138,29 +126,20 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(authority.name()));
+
+
+    public void setId(long id) {
+        this.id = id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id == user.id &&
-                newsletterSubscriber == user.newsletterSubscriber &&
-                username.equals(user.username) &&
-                password.equals(user.password) &&
-                Objects.equals(picture, user.picture) &&
-                Objects.equals(description, user.description) &&
-                email.equals(user.email) &&
-                authority == user.authority;
-    }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password, picture, description, newsletterSubscriber, email, authority);
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
     }
 
     @Override
@@ -173,7 +152,27 @@ public class User implements UserDetails {
                 ", description='" + description + '\'' +
                 ", newsletterSubscriber=" + newsletterSubscriber +
                 ", email='" + email + '\'' +
-                ", authority=" + authority +
+                ", authorities=" + authorities +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id == user.id &&
+                newsletterSubscriber == user.newsletterSubscriber &&
+                username.equals(user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(picture, user.picture) &&
+                Objects.equals(description, user.description) &&
+                Objects.equals(email, user.email) &&
+                authorities.equals(user.authorities);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, username, password, picture, description, newsletterSubscriber, email, authorities);
     }
 }

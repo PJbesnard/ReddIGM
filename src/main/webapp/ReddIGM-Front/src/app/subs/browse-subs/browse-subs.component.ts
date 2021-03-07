@@ -26,8 +26,7 @@ export class BrowseSubsComponent implements OnInit {
   }
 
   showSub(id?: number): void {
-    console.log("click on sub : " + id);
-    this.router.navigateByUrl('/list-subs');
+    this.router.navigateByUrl('/posts-from-sub/'+id);
   }
 
   viewAllClick(): void {

@@ -1,15 +1,19 @@
 package fr.uge.jee.web.service.reddIGM.utils;
 
+import fr.uge.jee.web.service.reddIGM.models.Authority;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtUtil {
@@ -39,21 +43,38 @@ public class JwtUtil {
 
     // Générer un token
     public String generateToken(User user){
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, user.getUsername());
+        String authorities = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
+        return createToken(authorities, user.getUsername(), user.getId());
     }
 
     // Création du token, claims = ce qu'on veut stocker à l'intérieur
-    private String createToken(Map<String, Object> claims, String subject){
-        return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
+    private String createToken(String authorities, String subject, Long id){
+        return Jwts.builder().claim("auth", authorities).claim("id", id).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
     }
 
     // Check si le token est valide
-    public Boolean validateToken(String token, User user){
-        final String userName = extractUserName(token);
-        return (userName.equals(user.getUsername()) && !isTokenExpired(token));
+    //, User user
+    public Boolean validateToken(String token){
+        //final String userName = extractUserName(token);
+        Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+        return true;
+    }
+
+    public Authentication getAuthentication(String token) {
+
+        Claims claims = extractAllClaims(token);
+        Set<Authority> authorities =
+                Arrays.stream(claims.get("auth").toString().split(","))
+                        .map(Authority::new)
+                        .collect(Collectors.toSet());
+        Long userId = (Long.valueOf(claims.get("id").toString()));
+        User principal = new User(claims.getSubject(), null, null, authorities, null, null, false);
+        principal.setId(userId);
+        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
 }
