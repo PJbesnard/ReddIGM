@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { VoteType } from '../models/vote-type.enum';
 import { AuthenticationService } from '../services/authentication.service';
 import { PostService } from "../services/post.service"
+import { CreateCommentComponent} from "../create-comment/create-comment.component";
 
 
 
@@ -58,7 +59,7 @@ export class PostViewInContextComponent implements OnInit {
   @Input() rate: number = 14; //utiliser number
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
   @Input() responseNb: number = 182; 
-
+  @Input() postId: number = 0;
   @Input() vote: VoteType = VoteType.NOVOTE;
 
   
@@ -97,7 +98,7 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   displayAuthor(){
-    this.router.navigate(['users/' + this.authorId, { id: this.id, subName: this.subName }]);
+    this.router.navigateByUrl('users/' + this.authorId);
   }
 
   newOnclick(){

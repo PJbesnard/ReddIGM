@@ -31,6 +31,7 @@ import { DisplayPostPageComponent } from './display-post-page/display-post-page.
 import { PostViewInContextComponent } from './post-view-in-context/post-view-in-context.component';
 import { AlertComponent } from './alert/alert.component';
 import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { CreateCommentComponent } from './create-comment/create-comment.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { NotFoundPageComponent } from './not-found-page/not-found-page.component
     DisplayPostPageComponent,
     PostViewInContextComponent,
     AlertComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    CreateCommentComponent
   ],
   imports: [
     BrowserModule,

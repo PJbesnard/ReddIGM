@@ -4,6 +4,7 @@ import { Comment } from '../models/comment.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { VoteType } from '../models/vote-type.enum';
+import { CreateCommentPayload } from '../create-comment/create-comment.payload';
 
 
 
@@ -48,9 +49,9 @@ export class CommentService {
     return this.http.get<Array<Comment>>(this.urlUser + username);
   }
 
-  /*createPost(postPayload: CreatePostPayload): Observable<any> {
-    return this.httpClient.post(BASE_ADDRESS+"posts/", postPayload);
-  }*/
+  createComment(commentPayload: CreateCommentPayload): Observable<any> {
+    return this.httpClient.post(BASE_ADDRESS+"comments/", commentPayload);
+  }
 
   vote(commentId: number, vote: VoteType): Observable<Comment> {
     const body = {

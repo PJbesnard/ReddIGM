@@ -12,8 +12,7 @@
         <div class="content is-size-4 has-text-light has-text-weight-bold is-clickable" (click)="displayPost()">
           {{ title }}
         </div>
-        <div class="content has-text-light">
-          {{ content }}
+        <div class="content has-text-light" [innerHTML]="content">
         </div>
         <div class="columns">
           <div class="column is-1 is-clickable" (click)="clickProfile()">

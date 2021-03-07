@@ -16,6 +16,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotNull
+    @Lob
     private String text;
     @NotNull
     private LocalDateTime creationDate;

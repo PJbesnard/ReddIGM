@@ -8,25 +8,10 @@
 
   <div class="columns">
     <div class="column is-three-quarters ">
-      <app-post-view-in-context [image]="'{{ c.user.getPicture() }}'" [commentNumber]="post.nbComments" [vote]="post.myVote" [id]="post.id" [author]="post.user.username" [title]="post.postName" [content]="post.description" [authorId]="post.user.id" [date]="post.duration" [subName]="post.sub.name" [rate]="post.voteCount"></app-post-view-in-context>     
+      <app-post-view-in-context [postId]="post.id" [image]="'{{ c.user.getPicture() }}'" [commentNumber]="post.nbComments" [vote]="post.myVote" [id]="post.id" [author]="post.user.username" [title]="post.postName" [content]="post.description" [authorId]="post.user.id" [date]="post.duration" [subName]="post.sub.name" [rate]="post.voteCount"></app-post-view-in-context>     
     </div>
-    
-
-    <div class ="column is-one-quarter position:" >
-      <!--zebi-->
-      <div class="card has-background-grey block" >
-        <div class="card-content">
-          <div class="content is-size-4 has-text-light has-text-weight-bold">
-            Browse subs
-          </div>
-          <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMFacts</div>
-          <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMCodingLife</div>
-          <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMCrazyCoders</div>
-          <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMCoderLifeStyle</div>
-          <div class="content is-size-5 has-text-light has-text-weight-light is-clickable">r/IGMLoveUForax</div>
-          <div class="content is-size-5 has-text-centered has-text-light has-text-weight-semibold is-clickable">view all</div>
-        </div>
-      </div>
+    <div class="column is-one-quarter">
+      <app-browse-subs></app-browse-subs>
     </div>
   </div>
 </div>

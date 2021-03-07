@@ -10,10 +10,12 @@ import { PostModel } from '../models/post.model';
   selector: 'app-display-post-page',
   templateUrl: './display-post-page.component.html',
   styleUrls: ['./display-post-page.component.scss']
+  
 })
 export class DisplayPostPageComponent implements OnInit {
   post: PostModel = new PostModel();
   subjectName: string = "";
+  subjectId: String = "0";
 
 
   constructor(private route: ActivatedRoute,
@@ -26,10 +28,11 @@ export class DisplayPostPageComponent implements OnInit {
       }
     );
     this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();
+    this.subjectId = this.route.snapshot.paramMap.get('subId')!.toString();
   }
 
   displaySub(){
-    this.router.navigateByUrl('/posts-from-sub/'+1);
+    this.router.navigateByUrl('/posts-from-sub/'+this.subjectId);
   }
 
 
