@@ -16,8 +16,8 @@ export class CommentService {
     this.urlPost = 'http://localhost:8080/comments/post/'
   }
 
-  getCommentsFromPost(id: number): Observable<Array<Comment>> {
-    return this.http.get<Array<Comment>>(this.urlPost + id, {
+  getCommentsFromPost(sort: String, id: number): Observable<Array<Comment>> {
+    return this.http.get<Array<Comment>>(this.urlPost + id + '/' + sort, {
       headers: new HttpHeaders(
         {
           'Access-Control-Allow-Origin':'*'
@@ -27,8 +27,8 @@ export class CommentService {
 
   }
 
-  getCommentsForComment(id: number): Observable<Array<Comment>> {
-    return this.http.get<Array<Comment>>(this.urlComment + id, {
+  getCommentsForComment(sort: String, id: number): Observable<Array<Comment>> {
+    return this.http.get<Array<Comment>>(this.urlComment + id + '/' + sort, {
       headers: new HttpHeaders(
         {
           'Access-Control-Allow-Origin':'*'

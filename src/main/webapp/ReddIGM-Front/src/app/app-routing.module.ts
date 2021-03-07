@@ -22,7 +22,7 @@ const routes: Routes = [
   {path: 'create-sub', component: CreateSubComponent, canActivate: [AuthGuardService]},
   {path: 'posts-from-sub/:id', component: PostsFromSubComponent},
   {path: 'list-subs', component: ListSubsComponent},
-  {path: 'posts-from-sub/display-post', component: DisplayPostPageComponent},
+  {path: 'display-post', component: DisplayPostPageComponent},
   {path: 'not-found', component: NotFoundPageComponent},
   {path: '**', redirectTo: 'not-found'}
 ];

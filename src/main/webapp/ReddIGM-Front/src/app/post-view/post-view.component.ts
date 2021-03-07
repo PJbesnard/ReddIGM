@@ -11,7 +11,7 @@ export class PostViewComponent implements OnInit {
   faPlusCircle = faPlusCircle;
   faMinusCircle = faMinusCircle;
 
-  @Input() id: number = 6;
+  @Input() id: number = 3;
   @Input() author: string = "Michel"; //
   @Input() title: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
   @Input() content: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
@@ -27,7 +27,9 @@ export class PostViewComponent implements OnInit {
   }
   
   displayPost(){
-    this.router.navigate(['posts-from-sub/display-post', { id: this.id, subName: this.subName }]);
+    this.router.navigate(['display-post', { id: this.id, subName: this.subName }]);
   }
+
+  
 
 }

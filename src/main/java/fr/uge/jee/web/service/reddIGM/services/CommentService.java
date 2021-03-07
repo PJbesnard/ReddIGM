@@ -66,18 +66,12 @@ public class CommentService {
                 System.out.println("sortComments methode called : ASCENDING");
                 commentsDtos.sort((o1, o2) -> {
                     System.out.println("nbvote 1 : " + o1.getNbVote() + " nbvote2 :" + o2.getNbVote());
-                    if (o1.getNbVote() <= o2.getNbVote()) {
-                        return 1;
-                    }
-                    return 0;
+                    return o1.getNbVote() - o2.getNbVote();
                 });
                 break;
             case DESCENDING:
                 commentsDtos.sort((o1, o2) -> {
-                    if (o1.getNbVote() >= o2.getNbVote()) {
-                        return 1;
-                    }
-                    return 0;
+                    return o1.getNbVote() - o2.getNbVote();
                 });
                 break;
             default:
@@ -85,7 +79,7 @@ public class CommentService {
                     if (o1.getCreationDate().isBefore(o2.getCreationDate())) {
                         return 1;
                     }
-                    return 0;
+                    return -1;
                 });
                 break;
         }

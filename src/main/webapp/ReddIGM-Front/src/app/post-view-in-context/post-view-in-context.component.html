@@ -17,12 +17,12 @@
   
             <div class="column is-1 ">
               <figure class="image is-32x32">
-                <img class="is-rounded" src = {{image}}> 
+                <img class="is-rounded is-clickable" src = {{image}} (click)="displayAuthor()"> 
               </figure>
             </div>
             
             <div class="column is-1 has-text-left">
-              <div class="content has-text-primary is-clickable ">{{author}}</div>
+              <div class="content has-text-primary is-clickable "(click)="displayAuthor()">{{author}} </div>
             </div>
   
             <div class="column is-1"></div>
@@ -39,7 +39,7 @@
             <div class="column is-3">
               <div *ngIf = "showComments === false"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
                 <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
-                 Comments ({{responseNb}})
+                 Comments
               </div>  
               <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">        
                 <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
@@ -52,6 +52,16 @@
       </div>
     </div>
       <app-create-post [openModal]= "isModalActive" (openModelChange)="isModalActive = false"></app-create-post>
+  </div>
+  <div *ngIf = "showComments === true" class="columns">
+    <div class="column is-1">
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "hotOnclick()">Hot</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-light is-clickable" (click) = "hotOnclick()">Hot</p>
+    </div>
+    <div class="column is-1">
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-light is-clickable" (click) = "newOnclick()">New</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "newOnclick()">New</p>
+    </div>
   </div>
   <div class="columns" *ngFor="let c of comments">
     <div class="column is-1" >
