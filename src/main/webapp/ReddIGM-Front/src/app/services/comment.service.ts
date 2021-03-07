@@ -3,6 +3,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { VoteType } from '../models/vote-type.enum';
+
+
 
 const BASE_ADDRESS = environment.baseURL;
 
@@ -14,7 +17,7 @@ export class CommentService {
   private urlPost: string;
   private urlUser: string;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private httpClient: HttpClient) {
     this.urlComment = BASE_ADDRESS + 'comments/comment/';
     this.urlPost = BASE_ADDRESS + 'comments/post/';
     this.urlUser = BASE_ADDRESS + 'comments/user/';
@@ -43,5 +46,17 @@ export class CommentService {
 
   getCommentsByUsername(username: string): Observable<Array<Comment>> {
     return this.http.get<Array<Comment>>(this.urlUser + username);
+  }
+
+  /*createPost(postPayload: CreatePostPayload): Observable<any> {
+    return this.httpClient.post(BASE_ADDRESS+"posts/", postPayload);
+  }*/
+
+  vote(commentId: number, vote: VoteType): Observable<Comment> {
+    const body = {
+      commentId: commentId,
+      vote: vote
+    };
+    return this.httpClient.post<Comment>(BASE_ADDRESS+"comments/vote", body);
   }
 }
