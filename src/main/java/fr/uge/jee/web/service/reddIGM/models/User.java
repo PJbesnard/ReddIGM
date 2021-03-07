@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
+    @ManyToMany//(fetch = FetchType.EAGER, cascade=CascadeType.PERSIST)
     private Set<Authority> authorities;
 
     public User() {}
