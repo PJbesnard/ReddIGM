@@ -35,6 +35,17 @@ export class CommentService {
 
   }
 
+  deleteComment(id: number): Observable<Array<Comment>> {
+    return this.http.get<Array<Comment>>(BASE_ADDRESS + "comments/delete/" + id, {
+      headers: new HttpHeaders(
+        {
+          'Access-Control-Allow-Origin':'*'
+        }
+      )
+    });
+
+  }
+
   getCommentsForComment(sort: String, id: number): Observable<Array<Comment>> {
     return this.http.get<Array<Comment>>(this.urlComment + id + '/' + sort, {
       headers: new HttpHeaders(

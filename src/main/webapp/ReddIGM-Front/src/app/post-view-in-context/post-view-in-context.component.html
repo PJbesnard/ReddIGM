@@ -15,41 +15,44 @@
           <div class="content has-text-light" [innerHTML]="content">
           </div>
           <div class="columns is-vcentered">
-  
+
             <div class="column is-1 ">
               <figure class="image is-32x32">
-                <img class="is-rounded is-clickable" src = {{image}} (click)="displayAuthor()"> 
+                <img class="is-rounded is-clickable" src = {{image}} (click)="displayAuthor()">
               </figure>
             </div>
-            
+
             <div class="column is-1 has-text-left">
               <div class="content has-text-primary is-clickable "(click)="displayAuthor()">{{author}} </div>
             </div>
-  
+
             <div class="column is-1"></div>
             <div class="column is-2">
               <div class="content has-text-light has-text-left">{{date}}</div>
             </div>
-            <div class="column is-3"></div>
+            <div class="column is-3" *ngIf="(!isAdmin && type=='post') || (!isAdmin && !crossComment)"></div>
+            <div class="column is-2" *ngIf="(isAdmin) || (!isAdmin && type != 'post' && crossComment)"></div>
             <div class="column is-2">
-              <div class="content has-text-light is-clickable has-text-left " (click)="openModalCreatePost()">        
-                <fa-icon [icon]="faReply"class="content is-clickable has-text-light"  style="font-size: 18px;"> </fa-icon>  
+              <div class="content has-text-light is-clickable has-text-left " (click)="openModalCreatePost()">
+                <fa-icon [icon]="faReply"class="content is-clickable has-text-light"  style="font-size: 18px;"> </fa-icon>
                   Reply
-              </div>  
+              </div>
             </div>
             <div class="column is-3">
-              <div *ngIf = "showComments === false"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">        
-                <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
-                 Comments ( {{commentNumber}} ) 
-              </div>  
-              <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">        
-                <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>  
+              <div *ngIf = "showComments === false"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">
+                <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>
+                 Comments ( {{commentNumber}} )
+              </div>
+              <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">
+                <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>
                  Hide
-              </div>  
+              </div>
             </div>
+            <div class="column is-1" *ngIf="(isAdmin && type=='post') || (!isAdmin && type != 'post' && crossComment)"><fa-icon [icon]="faTimesCircle" class="content is-clickable has-text-light" style="font-size: 24px;" (click)="deleteId(id)"></fa-icon></div>
           </div>
         </div>
-        <div class="column is-1"></div>
+        <div class="column is-1">
+        </div>
       </div>
     </div>
       <!--<app-create-post [openModal]= "isModalActive" (openModelChange)="isModalActive = false"></app-create-post>-->
@@ -70,11 +73,10 @@
     <div class="column is-1" >
     </div>
     <div class="column is-11" >
-      <app-post-view-in-context [postId]="postId" [image]="'{{ c.user.getPicture() }}'" [type]="'comment'" [commentNumber]=c.nbComments [vote]=c.myVote [id]=c.commentId [author]=c.user.username [title]="''" [content]=c.text [authorId]=c.user.id [date]=c.creationDate [subName]="''" [rate]=c.nbVote></app-post-view-in-context>     
+      <app-post-view-in-context [postId]="postId" [image]="'{{ c.user.getPicture() }}'" [type]="'comment'" [commentNumber]=c.nbComments [vote]=c.myVote [id]=c.commentId [author]=c.user.username [title]="''" [content]=c.text [authorId]=c.user.id [date]=c.creationDate [subName]="''" [rate]=c.nbVote></app-post-view-in-context>
 
     </div>
-  
+
   </div>
-  
-  
-  
+
+
