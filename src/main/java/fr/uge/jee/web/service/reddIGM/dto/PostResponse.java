@@ -19,10 +19,11 @@ public class PostResponse {
     private LocalDateTime duration;
     private VoteType myVote;
     private UserDto user;
+    private Integer nbComments;
 
     public PostResponse(){}
 
-    public PostResponse(Long id, String postName, String url, String description, SubjectDto sub, Integer voteCount, LocalDateTime duration, VoteType myVote, UserDto user) {
+    public PostResponse(Long id, String postName, String url, String description, SubjectDto sub, Integer voteCount, LocalDateTime duration, VoteType myVote, UserDto user, Integer nbComments) {
         this.id = id;
         this.postName = postName;
         this.url = url;
@@ -32,10 +33,19 @@ public class PostResponse {
         this.duration = duration;
         this.myVote = myVote;
         this.user = user;
+        this.nbComments = nbComments;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getNbComments() {
+        return nbComments;
+    }
+
+    public void setNbComments(Integer nbComments) {
+        this.nbComments = nbComments;
     }
 
     public Long getId() {

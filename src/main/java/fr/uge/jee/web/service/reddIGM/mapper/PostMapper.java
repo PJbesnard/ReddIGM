@@ -16,7 +16,6 @@ public interface PostMapper {
     @Mapping(target = "createdDate", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "description", source = "postRequest.description")
     @Mapping(target = "subject", source = "subject")
-    @Mapping(target = "voteCount", constant = "0")
     @Mapping(target = "user", source = "user")
     Post map(PostRequest postRequest, Subject subject, User user);
 
@@ -27,6 +26,7 @@ public interface PostMapper {
     @Mapping(target = "myVote", expression = "java(voteType)")
     @Mapping(target = "voteCount", expression = "java(nbVote)")
     @Mapping(target = "description", expression = "java(post.getDescription())")
-    PostResponse mapToDto(Post post, int nbVote, VoteType voteType, SubjectDto sub, UserDto user);
+    @Mapping(target = "nbComments", expression = "java(nbComments)")
+    PostResponse mapToDto(Post post, int nbVote, VoteType voteType, SubjectDto sub, UserDto user, Integer nbComments);
 
 }

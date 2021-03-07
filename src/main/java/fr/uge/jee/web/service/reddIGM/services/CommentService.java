@@ -48,14 +48,12 @@ public class CommentService {
     }
 
     public List<CommentResponseDto> getSubComments(Long commentId, OrderType orderType, User user) {
-        System.out.println("ORDERTYPE auth : " + orderType);
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NoSuchElementException("Comment " + commentId.toString() + " not found"));
         List<CommentResponseDto> res = computeVote(repository.findAllBySuperComment(comment), user);
         return sortComments(res, orderType);
     }
 
     public List<CommentResponseDto> getSubComments(Long commentId, OrderType orderType) {
-        System.out.println("ORDERTYPE non auth: " + orderType);
         return getSubComments(commentId, orderType, null);
     }
 
@@ -80,7 +78,6 @@ public class CommentService {
                 });
                 break;
         }
-        System.out.println("commentsDtos : " + commentsDtos);
         return commentsDtos;
     }
 

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,6 +39,9 @@ public class PostService {
     @Autowired
     private VotePostRepository votePostRepository;
 
+    @Autowired
+    private  CommentRepository commentRepository;
+
 
     public void save(PostRequest postRequest, Long userId){
         Subject subreddit = subjectRepository.findById(postRequest.getSubjectId())
@@ -50,7 +54,8 @@ public class PostService {
     public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
-        return PostMapper.INSTANCE.mapToDto(post, post.getVoteCount(), getVoteForPostAndUser(post, post.getUser()), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()));
+        int voteNb = calcScore(votePostRepository.findAllByPost(post));
+        return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, post.getUser()), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
     }
 
     public List<PostResponse> getAllPosts() {
@@ -63,6 +68,11 @@ public class PostService {
         List<PostResponse> res = new ArrayList<>();
         return computeVote(postRepository.findAll(), user);
 
+    }
+
+    private Integer nbCommentsInPost(Post post){
+        List<Comment> comments = commentRepository.findByPost(post);
+        return comments.stream().filter(c -> c.getSuperComment() == null).collect(Collectors.toList()).size();
     }
 
     public List<PostResponse> getPostsBySubjectId(Long subjectId) {
@@ -93,8 +103,8 @@ public class PostService {
         List<PostResponse> res = new ArrayList<>();
         posts.forEach(p -> {
             int voteNb = calcScore(votePostRepository.findAllByPost(p));
-            if (user == null)res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, VoteType.NOVOTE, SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser())));
-            else  res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, getVoteForPostAndUser(p, user), SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser())));
+            if (user == null)res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, VoteType.NOVOTE, SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser()), nbCommentsInPost(p)));
+            else  res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, getVoteForPostAndUser(p, user), SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser()), nbCommentsInPost(p)));
         });
         return res;
     }
@@ -139,7 +149,7 @@ public class PostService {
         }
         voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
         votePostRepository.save(new VotePost(vote.getVote(), user, post, LocalDateTime.now()));
-        return PostMapper.INSTANCE.mapToDto(post, calcScore(votePostRepository.findAllByPost(post)), getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()));
+        return PostMapper.INSTANCE.mapToDto(post, calcScore(votePostRepository.findAllByPost(post)), getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
     }
 
     public List<PostResponse> getAllPostsForSubject(Long subjectId, OrderType orderType, User user) {

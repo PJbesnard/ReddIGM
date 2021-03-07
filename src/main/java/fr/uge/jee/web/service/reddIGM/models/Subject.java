@@ -17,17 +17,12 @@ public class Subject {
     @NotNull
     private String description;
 
-    @NotNull
-    @OneToMany
-    private List<Post> posts;
-
     public Subject() {
     }
 
-    public Subject(@NotNull String name, @NotNull String description, @NotNull List<Post> posts) {
+    public Subject(@NotNull String name, @NotNull String description) {
         this.name = name;
         this.description = description;
-        this.posts = posts;
     }
 
     public String getName() {
@@ -50,21 +45,12 @@ public class Subject {
         this.description = description;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
     @Override
     public String toString() {
         return "Subject{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", posts=" + posts +
                 '}';
     }
 
@@ -75,12 +61,11 @@ public class Subject {
         Subject subject = (Subject) o;
         return id == subject.id &&
                 name.equals(subject.name) &&
-                description.equals(subject.description) &&
-                posts.equals(subject.posts);
+                description.equals(subject.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, posts);
+        return Objects.hash(id, name, description);
     }
 }
