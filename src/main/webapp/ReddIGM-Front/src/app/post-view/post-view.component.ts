@@ -45,7 +45,7 @@ export class PostViewComponent implements OnInit {
     if(!this.isAuthentified) {
       this.router.navigateByUrl('/login');
     }
-    this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote});
+    this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
   }
 
 }
