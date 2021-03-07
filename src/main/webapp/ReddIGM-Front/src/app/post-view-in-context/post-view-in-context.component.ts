@@ -7,6 +7,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { VoteType } from '../models/vote-type.enum';
+import { AuthenticationService } from '../services/authentication.service';
+import { PostService } from "../services/post.service"
+
+
+
 
 
 @Component({
@@ -34,6 +40,12 @@ export class PostViewInContextComponent implements OnInit {
   sort: String = "DESCENDING";
   hot: boolean = true;
 
+  upvote: VoteType = VoteType.UPVOTE;
+  downvote: VoteType = VoteType.DOWNVOTE;
+  novote: VoteType = VoteType.NOVOTE;
+  isAuthentified: boolean = false;
+
+
 
   @Input() type: string = "post";
   @Input() id: number = 1;
@@ -46,8 +58,11 @@ export class PostViewInContextComponent implements OnInit {
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
   @Input() responseNb: number = 182; 
 
+  @Input() vote: VoteType = VoteType.NOVOTE;
+
   
-  constructor(private commentService: CommentService, private router: Router) {
+  constructor(private commentService: CommentService, private postService: PostService, private authenticationService: AuthenticationService, private router: Router) {
+    this.isAuthentified = this.authenticationService.isLoggedIn();
   }
 
   ngOnInit(): void {
@@ -94,6 +109,13 @@ export class PostViewInContextComponent implements OnInit {
     this.sort = "DESCENDING";
     this.hot = true;
     this.displayResponses();
+  }
+
+  clickVote(userVote: VoteType) {
+    if(!this.isAuthentified) {
+      this.router.navigateByUrl('/login');
+    }
+    this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
   }
   
   

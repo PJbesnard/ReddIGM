@@ -27,6 +27,7 @@ export class PostViewComponent implements OnInit {
   @Input() subName: string = "r/truc"; //
   @Input() rate: number = 14; //utiliser number
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
+  
   @Input() vote: VoteType = VoteType.NOVOTE;
 
 
