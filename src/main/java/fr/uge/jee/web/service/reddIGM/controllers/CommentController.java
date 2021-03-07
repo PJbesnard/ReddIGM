@@ -31,6 +31,12 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment, principal));
     }
 
+    @GetMapping("/delete/{id}")
+    public void deleteComment(@PathVariable Long id) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        commentService.deleteComment(id, principal);
+    }
+
     @PostMapping("/vote")
     public ResponseEntity<CommentResponseDto> voteForComment(@Valid @RequestBody VoteCommentDto vote) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

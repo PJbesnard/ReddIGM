@@ -147,6 +147,16 @@ public class CommentService {
         return getAllCommentsForUser(userName, null);
     }
 
+    public void deleteComment(Long id, User user) {
+        Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Comment " + id.toString() + " not found"));
+        Authority userAuth = new Authority("USER");
+        if(user.getAuthorities().contains(userAuth) && comment.getUser().getId() != (user.getId())) throw new InvalidParameterException("Comment " + id.toString() + " is not a comment of " + user.getUsername());
+        List<Comment> subComments = commentRepository.findAllBySuperComment(comment);
+        subComments.forEach(c -> {voteCommentRepository.deleteAllByComment(c); commentRepository.deleteById(c.getId());});
+        voteCommentRepository.deleteAllByComment(comment);
+        commentRepository.deleteById(id);
+    }
+
     public CommentResponseDto vote(VoteCommentDto vote, User user) {
         Comment comment = commentRepository.findById(vote.getCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + vote.getCommentId().toString() + " not found"));
         Optional<VoteComment> voteByCommentAndUser = voteCommentRepository.findByCommentAndUser(comment, user);

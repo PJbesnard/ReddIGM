@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
+import fr.uge.jee.web.service.reddIGM.models.Post;
 import fr.uge.jee.web.service.reddIGM.models.VotePost;
 import fr.uge.jee.web.service.reddIGM.repositories.VotePostRepository;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;

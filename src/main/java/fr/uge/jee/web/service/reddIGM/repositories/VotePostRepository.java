@@ -17,4 +17,6 @@ public interface VotePostRepository extends JpaRepository<VotePost, Long> {
     List<VotePost> findAllByUserId(long userId);
     List<VotePost> findAllByUserIdOrderByCreationDateAsc(long userId);
     List<VotePost> findAllByUserIdOrderByCreationDateDesc(long userId);
+
+    void deleteAllByPost(Post post);
 }

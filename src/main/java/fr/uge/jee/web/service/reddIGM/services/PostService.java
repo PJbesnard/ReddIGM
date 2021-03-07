@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -42,6 +43,9 @@ public class PostService {
     @Autowired
     private  CommentRepository commentRepository;
 
+    @Autowired
+    private CommentService commentService;
+
 
     public void save(PostRequest postRequest, Long userId){
         Subject subreddit = subjectRepository.findById(postRequest.getSubjectId())
@@ -63,6 +67,17 @@ public class PostService {
                 .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
         int voteNb = calcScore(votePostRepository.findAllByPost(post));
         return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
+    }
+
+    public void deletePost(Long id, User user) {
+        Authority adminAuth = new Authority("ADMIN");
+        Post post = postRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Post " + id.toString() + " not found"));
+        User principal = userRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException("User " + user.getId() + " not found"));
+        if(!principal.getAuthorities().contains(adminAuth)) throw new InvalidParameterException("Only admins can delete posts");
+        List<Comment> comments = commentRepository.findByPost(post);
+        comments.forEach(c ->{ if(c.getSuperComment() == null) commentService.deleteComment(c.getId(), principal);});
+        votePostRepository.deleteAllByPost(post);
+        postRepository.deleteById(id);
     }
 
 
