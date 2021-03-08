@@ -6,8 +6,6 @@ import { environment } from 'src/environments/environment';
 import { VoteType } from '../models/vote-type.enum';
 import { CreateCommentPayload } from '../create-comment/create-comment.payload';
 
-
-
 const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
@@ -25,7 +23,7 @@ export class CommentService {
   }
 
   getCommentById(id: number): Observable<Comment> {
-    return this.http.get<Comment>(this.urlComment + id);
+    return this.http.get<Comment>(BASE_ADDRESS + "comments/" + id);
   }
 
   getCommentsFromPost(sort: String, id: number): Observable<Array<Comment>> {

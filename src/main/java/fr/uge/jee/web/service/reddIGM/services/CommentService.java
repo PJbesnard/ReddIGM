@@ -40,7 +40,7 @@ public class CommentService {
             Comment comment = optComment.get();
             int score = calcScore(voteCommentRepository.findAllByComment(comment));
             return Optional.of(
-                    new CommentResponseDto(id, comment.getText(), comment.getCreationDate(), comment.getPost().getPostId(), comment.getSuperComment().getId(), score, VoteType.NOVOTE, nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()))
+                    new CommentResponseDto(id, comment.getText(), comment.getCreationDate(), comment.getPost().getPostId(), Objects.isNull(comment.getSuperComment()) ? null : comment.getSuperComment().getId(), score, VoteType.NOVOTE, nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()))
             );
         } else {
             return Optional.empty();

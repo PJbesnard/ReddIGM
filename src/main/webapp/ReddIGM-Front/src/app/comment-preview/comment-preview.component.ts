@@ -12,15 +12,17 @@ export class CommentPreviewComponent implements OnInit {
   @Input()
   commentId!: number;
 
-  comment!: Comment;
+  comment: Comment = new Comment();
 
   constructor(private commentService: CommentService) {
-    this.commentService.getCommentById(this.commentId).subscribe(
-      (response) => this.comment = new Comment().deserialize(response)
-    );
   }
 
   ngOnInit(): void {
+    this.commentService.getCommentById(this.commentId).subscribe(
+      (response) => {
+        this.comment = new Comment().deserialize(response);
+      }
+    );
   }
 
 }
