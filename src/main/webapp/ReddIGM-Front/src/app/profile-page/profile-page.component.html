@@ -50,22 +50,32 @@
         <br />
 
         <div *ngFor="let elem of chronologicalHistoryFiltered">
-            <div *ngIf="elem instanceof PostModel">
+            <div *ngIf="isPost(elem)">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has posted</p>
-                <app-post-view></app-post-view>
+                <app-post-view [loaded]="false" [id]="asPost(elem).id"></app-post-view>
             </div>
 
-            <div *ngIf="elem instanceof Comment">
+            <div *ngIf="isComment(elem) && (asComment(elem).commentId === asComment(elem).postId)">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has commented this post</p>
-                <app-post-view></app-post-view>
+                <app-post-view [id]="asComment(elem).postId" [loaded]="false"></app-post-view>
                 <div style="margin-inline: auto; width: 98%;">
-                    <app-comment-preview></app-comment-preview>
+                    <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
                 </div>
             </div>
 
-            <div *ngIf="elem instanceof VotePost || elem instanceof VoteComment">
-                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} like this</p>
-                <app-post-view></app-post-view>
+            <div *ngIf="isComment(elem) && (asComment(elem).commentId !== asComment(elem).postId)">
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has replied to this comment</p>
+                <app-comment-preview [commentId]="asComment(elem).superCommentId"></app-comment-preview>
+                <div style="margin-inline: auto; width: 98%;">
+                    <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
+                </div>
+            </div>
+
+            <div *ngIf="isVotePost(elem) || isVoteComment(elem)">
+                <p class="has-text-light" *ngIf="isUpvote(elem)">&nbsp;&nbsp;{{ user.username }} like this</p>
+                <p class="has-text-light" *ngIf="isDownvote(elem)">&nbsp;&nbsp;{{ user.username }} dislike this</p>
+                <app-post-view *ngIf="isVotePost(elem)" [loaded]="false" [id]="asVotePost(elem).postId"></app-post-view>
+                <app-comment-preview *ngIf="isVoteComment(elem)" [commentId]="asVoteComment(elem).commentId"></app-comment-preview>
             </div>
 
             <br>

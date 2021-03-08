@@ -24,6 +24,10 @@ export class CommentService {
     this.urlUser = BASE_ADDRESS + 'comments/user/';
   }
 
+  getCommentById(id: number): Observable<Comment> {
+    return this.http.get<Comment>(this.urlComment + id);
+  }
+
   getCommentsFromPost(sort: String, id: number): Observable<Array<Comment>> {
     return this.http.get<Array<Comment>>(this.urlPost + id + '/' + sort, {
       headers: new HttpHeaders(
