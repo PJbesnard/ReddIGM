@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {PostService} from "../services/post.service"
 import {PostModel} from "../models/post.model"
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {SubjectService} from "../services/subject.service"
 import {SubjectModel} from "../models/subject-response"
 import {UserService} from "../services/user.service"
@@ -29,6 +29,7 @@ export class PostsFromSubComponent implements OnInit {
 	private subjectService: SubjectService,
 	private userService: UserService,
 	private route: ActivatedRoute,
+	private router: Router,
 	private dataService: DataService) {
     this.subId = this.route.snapshot.params['id'];
     this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});

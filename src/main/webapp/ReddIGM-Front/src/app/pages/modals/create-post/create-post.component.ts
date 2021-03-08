@@ -1,6 +1,7 @@
 import { PostService } from './../../../services/post.service';
 import { CreatePostPayload } from './create-post.payload';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-create-post',
   templateUrl: './create-post.component.html',
@@ -15,7 +16,9 @@ export class CreatePostComponent implements OnInit {
 	@Output()
   	openModelChange = new EventEmitter<boolean>();
 
-  constructor(private postService : PostService) { }
+  constructor(private postService : PostService,
+	private route: ActivatedRoute,
+	private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -51,7 +54,14 @@ export class CreatePostComponent implements OnInit {
 	payload.description = ""
 	this.postName= ""
 	this.description= ""
+	this.reloadComponent()
 
   }
 
+	reloadComponent() {
+		let currentUrl = this.router.url;
+			this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+			this.router.onSameUrlNavigation = 'reload';
+			this.router.navigate([currentUrl]);
+		}
 }
