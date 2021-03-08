@@ -59,8 +59,9 @@ export class PostViewInContextComponent implements OnInit {
   @Input() rate: number = 14; //utiliser number
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
   @Input() responseNb: number = 182;
-  @Input() postId: number = 0;
+  @Input() postId = 0;
   @Input() vote: VoteType = VoteType.NOVOTE;
+  @Input() nbSubComment: number = 0;
 
   constructor(private commentService: CommentService, private postService: PostService, private authenticationService: AuthenticationService, private router: Router) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
@@ -75,14 +76,15 @@ export class PostViewInContextComponent implements OnInit {
     this.showComments = true
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
-        console.log("data " + data)
         this.comments = data;
+        this.comments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
 
     if (this.type === "comment"){
       this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
         this.comments = data;
+        this.comments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
   }
@@ -124,7 +126,6 @@ export class PostViewInContextComponent implements OnInit {
     if (this.type === "post"){
       this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
     }else{
-      console.log("clic vote comment")
       this.commentService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.nbVote;});
     }
   }

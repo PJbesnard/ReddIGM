@@ -26,7 +26,7 @@ export class DisplayPostPageComponent implements OnInit {
     if (id != undefined) {
       this.postService.getPost(parseInt(id)).subscribe(
         (response) => {
-          this.post = response;
+          this.post = new PostModel().deserialize(response);
         }
       );
       this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();
