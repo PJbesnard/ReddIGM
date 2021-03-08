@@ -38,13 +38,13 @@ export class HomePageComponent implements OnInit {
   newOnclick(){
     this.sort = "NEWEST";
     this.hot = false;
-    this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   hotOnclick(){
     this.sort = "DESCENDING";
     this.hot = true;
-    this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   search(searchText : string){

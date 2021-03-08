@@ -56,13 +56,13 @@ export class PostsFromSubComponent implements OnInit {
   newOnclick(){
     this.sort = "NEWEST";
     this.hot = false;
-    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   hotOnclick(){
     this.sort = "DESCENDING";
     this.hot = true;
-    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   search(searchText : string){
