@@ -33,6 +33,20 @@ public class CommentService {
     @Autowired
     private VoteCommentRepository voteCommentRepository;
 
+    public Optional<CommentResponseDto> getById(long id) {
+        var optComment = repository.findById(id);
+
+        if (optComment.isPresent()) {
+            Comment comment = optComment.get();
+            int score = calcScore(voteCommentRepository.findAllByComment(comment));
+            return Optional.of(
+                    new CommentResponseDto(id, comment.getText(), comment.getCreationDate(), comment.getPost().getPostId(), comment.getSuperComment().getId(), score, VoteType.NOVOTE, nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()))
+            );
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public CommentResponseDto save(CommentRequestDto comment, User user) {
         Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + comment.getPostId().toString() + " not found"));
         Comment superComment = null;
