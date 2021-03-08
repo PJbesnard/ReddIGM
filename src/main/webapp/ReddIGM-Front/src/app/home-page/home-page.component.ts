@@ -20,11 +20,9 @@ export class HomePageComponent implements OnInit {
   subscription!: Subscription;
   message:string = "";
   faTimesCircle = faTimesCircle;
-  actualRoute: string = "";
 
   constructor(private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
     this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;});
-    this.actualRoute = 'home'
   }
 
   ngOnInit(): void {

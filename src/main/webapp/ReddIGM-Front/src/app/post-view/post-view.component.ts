@@ -33,7 +33,6 @@ export class PostViewComponent implements OnInit {
   @Input() vote: VoteType = VoteType.NOVOTE;
   @Input() subId: number | undefined = 0;
   @Input() authorId: number = 0;
-  @Input() parentRoute: string = ""
   @Input() post: PostModel | undefined;
   @Input() loaded: boolean = true; // If false, forces the component to load infos from backend with the id
 
@@ -44,7 +43,6 @@ export class PostViewComponent implements OnInit {
   ngOnInit(): void {
     this.isAuthentified = this.authenticationService.isLoggedIn();
     this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
-
     if (!this.loaded) {
       if (this.post) {
         this.id = this.post.id;
@@ -60,7 +58,7 @@ export class PostViewComponent implements OnInit {
       } else {
         this.postService.getPost(this.id).subscribe((response) => {
           const post = new PostModel().deserialize(response);
-  
+
           this.id = post.id;
           this.author = post.user.username;
           this.title = post.postName;
@@ -96,9 +94,6 @@ export class PostViewComponent implements OnInit {
   }
 
   deleteId(id: number) {
-    this.postService.deletePost(id).subscribe();
-    this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
-      this.router.navigate([this.parentRoute]);
-  });
+    this.postService.deletePost(id).subscribe(data => window.location.reload());
   }
 }
