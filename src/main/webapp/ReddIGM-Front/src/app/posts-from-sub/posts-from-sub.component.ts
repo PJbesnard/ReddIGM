@@ -25,6 +25,7 @@ export class PostsFromSubComponent implements OnInit {
   currentPosts: Array<PostModel> = [];
   subscription!: Subscription;
   message:string = "";
+  actualRoute: string = "";
 
   constructor(private postService: PostService,
 	private subjectService: SubjectService,
@@ -35,6 +36,7 @@ export class PostsFromSubComponent implements OnInit {
     this.subId = this.route.snapshot.params['id'];
     this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});
     this.subjectService.getSubject(this.subId).subscribe(data => {this.subName = data.name; this.subDescription = data.description;});
+    this.actualRoute = 'posts-from-sub/' + this.subId
   }
 
   ngOnInit(): void {

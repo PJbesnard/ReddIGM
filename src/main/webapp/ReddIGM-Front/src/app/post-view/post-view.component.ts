@@ -32,6 +32,7 @@ export class PostViewComponent implements OnInit {
   @Input() vote: VoteType = VoteType.NOVOTE;
   @Input() subId: number | undefined = 0;
   @Input() authorId: number = 0;
+  @Input() parentRoute: string = ""
 
 
   constructor(private router: Router, private authenticationService: AuthenticationService, private postService: PostService) {
@@ -63,5 +64,8 @@ export class PostViewComponent implements OnInit {
 
   deleteId(id: number) {
     this.postService.deletePost(id).subscribe();
+    this.router.navigateByUrl('/RefreshComponent', { skipLocationChange: true }).then(() => {
+      this.router.navigate([this.parentRoute]);
+  });
   }
 }

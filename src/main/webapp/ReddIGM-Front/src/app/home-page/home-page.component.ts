@@ -4,6 +4,8 @@ import {PostModel} from "../models/post.model";
 import { User } from '../models/user.model';
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
+import { AuthenticationService } from '../services/authentication.service';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home-page',
@@ -17,9 +19,12 @@ export class HomePageComponent implements OnInit {
   currentPosts: Array<PostModel> = [];
   subscription!: Subscription;
   message:string = "";
+  faTimesCircle = faTimesCircle;
+  actualRoute: string = "";
 
-  constructor(private postService: PostService, private dataService: DataService) {
+  constructor(private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
     this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;});
+    this.actualRoute = 'home'
   }
 
   ngOnInit(): void {
