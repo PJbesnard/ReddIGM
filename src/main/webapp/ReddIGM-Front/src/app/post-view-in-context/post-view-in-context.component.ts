@@ -6,15 +6,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { VoteType } from '../models/vote-type.enum';
 import { AuthenticationService } from '../services/authentication.service';
 import { PostService } from "../services/post.service"
-import { CreateCommentComponent} from "../create-comment/create-comment.component";
-
-
-
-
 
 @Component({
   selector: 'app-post-view-in-context',
@@ -49,6 +44,8 @@ export class PostViewInContextComponent implements OnInit {
 
   crossComment: boolean = false;
 
+  isAdmin: boolean | undefined = false;
+
 
   @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
@@ -64,15 +61,14 @@ export class PostViewInContextComponent implements OnInit {
   @Input() responseNb: number = 182;
   @Input() postId: number = 0;
   @Input() vote: VoteType = VoteType.NOVOTE;
-  @Input() isAdmin: boolean = false;
-
 
   constructor(private commentService: CommentService, private postService: PostService, private authenticationService: AuthenticationService, private router: Router) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
+    this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
   }
 
   ngOnInit(): void {
-    if(this.authenticationService.getCurrentUser()?.username === this.author || this.isAdmin) this.crossComment = true;
+    if((this.authenticationService.getCurrentUser()?.username === this.author) || this.isAdmin) this.crossComment = true;
   }
 
   displayResponses(){
@@ -92,8 +88,8 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   deleteId(id: number) {
-    if(this.type === "post") this.postService.deletePost(id);
-    this.commentService.deleteComment(id);
+    if(this.type === "post") this.postService.deletePost(id).subscribe();
+    else this.commentService.deleteComment(id).subscribe();
   }
 
   openModalCreatePost() {

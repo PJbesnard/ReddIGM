@@ -48,7 +48,7 @@
                  Hide
               </div>
             </div>
-            <div class="column is-1" *ngIf="(isAdmin && type=='post') || (!isAdmin && type != 'post' && crossComment)"><fa-icon [icon]="faTimesCircle" class="content is-clickable has-text-light" style="font-size: 24px;" (click)="deleteId(id)"></fa-icon></div>
+            <div class="column is-1" *ngIf="(isAdmin) || (!isAdmin && type != 'post' && crossComment)"><fa-icon [icon]="faTimesCircle" class="content is-clickable has-text-light" style="font-size: 24px;" (click)="deleteId(id)"></fa-icon></div>
           </div>
         </div>
         <div class="column is-1">

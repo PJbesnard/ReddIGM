@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { AuthenticationService } from '../services/authentication.service';
 import { VoteType } from '../models/vote-type.enum';
 import { PostService } from "../services/post.service"
@@ -13,11 +13,13 @@ import { PostService } from "../services/post.service"
 export class PostViewComponent implements OnInit {
   faPlusCircle = faPlusCircle;
   faMinusCircle = faMinusCircle;
+  faTimesCircle = faTimesCircle;
 
   upvote: VoteType = VoteType.UPVOTE;
   downvote: VoteType = VoteType.DOWNVOTE;
   novote: VoteType = VoteType.NOVOTE;
   isAuthentified: boolean = false;
+  isAdmin: boolean | undefined = false;
 
   @Input() id: number = 8;
   @Input() author: string = "Michel"; //
@@ -34,6 +36,7 @@ export class PostViewComponent implements OnInit {
 
   constructor(private router: Router, private authenticationService: AuthenticationService, private postService: PostService) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
+    this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
   }
 
   ngOnInit(): void {
@@ -58,4 +61,7 @@ export class PostViewComponent implements OnInit {
     this.router.navigateByUrl('users/'+this.authorId);
   }
 
+  deleteId(id: number) {
+    this.postService.deletePost(id).subscribe();
+  }
 }

@@ -1,3 +1,4 @@
+import { Authorities } from "./authorities.model";
 import { Deserializable } from "./deserializable.model";
 
 export class User implements Deserializable {
@@ -9,7 +10,7 @@ export class User implements Deserializable {
   description!: string;
   private picture!: string;
   newsletterSubscriber!: boolean;
-  authorities!: string[];
+  authorities!: Authorities[];
 
   deserialize(input: any): this {
     Object.assign(this, input);
@@ -23,8 +24,9 @@ export class User implements Deserializable {
 
     return this.picture;
   }
-
   public isAdmin(): boolean {
-    return this.authorities.indexOf("ADMIN") != -1;
+    let admin = false;
+    this.authorities.forEach(a => {if(a.authority === "ADMIN"){admin = true;}});
+    return admin;
   }
 }
