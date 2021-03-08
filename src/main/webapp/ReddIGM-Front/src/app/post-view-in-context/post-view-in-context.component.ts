@@ -88,8 +88,8 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   deleteId(id: number) {
-    if(this.type === "post") this.postService.deletePost(id).subscribe();
-    else this.commentService.deleteComment(id).subscribe();
+    if(this.type === "post") this.postService.deletePost(id).subscribe(data => window.location.reload());
+    else this.commentService.deleteComment(id).subscribe(data => window.location.reload());
   }
 
   openModalCreatePost() {

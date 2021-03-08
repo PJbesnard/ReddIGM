@@ -59,8 +59,8 @@
       <app-create-comment  *ngIf="type === 'comment'" [postId]="postId" [superCommentId]="id" [openModal]= "isModalActive" (openModelChange)="isModalActive = false"> </app-create-comment>
       <app-create-comment *ngIf="type === 'post'"  [postId]="id" [openModal]= "isModalActive" (openModelChange)="isModalActive = false"> </app-create-comment>
     </div>
-  <div *ngIf = "showComments === true" class="columns">
-    <div class="column is-1">
+  <div *ngIf = "comments.length > 0 && showComments === true" class="columns">
+    <div  class="column is-1"  >
       <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "hotOnclick()">Hot</p>
       <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-light is-clickable" (click) = "hotOnclick()">Hot</p>
     </div>
