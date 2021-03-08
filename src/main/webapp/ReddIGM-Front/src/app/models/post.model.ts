@@ -28,7 +28,7 @@ export class PostModel implements Datable, Deserializable {
 		if (input.sub != undefined) {
 			this.sub = new SubjectModel().deserialize(input.sub);
 		}
-
+		
 		if (input.user != undefined) {
 			this.user = new User().deserialize(input.user);
 		}
