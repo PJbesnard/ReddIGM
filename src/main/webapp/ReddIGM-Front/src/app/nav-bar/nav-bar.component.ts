@@ -27,6 +27,7 @@ export class NavBarComponent {
     if(this.isAuthentified) {
       this.user = this.authenticationService.getCurrentUser();
       this.picture = this.user?.getPicture();
+      console.log("pictuuuuure: " + this.picture);
       this.name = this.user?.username;
     }
   }

@@ -29,6 +29,8 @@ export class HomePageComponent implements OnInit {
 	this.postService.getAllPosts(this.sort).subscribe(data => {
 		this.currentPosts = data;
 		this.posts = data;
+    this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+    this.posts = this.posts.map(post => new PostModel().deserialize(post));
 	});
 	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
   }
@@ -45,9 +47,6 @@ export class HomePageComponent implements OnInit {
     this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
   }
 
-  getPicture(user: User): string {
-    return user.getPicture()
-  }
   search(searchText : string){
 	if (!this.posts) {
 		this.currentPosts = [];
