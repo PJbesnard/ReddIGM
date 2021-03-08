@@ -12,15 +12,15 @@ $reddIGM-light: #A8BDCA;
 $reddIGM-light-invert: findColorInvert(reddIGM-light);
 $reddIGM-grey: #3F4449;
 $reddIGM-grey-invert: findColorInvert(reddIGM-light);
-$reddIGM-danger: #252729;
-$reddIGM-danger-invert: findColorInvert(reddIGM-danger);
+$reddIGM-success: #252729;
+$reddIGM-success-invert: findColorInvert(reddIGM-danger);
 
 $primary: $reddIGM-green;
 $dark: $reddIGM-background;
 $info: $reddIGM-search;
 $light: $reddIGM-light;
 $grey: $reddIGM-grey;
-$danger: $reddIGM-danger;
+$success: $reddIGM-success;
 
 @import "../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
@@ -29,7 +29,7 @@ $addColors: (
   "reddIGM-search":($reddIGM-search, $reddIGM-search-invert),
   "reddIGM-light":($reddIGM-light, $reddIGM-light-invert),
   "reddIGM-grey":($reddIGM-grey, $reddIGM-grey-invert),
-  "reddIGM-danger":($reddIGM-danger, $reddIGM-danger-invert),
+  "reddIGM-success":($reddIGM-success, $reddIGM-success-invert),
 );
 $colors: map-merge($colors, $addColors);
 
