@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { PostViewInContextComponent } from '../post-view-in-context/post-view-in-context.component';
 import { PostService } from '../services/post.service';
 import { PostModel } from '../models/post.model';
+import { DataService } from '../services/data.service';
 
 
 @Component({
