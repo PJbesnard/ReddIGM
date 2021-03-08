@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { faPlusCircle, faMinusCircle } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
+import { faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { AuthenticationService } from '../services/authentication.service';
 import { VoteType } from '../models/vote-type.enum';
 import { PostService } from "../services/post.service"
+import { PostModel } from '../models/post.model';
 
 @Component({
   selector: 'app-post-view',
@@ -13,30 +14,64 @@ import { PostService } from "../services/post.service"
 export class PostViewComponent implements OnInit {
   faPlusCircle = faPlusCircle;
   faMinusCircle = faMinusCircle;
+  faTimesCircle = faTimesCircle;
 
   upvote: VoteType = VoteType.UPVOTE;
   downvote: VoteType = VoteType.DOWNVOTE;
   novote: VoteType = VoteType.NOVOTE;
   isAuthentified: boolean = false;
+  isAdmin: boolean | undefined = false;
 
-  @Input() id: number = 8;
-  @Input() author: string = "Michel"; //
-  @Input() title: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
-  @Input() content: string = "BDK ou BDE quelle association est la plus éclatée ?"; //
-  @Input() date: string = "5 days ago"; //
-  @Input() subName: string = "r/truc"; //
-  @Input() rate: number = 14; //utiliser number
-  @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
+  @Input() id: number = 0;
+  @Input() author: string = "";
+  @Input() title: string = "";
+  @Input() content: string = "";
+  @Input() date: string = "";
+  @Input() subName: string = "";
+  @Input() rate: number = 0;
+  @Input() image: string = "";
   @Input() vote: VoteType = VoteType.NOVOTE;
   @Input() subId: number | undefined = 0;
   @Input() authorId: number = 0;
+  @Input() post: PostModel | undefined;
+  @Input() loaded: boolean = true; // If false, forces the component to load infos from backend with the id
 
 
   constructor(private router: Router, private authenticationService: AuthenticationService, private postService: PostService) {
-    this.isAuthentified = this.authenticationService.isLoggedIn();
   }
 
   ngOnInit(): void {
+    this.isAuthentified = this.authenticationService.isLoggedIn();
+    this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
+    if (!this.loaded) {
+      if (this.post) {
+        this.id = this.post.id;
+        this.author = this.post.user.username;
+        this.title = this.post.postName;
+        this.content = this.post.description;
+        this.date = this.post.duration;
+        this.subName = this.post.sub.name;
+        this.rate = this.post.voteCount;
+        this.vote = this.post.myVote;
+        this.subId = this.post.sub.id;
+        this.authorId = this.post.user.id;
+      } else {
+        this.postService.getPost(this.id).subscribe((response) => {
+          const post = new PostModel().deserialize(response);
+
+          this.id = post.id;
+          this.author = post.user.username;
+          this.title = post.postName;
+          this.content = post.description;
+          this.date = post.duration;
+          this.subName = post.sub.name;
+          this.rate = post.voteCount;
+          this.vote = post.myVote;
+          this.subId = post.sub.id;
+          this.authorId = post.user.id;
+        });
+      }
+    }
   }
 
   displayPost(){
@@ -58,4 +93,7 @@ export class PostViewComponent implements OnInit {
     this.router.navigateByUrl('users/'+this.authorId);
   }
 
+  deleteId(id: number) {
+    this.postService.deletePost(id).subscribe(data => window.location.reload());
+  }
 }

@@ -1,5 +1,6 @@
 import { CreateCommentPayload } from './create-comment.payload';
 import { CreateSubcommentPayload } from './create-subcomment.payload';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CommentService } from '../services/comment.service';
@@ -14,11 +15,13 @@ export class CreateCommentComponent implements OnInit {
 	@Input() openModal: any
   @Input() postId: number = 0;
   @Input() superCommentId: number = 0;
-	
+	@Input() url: String = "/home";
 	@Output()
   	openModelChange = new EventEmitter<boolean>();
 
-  constructor(private commmentService : CommentService) { }
+  constructor(private commmentService : CommentService, private router: Router) {
+
+   }
 
   ngOnInit(): void {
   }
@@ -32,6 +35,8 @@ export class CreateCommentComponent implements OnInit {
   }
   closeModal() {
 	  this.openModelChange.emit(!this.openModal);
+    this.router.navigateByUrl('' + this.url);
+
   }
 
   createComment(){
@@ -42,6 +47,7 @@ export class CreateCommentComponent implements OnInit {
       this.commmentService.createComment(payload).subscribe((data) => {
         this.closeModal()
         this.reset()
+        window.location.reload()
       } )
     }else{
       let payload  = new CreateSubcommentPayload();
@@ -51,6 +57,8 @@ export class CreateCommentComponent implements OnInit {
       this.commmentService.createComment(payload).subscribe((data) => {
         this.closeModal()
         this.reset()
+        window.location.reload()
+
       } )
     }
 

@@ -3,6 +3,8 @@ package fr.uge.jee.web.service.reddIGM.controllers;
 import fr.uge.jee.web.service.reddIGM.dto.CommentRequestDto;
 import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
+import fr.uge.jee.web.service.reddIGM.mapper.CommentMapper;
+import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.CommentService;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
@@ -24,6 +26,11 @@ public class CommentController {
 
     @Autowired
     private CommentService commentService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CommentResponseDto> getComment(@PathVariable Long id) {
+        return ResponseEntity.of(commentService.getById(id));
+    }
 
     @PostMapping
     public ResponseEntity<CommentResponseDto> createComment(@Valid @RequestBody CommentRequestDto comment) {

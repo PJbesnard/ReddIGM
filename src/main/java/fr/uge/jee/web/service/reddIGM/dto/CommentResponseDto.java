@@ -1,6 +1,5 @@
 package fr.uge.jee.web.service.reddIGM.dto;
 
-import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.models.VoteType;
 
 import java.time.LocalDateTime;

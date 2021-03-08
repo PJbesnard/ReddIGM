@@ -16,7 +16,7 @@ export class PostService {
 
   constructor(private httpClient: HttpClient ) { }
 
-  getPost(id: string): Observable<PostModel> {
+  getPost(id: number): Observable<PostModel> {
     return this.httpClient.get<PostModel>(BASE_ADDRESS+"posts/"+id);
   }
 

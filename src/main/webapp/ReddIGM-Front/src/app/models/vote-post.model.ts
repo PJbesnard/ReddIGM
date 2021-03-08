@@ -5,7 +5,7 @@ import { VoteType } from "./vote-type.enum";
 export class VotePost implements Deserializable, Datable {
 
     postId!: number;
-    type!: VoteType;
+    vote!: VoteType;
     creationDate!: string;
 
     deserialize(input: any): this {

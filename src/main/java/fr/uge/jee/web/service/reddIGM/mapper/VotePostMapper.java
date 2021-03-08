@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 public interface VotePostMapper {
     VotePostMapper INSTANCE = Mappers.getMapper(VotePostMapper.class);
 
-    @Mapping(target = "postId", expression = "java(vote.getId())")
+    @Mapping(target = "postId", expression = "java(vote.getPost().getPostId())")
     @Mapping(target = "vote", expression = "java(vote.getType())")
     @Mapping(target = "creationDate", expression = "java(vote.getCreationDate())")
     VotePostDto toDto(VotePost vote);

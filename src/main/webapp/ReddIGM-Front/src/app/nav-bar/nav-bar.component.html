@@ -1,4 +1,4 @@
-<nav class="navbar is-fixed-top has-background-dark" role="navigation" aria-label="main navigation">
+<nav class="navbar is-fixed-top has-background-success" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="http://localhost:4200/">
       <img
@@ -13,7 +13,7 @@
     <div class="navbar-item">
       <div class="field has-addons">
         <div class="control is-dark">
-			<input type="search" [(ngModel)]="searchText" (input)="search()" placeholder="Search text">
+			<input class="input" type="search" [(ngModel)]="searchText" (input)="search()" placeholder="Search text">
         </div>
 
       </div>
@@ -31,7 +31,7 @@
         </div>
         <div class="navbar-item is-clickable" *ngIf="isAuthentified">
           <figure class="image is-28x28">
-            <img class="is-rounded" src=picture>
+            <img class="is-rounded" src="{{picture}}">
           </figure>
           <div class="columns is-vcentered">
             <div class="column">

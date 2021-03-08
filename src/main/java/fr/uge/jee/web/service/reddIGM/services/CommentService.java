@@ -33,6 +33,20 @@ public class CommentService {
     @Autowired
     private VoteCommentRepository voteCommentRepository;
 
+    public Optional<CommentResponseDto> getById(long id) {
+        var optComment = repository.findById(id);
+
+        if (optComment.isPresent()) {
+            Comment comment = optComment.get();
+            int score = calcScore(voteCommentRepository.findAllByComment(comment));
+            return Optional.of(
+                    new CommentResponseDto(id, comment.getText(), comment.getCreationDate(), comment.getPost().getPostId(), Objects.isNull(comment.getSuperComment()) ? null : comment.getSuperComment().getId(), score, VoteType.NOVOTE, nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()))
+            );
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public CommentResponseDto save(CommentRequestDto comment, User user) {
         Post post = postRepository.findById(comment.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + comment.getPostId().toString() + " not found"));
         Comment superComment = null;
@@ -149,12 +163,13 @@ public class CommentService {
 
     public void deleteComment(Long id, User user) {
         Comment comment = commentRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Comment " + id.toString() + " not found"));
+        System.out.println("comment: " + comment.getId());
         Authority userAuth = new Authority("USER");
         if(user.getAuthorities().contains(userAuth) && comment.getUser().getId() != (user.getId())) throw new InvalidParameterException("Comment " + id.toString() + " is not a comment of " + user.getUsername());
         List<Comment> subComments = commentRepository.findAllBySuperComment(comment);
-        subComments.forEach(c -> {voteCommentRepository.deleteAllByComment(c); commentRepository.deleteById(c.getId());});
-        voteCommentRepository.deleteAllByComment(comment);
+        subComments.forEach(c -> {commentRepository.deleteById(c.getId()); voteCommentRepository.deleteAllByComment_Id(c.getId());});
         commentRepository.deleteById(id);
+        voteCommentRepository.deleteAllByComment_Id(comment.getId());
     }
 
     public CommentResponseDto vote(VoteCommentDto vote, User user) {

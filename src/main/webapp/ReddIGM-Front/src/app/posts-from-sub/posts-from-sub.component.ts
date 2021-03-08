@@ -8,6 +8,7 @@ import {UserService} from "../services/user.service"
 import {User} from "../models/user.model"
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-posts-from-sub',
@@ -40,6 +41,8 @@ export class PostsFromSubComponent implements OnInit {
 	this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {
 		this.currentPosts = data;
 		this.posts = data;
+    this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+    this.posts = this.posts.map(post => new PostModel().deserialize(post));
 	});
 	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
   }
@@ -53,13 +56,13 @@ export class PostsFromSubComponent implements OnInit {
   newOnclick(){
     this.sort = "NEWEST";
     this.hot = false;
-    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   hotOnclick(){
     this.sort = "DESCENDING";
     this.hot = true;
-    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   search(searchText : string){

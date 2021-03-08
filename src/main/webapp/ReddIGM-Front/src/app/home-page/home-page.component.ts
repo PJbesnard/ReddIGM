@@ -4,6 +4,8 @@ import {PostModel} from "../models/post.model";
 import { User } from '../models/user.model';
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
+import { AuthenticationService } from '../services/authentication.service';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home-page',
@@ -17,8 +19,9 @@ export class HomePageComponent implements OnInit {
   currentPosts: Array<PostModel> = [];
   subscription!: Subscription;
   message:string = "";
+  faTimesCircle = faTimesCircle;
 
-  constructor(private postService: PostService, private dataService: DataService) {
+  constructor(private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
     this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;});
   }
 
@@ -26,6 +29,8 @@ export class HomePageComponent implements OnInit {
 	this.postService.getAllPosts(this.sort).subscribe(data => {
 		this.currentPosts = data;
 		this.posts = data;
+    this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+    this.posts = this.posts.map(post => new PostModel().deserialize(post));
 	});
 	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
   }
@@ -33,18 +38,15 @@ export class HomePageComponent implements OnInit {
   newOnclick(){
     this.sort = "NEWEST";
     this.hot = false;
-    this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
   hotOnclick(){
     this.sort = "DESCENDING";
     this.hot = true;
-    this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;this.currentPosts = data});
+    this.ngOnInit();
   }
 
-  getPicture(user: User): string {
-    return user.getPicture()
-  }
   search(searchText : string){
 	if (!this.posts) {
 		this.currentPosts = [];

@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { VoteType } from '../models/vote-type.enum';
 import { AuthenticationService } from '../services/authentication.service';
 import { PostService } from "../services/post.service"
@@ -52,6 +52,8 @@ export class PostViewInContextComponent implements OnInit {
 
   crossComment: boolean = false;
 
+  isAdmin: boolean | undefined = false;
+
 
   @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
@@ -65,10 +67,9 @@ export class PostViewInContextComponent implements OnInit {
   @Input() rate: number = 14; //utiliser number
   @Input() image: string = "https://ih1.redbubble.net/image.698410235.0273/flat,128x128,075,t.u2.jpg"; //utiliser number
   @Input() responseNb: number = 182;
-  @Input() postId: number = 0;
+  @Input() postId = 0;
   @Input() vote: VoteType = VoteType.NOVOTE;
-  @Input() isAdmin: boolean = false;
-
+  @Input() nbSubComment: number = 0;
 
   constructor(private commentService: CommentService,
 	private postService: PostService,
@@ -76,6 +77,7 @@ export class PostViewInContextComponent implements OnInit {
 	private router: Router,
 	private dataService: DataService) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
+    this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
   }
 
   ngOnInit(): void {
@@ -91,9 +93,10 @@ export class PostViewInContextComponent implements OnInit {
     this.showComments = true
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
-        console.log("data " + data)
         this.comments = data;
 		this.currentComments = data
+        this.comments = this.comments.map(c => new Comment().deserialize(c))
+		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
 
@@ -101,13 +104,15 @@ export class PostViewInContextComponent implements OnInit {
       this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
         this.comments = data;
 		this.currentComments = data
+        this.comments = this.comments.map(c => new Comment().deserialize(c))
+		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
   }
 
   deleteId(id: number) {
-    if(this.type === "post") this.postService.deletePost(id);
-    this.commentService.deleteComment(id);
+    if(this.type === "post") this.postService.deletePost(id).subscribe(data => window.location.reload());
+    else this.commentService.deleteComment(id).subscribe(data => window.location.reload());
   }
 
   openModalCreatePost() {
@@ -143,7 +148,6 @@ export class PostViewInContextComponent implements OnInit {
     if (this.type === "post"){
       this.postService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.voteCount;});
     }else{
-      console.log("clic vote comment")
       this.commentService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.nbVote;});
     }
   }

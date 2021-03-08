@@ -12,7 +12,7 @@ export class CreatePostComponent implements OnInit {
 	subjectName:string = "TestSubject"
 	description:string = ""
 	@Input() openModal: any
-	
+
 	@Output()
   	openModelChange = new EventEmitter<boolean>();
 
@@ -26,7 +26,7 @@ export class CreatePostComponent implements OnInit {
 
   isModalActive: boolean = false;
   isDropdownActive: boolean = false;
-  
+
   openDropdown() {
 	this.isDropdownActive = !this.isDropdownActive;
   }
@@ -45,7 +45,6 @@ export class CreatePostComponent implements OnInit {
 			this.closeModal()
 			this.reset()
 		} )
-		
   }
 
   reset(){

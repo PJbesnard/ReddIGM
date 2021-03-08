@@ -6,8 +6,6 @@ import { environment } from 'src/environments/environment';
 import { VoteType } from '../models/vote-type.enum';
 import { CreateCommentPayload } from '../create-comment/create-comment.payload';
 
-
-
 const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
@@ -24,6 +22,10 @@ export class CommentService {
     this.urlUser = BASE_ADDRESS + 'comments/user/';
   }
 
+  getCommentById(id: number): Observable<Comment> {
+    return this.http.get<Comment>(BASE_ADDRESS + "comments/" + id);
+  }
+
   getCommentsFromPost(sort: String, id: number): Observable<Array<Comment>> {
     return this.http.get<Array<Comment>>(this.urlPost + id + '/' + sort, {
       headers: new HttpHeaders(
@@ -35,15 +37,14 @@ export class CommentService {
 
   }
 
-  deleteComment(id: number): Observable<Array<Comment>> {
-    return this.http.get<Array<Comment>>(BASE_ADDRESS + "comments/delete/" + id, {
+  deleteComment(id: number) {
+    return this.http.get(BASE_ADDRESS + 'comments/delete/'+id, {
       headers: new HttpHeaders(
         {
           'Access-Control-Allow-Origin':'*'
         }
       )
-    });
-
+    })
   }
 
   getCommentsForComment(sort: String, id: number): Observable<Array<Comment>> {
