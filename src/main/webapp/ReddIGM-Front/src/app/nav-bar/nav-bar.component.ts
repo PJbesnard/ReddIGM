@@ -3,6 +3,7 @@ import { DataService } from '../services/data.service';
 import { AuthenticationService } from "../services/authentication.service"
 import { User } from '../models/user.model';
 import { UserService } from '../services/user.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class NavBarComponent {
   user: User | null = new User();
   picture: string | undefined = "";
 
-  constructor(private dataService: DataService, private authenticationService: AuthenticationService, private userService: UserService) {
+  constructor(private dataService: DataService, private authenticationService: AuthenticationService, private userService: UserService, private router: Router) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
   }
 
@@ -37,5 +38,10 @@ export class NavBarComponent {
 
   logout() {
     this.authenticationService.logout();
+    this.router.navigate(["/home"]);
+  }
+
+  goToProfile() {
+    this.router.navigate(["/users/" + this.user?.id]);
   }
 }
