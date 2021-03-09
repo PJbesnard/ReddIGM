@@ -6,7 +6,7 @@ import {
   HttpInterceptor,
   HttpResponse
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthenticationService } from './authentication.service';
 import { Router } from '@angular/router';
@@ -27,8 +27,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       });
     }
 
-    return next.handle(request).pipe(catchError((response: HttpResponse<any>) => {
-      if (response.status === 403) {
+    return next.handle(request).pipe(catchError((errorResponse: HttpResponse<any>) => {
+      if (errorResponse.status === 403) {
         if (this.authService.isLoggedIn()) {
           // Invalid token in memory
           this.authService.logout();
@@ -37,8 +37,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         // Redirecting user to login page
         this.router.navigate(["/login"]);
       }
-      
-      return next.handle(request);
+
+      return throwError(errorResponse);
     }))
   }
 }
