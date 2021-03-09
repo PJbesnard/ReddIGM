@@ -4,6 +4,11 @@
 </div>
 
 <div class="container is-max-desktop">
+
+    <div class="content" style="margin-inline: auto; width: 90%;">
+        <app-alert></app-alert>
+    </div>
+
     <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
         <div class="field">
             <label class="subtitle has-text-light">
@@ -50,8 +55,14 @@
             </label>
           </div>
     
-          <div class="control is-expanded">
-            <button class="button is-primary" type="submit">Submit</button>
+          <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-primary" type="submit">Submit</button>
+              </div>
+    
+              <div class="control">
+                <button class="button is-primary is-light" (click)="onCancelClick()">Cancel</button>
+              </div>
           </div>
     </form>
 </div>
