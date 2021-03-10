@@ -5,7 +5,7 @@
                 <img class="is-rounded" src="{{ comment.user.getPicture() }}" style="height: 1.3em;">
                 &nbsp;&nbsp;{{ comment.user.username }}
             </h1>
-            <p class="has-text-grey-lighter">{{ comment.text }}</p>
+            <p class="has-text-grey-lighter" [innerHTML]="comment.text" ></p>
         </div>
     </div>
 </div>

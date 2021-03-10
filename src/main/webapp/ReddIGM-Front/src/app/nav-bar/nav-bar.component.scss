@@ -5,8 +5,26 @@
   color: white;
   transition: 0.6s ease;
   margin-block: 1%;
+  width: 10em;
 }
 
 .input:focus {
   box-shadow: 0 0 0 0.125em rgba(17, 199, 81, 0.25);
+  resize: horizontal;
+  width: 20em;
+}
+
+.navbar-menu.navbar-center {
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.navbar {
+  background-color: rgb(53, 57, 63);
+  box-shadow:0px 0px 25px 0px rgba(1,1,1,0.2);
+}
+
+.navbar-start > a.navbar-item:hover {
+  background-color:rgb(63, 67, 73);
 }

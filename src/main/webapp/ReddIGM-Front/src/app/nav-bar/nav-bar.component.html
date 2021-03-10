@@ -1,47 +1,58 @@
-<nav class="navbar is-fixed-top has-background-success" role="navigation" aria-label="main navigation">
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation" >
   <div class="navbar-brand">
-    <a class="navbar-item" href="http://localhost:4200/">
-      <img
-        src="./assets/img/logo.svg"
-        width="112px"
-        height="28px"
-      />
+    <a class="navbar-item" href="/home">
+      <img src="./assets/img/logo.svg">
+    </a>
 
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
     </a>
   </div>
-  <div class="navbar-start" style="flex-grow: 2; justify-content: center;">
-    <div class="navbar-item">
-      <div class="field has-addons">
-        <div class="control is-dark">
-			<input class="input" type="search" [(ngModel)]="searchText" (input)="search()" placeholder="Search text">
-        </div>
 
+  <div class="navbar-menu" id="navMenu">
+    <div class="navbar-start">
+      <a class="navbar-item has-text-light" href="/home">
+        Home
+      </a>
+
+      <a class="navbar-item has-text-light" href="/list-subs">
+        Subjects
+      </a>
+    </div>
+    
+    <div class="navbar-center">
+      <div class="navbar-item">
+        <input class="input" type="search" [(ngModel)]="searchText" (input)="search()" placeholder="Search text">
+      </div>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item" *ngIf="!isAuthentified">
+        <div class="buttons">
+          <a class="button is-primary is-outlined" href="/register">
+            <strong>Sign up</strong>
+          </a>
+          <a class="button is-primary" href="/login">
+            Log in
+          </a>
+        </div>
+      </div>
+
+      <figure *ngIf="isAuthentified" class="image" style="margin-block: 0.4em;">
+        <img class="is-rounded is-clickable" src="{{ picture }}" (click)="goToProfile()" style="width: 3em;">
+      </figure>
+
+      <label *ngIf="isAuthentified" class="navbar-item is-clickable has-text-light" (click)="goToProfile()">
+        {{name}}
+      </label>
+
+      <div *ngIf="isAuthentified" class="navbar-item">
+        <a class="button is-primary is-outlined" (click)="logout()">
+          <strong>Log out</strong>
+        </a>
       </div>
     </div>
   </div>
-
-    <div class="navbar-end">
-        <div class="navbar-item" *ngIf="!isAuthentified">
-          <div class="buttons">
-            <a class="button is-primary is-outlined" href="/register">
-              <strong>Sign up</strong>
-            </a>
-            <a class="button is-primary" href="/login"> Log in </a>
-          </div>
-        </div>
-        <div class="navbar-item is-clickable" *ngIf="isAuthentified">
-          <figure class="image is-28x28">
-            <img class="is-rounded" src="{{picture}}">
-          </figure>
-          <div class="columns is-vcentered">
-            <div class="column">
-              <div class="content has-text-primary is-clickable has-text-left has-text-weight-bold">{{name}}</div>
-            </div>
-          </div>
-        </div>
-        <div class="navbar-item is-clickable" *ngIf="isAuthentified">
-          <a class="button is-primary" (click)="logout()" href="/home"> Log out </a>
-        </div>
-    </div>
-
 </nav>

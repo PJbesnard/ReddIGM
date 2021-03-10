@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faChevronCircleUp, faPlusCircle, faReply, faMinusCircle, faCommentAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
@@ -10,6 +10,12 @@ import { Router } from '@angular/router';
 import { VoteType } from '../models/vote-type.enum';
 import { AuthenticationService } from '../services/authentication.service';
 import { PostService } from "../services/post.service"
+import { CreateCommentComponent} from "../create-comment/create-comment.component";
+import { DataService } from '../services/data.service';
+
+
+
+
 
 @Component({
   selector: 'app-post-view-in-context',
@@ -25,6 +31,8 @@ export class PostViewInContextComponent implements OnInit {
   appareilsSubject = new Subject<any[]>();
 
   comments: Array<Comment> = [];
+  currentComments: Array<Comment> = [];
+  subscription!: Subscription;
 
   isModalActive: boolean = false;
 
@@ -63,13 +71,22 @@ export class PostViewInContextComponent implements OnInit {
   @Input() vote: VoteType = VoteType.NOVOTE;
   @Input() nbSubComment: number = 0;
 
-  constructor(private commentService: CommentService, private postService: PostService, private authenticationService: AuthenticationService, private router: Router) {
+  constructor(private commentService: CommentService,
+	private postService: PostService,
+	private authenticationService: AuthenticationService,
+	private router: Router,
+	private dataService: DataService) {
     this.isAuthentified = this.authenticationService.isLoggedIn();
     this.isAdmin = this.authenticationService.getCurrentUser()?.isAdmin()
   }
 
   ngOnInit(): void {
-    if((this.authenticationService.getCurrentUser()?.username === this.author) || this.isAdmin) this.crossComment = true;
+    if(this.authenticationService.getCurrentUser()?.username === this.author || this.isAdmin) this.crossComment = true;
+
+
+	
+	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
+
   }
 
   displayResponses(){
@@ -77,14 +94,18 @@ export class PostViewInContextComponent implements OnInit {
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
         this.comments = data;
+		this.currentComments = data
         this.comments = this.comments.map(c => new Comment().deserialize(c))
+		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
 
     if (this.type === "comment"){
       this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
         this.comments = data;
+		this.currentComments = data
         this.comments = this.comments.map(c => new Comment().deserialize(c))
+		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
       });
     }
   }
@@ -101,6 +122,7 @@ export class PostViewInContextComponent implements OnInit {
   hideResponses() {
     this.showComments = false;
     this.comments = [];
+	this.currentComments = [];
   }
 
   displayAuthor(){
@@ -129,4 +151,23 @@ export class PostViewInContextComponent implements OnInit {
       this.commentService.vote(this.id, userVote).subscribe(data => {this.vote = data.myVote; this.rate = data.nbVote;});
     }
   }
+
+    search(searchText : string){
+	if (!this.comments) {
+		this.currentComments = [];
+		console.log(this.currentComments)
+	}
+	  if (!searchText) {
+		this.currentComments = this.comments;
+		console.log(this.currentComments)
+	  }
+	  searchText = searchText.toLocaleLowerCase();
+
+	  this.currentComments = this.comments.filter(it => {
+		return it.text.toLocaleLowerCase().includes(searchText);
+
+	  })
+  }
+
+
 }

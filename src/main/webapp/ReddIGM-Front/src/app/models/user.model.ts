@@ -24,9 +24,12 @@ export class User implements Deserializable {
 
     return this.picture;
   }
+
+  public setPicture(url: string): void {
+    this.picture = url;
+  }
+
   public isAdmin(): boolean {
-    let admin = false;
-    this.authorities.forEach(a => {if(a.authority === "ADMIN"){admin = true;}});
-    return admin;
+    return this.authorities.find(authority => authority.authority === "ADMIN") != undefined;
   }
 }

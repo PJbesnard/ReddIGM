@@ -44,7 +44,10 @@ export class RegisterPageComponent implements OnInit {
       formValue['username'],
       formValue['password'],
       formValue['email'],
-      () => this.router.navigate(["/home"]),
+      () =>
+        this.authService.login(formValue['username'], formValue['password'],
+          () => this.router.navigate(["/home"])
+        ),
       (errorMsg) => {
         this.logging = false;
         this.alertService.error(errorMsg);

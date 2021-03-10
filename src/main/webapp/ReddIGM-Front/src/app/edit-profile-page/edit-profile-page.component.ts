@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
+import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class EditProfilePageComponent implements OnInit {
   user: User = new User();
   registerForm: FormGroup;
 
-  constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute) {
+  constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private alertService: AlertService) {
     let userId = this.route.snapshot.params['id'];
 
     this.registerForm = this.formBuilder.group({
@@ -41,26 +42,60 @@ export class EditProfilePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Reset alert
+    this.alertService.clear();
   }
 
-  onSubmitForm() {
+  onSubmitForm(): void {
     const formValue = this.registerForm.value;
+    let redirecting = false;
+
+    // Reset alert
+    this.alertService.clear();
 
     if ( formValue.description !== this.user.description ) {
-      // TODO : Mettre à jour formValue.description
+      this.user.description = formValue.description;
     }
 
     if ( formValue.picture !== this.user.getPicture() ) {
-      // TODO : Mettre à jour formValue.picture
+      this.user.description = formValue.description;
     }
 
     if ( formValue.newsletters !== this.user.newsletterSubscriber ) {
-      // TODO : Mettre à jour formValue.newsletters
+      this.user.setPicture(formValue.newsletters);
     }
+    
+    this.userService.updateUser(this.user.id, this.user).subscribe(
+      (response) => {
+        if (!redirecting) {
+          redirecting = true;
+          this.alertService.success("Profile successfully updated", true);
+          this.router.navigate(["/users/" + this.user.id]);
+        }
+      },
+      (errorMessage) => {
+        this.alertService.error("Updating failed : " + errorMessage);
+      }
+    );
 
     if (formValue.password) {
-      // TODO : Mettre à jour formValue.password
+      console.log("Changement du pass");
+      this.userService.updateUserPassword(this.user.id, formValue.password).subscribe(
+        (response) => {
+          if (!redirecting) {
+            redirecting = true;
+            this.alertService.success("Password successfully updated", true);
+            this.router.navigate(["/users/" + this.user.id]);
+          }
+        },
+        (errorMessage) => {
+          this.alertService.error("Updating failed");
+        }
+      );
     }
   }
 
+  onCancelClick(): void {
+    this.router.navigate(["/users/" + this.user.id]);
+  }
 }

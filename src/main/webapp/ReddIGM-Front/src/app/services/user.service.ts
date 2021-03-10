@@ -35,4 +35,12 @@ export class UserService {
   getUserVotesComments(userId: number, orderType: OrderType = OrderType.DESCENDING): Observable<VoteComment[]> {
     return this.httpClient.get<VoteComment[]>(BASE_ADDRESS + "users/" + userId + "/votes/comments/" + orderType);
   }
+
+  updateUser(userId: number, newUser: User): Observable<User> {
+    return this.httpClient.post<User>(BASE_ADDRESS + "users/" + userId, newUser);
+  }
+
+  updateUserPassword(userId: number, newPassword: string): Observable<User> {
+    return this.httpClient.post<User>(BASE_ADDRESS + "users/editPassword/" + userId, newPassword);
+  }
 }

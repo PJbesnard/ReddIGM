@@ -6,12 +6,16 @@ import fr.uge.jee.web.service.reddIGM.dto.VotePostDto;
 import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.VoteCommentMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.VotePostMapper;
+import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.services.UserService;
 import fr.uge.jee.web.service.reddIGM.services.VoteCommentService;
 import fr.uge.jee.web.service.reddIGM.services.VotePostService;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,6 +33,9 @@ public class UserController {
 
     @Autowired
     private VoteCommentService voteCommentService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
@@ -77,5 +84,37 @@ public class UserController {
                         // Converting VoteComment to VoteCommentDto
                         .stream().map(VoteCommentMapper.INSTANCE::toDto).collect(Collectors.toList())
         );
+    }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
+        var ctx = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        User authUser = (User) ctx;
+
+        if (authUser.getId() != id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        User user = userService.getById(id).get();
+        user.setPicture(userDto.getPicture());
+        user.setDescription(userDto.getDescription());
+        user.setNewsletterSubscriber(userDto.getNewsletterSubscriber());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.INSTANCE.toDto(userService.save(user)));
+    }
+
+    @PostMapping("/editPassword/{id}")
+    public ResponseEntity<UserDto> updateUserPassword(@PathVariable Long id, @RequestBody String password) {
+        User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (authUser.getId() != id) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        User user = userService.getById(id).get();
+        user.setPassword(passwordEncoder.encode(password));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.INSTANCE.toDto(userService.save(user)));
     }
 }
