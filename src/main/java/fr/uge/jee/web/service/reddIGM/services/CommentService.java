@@ -167,7 +167,7 @@ public class CommentService {
         Authority userAuth = new Authority("USER");
         if(user.getAuthorities().contains(userAuth) && comment.getUser().getId() != (user.getId())) throw new InvalidParameterException("Comment " + id.toString() + " is not a comment of " + user.getUsername());
         List<Comment> subComments = commentRepository.findAllBySuperComment(comment);
-        subComments.forEach(c -> {commentRepository.deleteById(c.getId()); voteCommentRepository.deleteAllByComment_Id(c.getId());});
+        subComments.forEach(c -> {deleteComment(c.getId(), user);});
         commentRepository.deleteById(id);
         voteCommentRepository.deleteAllByComment_Id(comment.getId());
     }
