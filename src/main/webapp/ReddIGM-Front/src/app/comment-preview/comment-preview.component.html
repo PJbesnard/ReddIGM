@@ -1,11 +1,25 @@
 <div class="card" style="background-color: #303336;">
     <div class="card-content">
-        <div class="content">
-            <h1 *ngIf="comment.user" class="title is-4 has-text-light" style="display: flex; align-items:center;">
-                <img class="is-rounded" src="{{ comment.user.getPicture() }}" style="height: 1.3em;">
-                &nbsp;&nbsp;{{ comment.user.username }}
-            </h1>
-            <p class="has-text-grey-lighter" [innerHTML]="comment.text" ></p>
-        </div>
+        <article class="media">
+            <figure class="media-left">
+              <a class="image is-64x64">
+                <img src="{{ comment.user.getPicture() }}" (click)="goToUser()">
+              </a>
+            </figure>
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <strong class="has-text-grey-light" (click)="goToUser()">{{ comment.user.username }}</strong> <time style="margin-left: 3%;">{{ comment.getDate().toLocaleString() }}</time>
+                  <br>
+                  <br>
+                  <span class="has-text-grey-lighter" [innerHTML]="comment.text"></span>
+                </p>
+              </div>
+            </div>
+            <a class="media-right tooltip" (click)="goToPost()">
+              <button class="fas fa-directions fa-2x"></button>
+              <span class="tooltiptext">See comment in context</span>
+            </a>
+          </article>
     </div>
 </div>

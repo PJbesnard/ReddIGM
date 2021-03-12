@@ -9,12 +9,12 @@ export class Comment implements Datable, Deserializable {
     commentId: number = 0;
     text: string = "";
     userName: string = "unknown";
-    creationDate: string = "15/02/2021";
+    private creationDate: string = "";
     nbVote: number = 0;
     picture: string = "";
     myVote!: VoteType;
     nbComments: number = 0;
-    user!: User;
+    user: User = new User();
 
     getDate(): Date {
         return new Date(this.creationDate);

@@ -28,6 +28,10 @@ export class DisplayPostPageComponent implements OnInit {
       this.postService.getPost(parseInt(id)).subscribe(
         (response) => {
           this.post = new PostModel().deserialize(response);
+          this.subjectName = this.post.sub.name;
+          if (this.post.sub.id) {
+            this.subjectId = this.post.sub.id.toString();
+          }
         }
       );
       this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();

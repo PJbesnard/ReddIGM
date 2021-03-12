@@ -58,11 +58,11 @@ export class EditProfilePageComponent implements OnInit {
     }
 
     if ( formValue.picture !== this.user.getPicture() ) {
-      this.user.description = formValue.description;
+      this.user.setPicture(formValue.picture);
     }
 
     if ( formValue.newsletters !== this.user.newsletterSubscriber ) {
-      this.user.setPicture(formValue.newsletters);
+      this.user.newsletterSubscriber = formValue.newsletters;
     }
     
     this.userService.updateUser(this.user.id, this.user).subscribe(

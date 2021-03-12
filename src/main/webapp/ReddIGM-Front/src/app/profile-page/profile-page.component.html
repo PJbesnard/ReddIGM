@@ -63,7 +63,7 @@
             <div *ngIf="isComment(elem) && !asComment(elem).superCommentId">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has commented this post</p>
                 <app-post-view [id]="asComment(elem).postId" [loaded]="false"></app-post-view>
-                <div style="margin-inline: auto; width: 98%;">
+                <div style="margin-inline: auto; width: 98%; margin-top: -2%;">
                     <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
                 </div>
             </div>
@@ -71,14 +71,14 @@
             <div *ngIf="isComment(elem) && asComment(elem).superCommentId">
                 <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has replied to this comment</p>
                 <app-comment-preview [commentId]="asComment(elem).superCommentId"></app-comment-preview>
-                <div style="margin-inline: auto; width: 98%;">
+                <div style="margin-inline: auto; width: 98%; margin-top: -2%;">
                     <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
                 </div>
             </div>
 
             <div *ngIf="isVotePost(elem) || isVoteComment(elem)">
-                <p class="has-text-light" *ngIf="isUpvote(elem)">&nbsp;&nbsp;{{ user.username }} like this</p>
-                <p class="has-text-light" *ngIf="isDownvote(elem)">&nbsp;&nbsp;{{ user.username }} dislike this</p>
+                <p class="has-text-light" *ngIf="isUpvote(elem)">&nbsp;&nbsp;{{ user.username }} liked this</p>
+                <p class="has-text-light" *ngIf="isDownvote(elem)">&nbsp;&nbsp;{{ user.username }} disliked this</p>
                 <app-post-view *ngIf="isVotePost(elem)" [loaded]="false" [id]="asVotePost(elem).postId"></app-post-view>
                 <app-comment-preview *ngIf="isVoteComment(elem)" [commentId]="asVoteComment(elem).commentId"></app-comment-preview>
             </div>

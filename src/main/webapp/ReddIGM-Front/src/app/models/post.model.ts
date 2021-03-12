@@ -12,7 +12,7 @@ export class PostModel implements Datable, Deserializable {
 	voteCount!: number;
 	//userId!:number;
 	sub!: SubjectModel;
-	duration! : string;
+	private duration! : string;
 	//subjectId!:number;
 	user!: User;
 	myVote!: VoteType;
