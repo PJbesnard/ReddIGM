@@ -2,6 +2,7 @@ package fr.uge.jee.web.service.reddIGM.services;
 
 import fr.uge.jee.web.service.reddIGM.dto.CommentRequestDto;
 import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
+import fr.uge.jee.web.service.reddIGM.dto.ScoreDto;
 import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
 import fr.uge.jee.web.service.reddIGM.mapper.CommentMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
@@ -14,6 +15,7 @@ import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -181,5 +183,21 @@ public class CommentService {
         voteByCommentAndUser.ifPresent(voteComment -> voteCommentRepository.deleteById(voteComment.getId()));
         voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
         return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user), nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()));
+    }
+
+    /**
+     * Return the list of comments id associated to their score (sum(upvote) - sum(downvote))
+     * sorted by their score descending.
+     *
+     * @param parentId The parent id of the comment (postId or commentId)
+     * @return The list of comments id
+     */
+    public List<ScoreDto> getScores(long parentId) {
+        return commentRepository.getScores(parentId).stream()
+                .map(obj -> {
+                    var array = (Object[]) obj;
+                    return new ScoreDto(((BigInteger) array[0]).longValue(), ((BigInteger) array[1]).intValue());
+                })
+                .collect(Collectors.toList());
     }
 }

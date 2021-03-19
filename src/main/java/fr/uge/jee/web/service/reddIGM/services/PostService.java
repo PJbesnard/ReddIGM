@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -186,4 +187,19 @@ public class PostService {
         return  getAllPostsForSubject(subjectId, orderType, null);
     }
 
+    /**
+     * Return the list of posts id associated to their score (sum(upvote) - sum(downvote))
+     * sorted by their score descending.
+     *
+     * @param subjectId The subject id containing the posts
+     * @return The list of posts id
+     */
+    public List<ScoreDto> getScores(long subjectId) {
+        return postRepository.getScores(subjectId).stream()
+                .map(obj -> {
+                    var array = (Object[]) obj;
+                    return new ScoreDto(((BigInteger) array[0]).longValue(), ((BigInteger) array[1]).intValue());
+                })
+                .collect(Collectors.toList());
+    }
 }
