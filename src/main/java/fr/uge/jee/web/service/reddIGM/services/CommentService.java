@@ -1,9 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
-import fr.uge.jee.web.service.reddIGM.dto.CommentRequestDto;
-import fr.uge.jee.web.service.reddIGM.dto.CommentResponseDto;
-import fr.uge.jee.web.service.reddIGM.dto.ScoreDto;
-import fr.uge.jee.web.service.reddIGM.dto.VoteCommentDto;
+import fr.uge.jee.web.service.reddIGM.dto.*;
 import fr.uge.jee.web.service.reddIGM.mapper.CommentMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.models.*;
@@ -17,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.security.InvalidParameterException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -125,6 +123,16 @@ public class CommentService {
         return VoteType.NOVOTE;
     }
 
+    private VoteType getVoteForCommentAndUser(long commentId, long userId) {
+        Optional<VoteComment> myVote = voteCommentRepository.findByIdAndUserId(commentId, userId);
+
+        if (myVote.isPresent()) {
+            return myVote.get().getType();
+        }
+
+        return VoteType.NOVOTE;
+    }
+
     private Integer nbCommentsInComment(Comment comment){
         List<Comment> comments = commentRepository.findAllBySuperComment(comment);
         return comments.stream().filter(c -> c.getSuperComment() != null).collect(Collectors.toList()).size();
@@ -185,19 +193,46 @@ public class CommentService {
         return CommentMapper.INSTANCE.toDto(comment, calcScore(voteCommentRepository.findAllByComment(comment)), getVoteForCommentAndUser(comment, user), nbCommentsInComment(comment), UserMapper.INSTANCE.toDto(comment.getUser()));
     }
 
-    /**
-     * Return the list of comments id associated to their score (sum(upvote) - sum(downvote))
-     * sorted by their score descending.
-     *
-     * @param parentId The parent id of the comment (postId or commentId)
-     * @return The list of comments id
-     */
-    public List<ScoreDto> getScores(long parentId) {
-        return commentRepository.getScores(parentId).stream()
+    public List<CommentResponseDto> getCommentsByParentSortedByScore(long parentId, OrderType sortOrder) {
+        List<Object> queryResult = sortOrder == OrderType.ASCENDING ?
+                repository.getScoresSortedAsc(parentId) :
+                repository.getScoresSortedDesc(parentId);
+
+        return queryResult.stream()
                 .map(obj -> {
                     var array = (Object[]) obj;
-                    return new ScoreDto(((BigInteger) array[0]).longValue(), ((BigInteger) array[1]).intValue());
+                    var user = userRepository.findById(((BigInteger) array[5]).longValue()).get();
+
+                    return new CommentResponseDto(
+                            ((BigInteger) array[0]).longValue(),
+                            (String) array[2],
+                            ((Timestamp) array[1]).toLocalDateTime(),
+                            ((BigInteger) array[3]).longValue(),
+                            Objects.isNull(array[4]) ? null : ((BigInteger) array[4]).longValue(),
+                            ((BigInteger) array[6]).intValue(),
+                            getVoteForCommentAndUser(((BigInteger) array[0]).longValue(), ((BigInteger) array[5]).longValue()),
+                            (int) repository.countBySuperCommentId(parentId),
+                            UserMapper.INSTANCE.toDto(user));
                 })
+                .collect(Collectors.toList());
+    }
+
+    public List<CommentResponseDto> getCommentsByUserSortedByDate(long userId, OrderType sortOrder) {
+        List<Comment> queryResult = sortOrder == OrderType.ASCENDING ?
+                repository.findAllByUserIdOrderByCreationDateAsc(userId) :
+                repository.findAllByUserIdOrderByCreationDateDesc(userId);
+
+        return queryResult.stream()
+                .map(comment -> new CommentResponseDto(
+                        comment.getId(),
+                        comment.getText(),
+                        comment.getCreationDate(),
+                        comment.getPost().getPostId(),
+                        Objects.isNull(comment.getSuperComment()) ? null : comment.getSuperComment().getId(),
+                        Objects.isNull(repository.getCommentScore(comment.getId())) ? 0 : repository.getCommentScore(comment.getId()).intValue(),
+                        getVoteForCommentAndUser(comment.getId(), comment.getUser().getId()),
+                        (int) repository.countBySuperCommentId(comment.getId()),
+                        UserMapper.INSTANCE.toDto(comment.getUser())))
                 .collect(Collectors.toList());
     }
 }

@@ -13,6 +13,7 @@ import java.util.Optional;
 @Repository
 public interface VotePostRepository extends JpaRepository<VotePost, Long> {
     Optional<VotePost> findByPostAndUser(Post post, User user);
+    Optional<VotePost> findByPostPostIdAndUserId(long postId, long userId);
     List<VotePost> findAllByPost(Post post);
     List<VotePost> findAllByUserId(long userId);
     List<VotePost> findAllByUserIdOrderByCreationDateAsc(long userId);

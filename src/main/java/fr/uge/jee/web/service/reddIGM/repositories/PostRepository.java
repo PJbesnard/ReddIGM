@@ -17,19 +17,55 @@ public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findAllPostByUser(User user);
     List<Post> findByUser(User user);
 
-    @Query(value = "SELECT post_votes.post_id, SUM(CASE\n" +
-            "\t\t\t\t\t\t\t\tWHEN type = 'UPVOTE' THEN 1\n" +
-            "\t\t\t\t\t\t\t\tWHEN type = 'DOWNVOTE' THEN -1\n" +
-            "\t\t\t\t\t\t\t\tELSE 0\n" +
-            "\t\t\t\t\t\t\t   END) AS score\n" +
-            "FROM\n" +
-            "\tpost_votes, posts\n" +
-            "WHERE\n" +
-            "\tpost_votes.post_id = posts.post_id AND\n" +
-            "\tposts.sub_id = :subjectId\n" +
-            "GROUP BY\n" +
-            "\tpost_votes.post_id\n" +
-            "ORDER BY\n" +
-            "\tscore DESC", nativeQuery = true)
-    List<Object> getScores(@Param("subjectId") long subjectId);
+    @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
+                           "posts.sub_id, posts.user_id, SUM(CASE " +
+                            "WHEN type = 'UPVOTE' THEN 1 " +
+                            "WHEN type = 'DOWNVOTE' THEN -1 " +
+                            "ELSE 0 " +
+                        "END) AS score " +
+                    "FROM " +
+                        "post_votes, posts " +
+                    "WHERE " +
+                        "post_votes.post_id = posts.post_id AND " +
+                        "posts.sub_id = :subjectId " +
+                    "GROUP BY " +
+                        "posts.post_id " +
+                    "ORDER BY " +
+                        "score ASC",
+            nativeQuery = true)
+    List<Object> getScoresSortedAsc(@Param("subjectId") long subjectId);
+
+    @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
+                           "posts.sub_id, posts.user_id, SUM(CASE " +
+                            "WHEN type = 'UPVOTE' THEN 1 " +
+                            "WHEN type = 'DOWNVOTE' THEN -1 " +
+                            "ELSE 0 " +
+                        "END) AS score " +
+                    "FROM " +
+                        "post_votes, posts " +
+                    "WHERE " +
+                        "post_votes.post_id = posts.post_id AND " +
+                        "posts.sub_id = :subjectId " +
+                    "GROUP BY " +
+                        "posts.post_id " +
+                    "ORDER BY " +
+                        "score ASC",
+            nativeQuery = true)
+    List<Object> getScoresSortedDesc(@Param("subjectId") long subjectId);
+
+    @Query(value = "SELECT SUM(CASE " +
+                                    "WHEN type = 'UPVOTE' THEN 1 " +
+                                    "WHEN type = 'DOWNVOTE' THEN -1 " +
+                                    "ELSE 0 " +
+                                "END) AS score " +
+                    "FROM " +
+                        "post_votes " +
+                    "WHERE " +
+                        "post_id = :postId ",
+            nativeQuery = true)
+    Long getPostScore(@Param("postId") long postId);
+
+    List<Post> findAllByUserIdOrderByCreatedDateAsc(@Param("subjectId") long subjectId);
+
+    List<Post> findAllByUserIdOrderByCreatedDateDesc(@Param("subjectId") long subjectId);
 }

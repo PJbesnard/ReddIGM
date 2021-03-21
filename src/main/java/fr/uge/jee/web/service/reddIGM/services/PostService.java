@@ -1,7 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
 import fr.uge.jee.web.service.reddIGM.dto.*;
-import fr.uge.jee.web.service.reddIGM.mapper.CommentMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.PostMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.SubjectMapper;
 import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
@@ -11,17 +10,15 @@ import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.security.InvalidParameterException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
@@ -165,6 +162,13 @@ public class PostService {
         return v;
     }
 
+    private VoteType getVoteForPostAndUser(long postId, long userId) {
+        Optional<VotePost> myVote = votePostRepository.findByPostPostIdAndUserId(postId, userId);
+        VoteType v = VoteType.NOVOTE;
+        if(myVote.isPresent()) v = myVote.get().getType();
+        return v;
+    }
+
     public PostResponse vote(VotePostDto vote, User user) {
         Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + vote.getPostId().toString() + " not found"));
         Optional<VotePost> voteByPostAndUser = votePostRepository.findByPostAndUser(post, user);
@@ -187,19 +191,50 @@ public class PostService {
         return  getAllPostsForSubject(subjectId, orderType, null);
     }
 
-    /**
-     * Return the list of posts id associated to their score (sum(upvote) - sum(downvote))
-     * sorted by their score descending.
-     *
-     * @param subjectId The subject id containing the posts
-     * @return The list of posts id
-     */
-    public List<ScoreDto> getScores(long subjectId) {
-        return postRepository.getScores(subjectId).stream()
+    public List<PostResponse> getPostsBySubjectSortedByScore(long subjectId, OrderType sortType) {
+        List<Object> queryResult = sortType == OrderType.ASCENDING ?
+                postRepository.getScoresSortedAsc(subjectId) :
+                postRepository.getScoresSortedDesc(subjectId);
+
+        return queryResult.stream()
                 .map(obj -> {
                     var array = (Object[]) obj;
-                    return new ScoreDto(((BigInteger) array[0]).longValue(), ((BigInteger) array[1]).intValue());
+                    var user = userRepository.findById(((BigInteger) array[6]).longValue()).get();
+                    var subject = subjectRepository.findById(((BigInteger) array[5]).longValue()).get();
+
+                    return new PostResponse(
+                            ((BigInteger) array[0]).longValue(),
+                            ((String) array[3]),
+                            ((String) array[4]),
+                            (String) array[2],
+                            SubjectMapper.INSTANCE.toDto(subject),
+                            ((BigInteger) array[7]).intValue(),
+                            ((Timestamp) array[1]).toLocalDateTime(),
+                            getVoteForPostAndUser(((BigInteger) array[0]).longValue(), ((BigInteger) array[6]).longValue()),
+                            UserMapper.INSTANCE.toDto(user),
+                            (int) commentRepository.countByPostPostId(((BigInteger) array[0]).longValue())
+                    );
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getPostsByUserSortedByDate(long userId, OrderType sortType) {
+        List<Post> queryResult = sortType == OrderType.ASCENDING ?
+                postRepository.findAllByUserIdOrderByCreatedDateAsc(userId) :
+                postRepository.findAllByUserIdOrderByCreatedDateDesc(userId);
+
+        return queryResult.stream()
+                .map(post -> new PostResponse(
+                        post.getPostId(),
+                        post.getPostName(),
+                        post.getUrl(),
+                        post.getDescription(),
+                        SubjectMapper.INSTANCE.toDto(post.getSubject()),
+                        Objects.isNull(postRepository.getPostScore(post.getPostId())) ? 0 : postRepository.getPostScore(post.getPostId()).intValue(),
+                        post.getCreatedDate(),
+                        getVoteForPostAndUser(post, post.getUser()),
+                        UserMapper.INSTANCE.toDto(post.getUser()),
+                        (int) commentRepository.countByPostPostId(post.getPostId())
+                )).collect(Collectors.toList());
     }
 }
