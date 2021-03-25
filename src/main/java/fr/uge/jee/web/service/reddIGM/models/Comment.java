@@ -2,10 +2,10 @@ package fr.uge.jee.web.service.reddIGM.models;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 import static javax.persistence.FetchType.LAZY;
@@ -17,6 +17,7 @@ public class Comment {
     private Long id;
     @NotNull
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String text;
     @NotNull
     private LocalDateTime creationDate;

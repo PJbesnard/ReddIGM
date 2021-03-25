@@ -23,8 +23,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                             "ELSE 0 " +
                         "END) AS score " +
                     "FROM " +
-                        "post_votes, posts " +
-                    "WHERE " +
+                        "post_votes RIGHT JOIN posts " +
+                    "ON " +
                         "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
                         "posts.post_id " +
@@ -40,8 +40,8 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                             "ELSE 0 " +
                         "END) AS score " +
                     "FROM " +
-                        "post_votes, posts " +
-                    "WHERE " +
+                        "post_votes RIGHT JOIN posts " +
+                    "ON " +
                         "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
                         "posts.post_id " +

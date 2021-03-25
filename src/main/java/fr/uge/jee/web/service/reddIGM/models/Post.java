@@ -3,6 +3,7 @@ package fr.uge.jee.web.service.reddIGM.models;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
@@ -25,6 +26,7 @@ public class Post {
     private String url;
     @Nullable
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String description;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

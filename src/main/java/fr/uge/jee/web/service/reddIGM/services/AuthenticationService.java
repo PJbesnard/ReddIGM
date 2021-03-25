@@ -72,7 +72,7 @@ public class AuthenticationService {
     }
 
     public User getCurrentUser() {
-        if (isAuthenticated()) {
+        if (!isAuthenticated()) {
             return null;
         }
 

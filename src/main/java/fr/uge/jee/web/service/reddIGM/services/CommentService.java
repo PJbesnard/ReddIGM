@@ -11,6 +11,7 @@ import fr.uge.jee.web.service.reddIGM.repositories.VoteCommentRepository;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.security.InvalidParameterException;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class CommentService {
 
     @Autowired
