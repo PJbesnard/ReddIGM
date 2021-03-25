@@ -9,13 +9,16 @@ import fr.uge.jee.web.service.reddIGM.models.User;
 import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
 import fr.uge.jee.web.service.reddIGM.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -61,6 +64,19 @@ public class AuthenticationService {
         user.setAuthorities(authorities);
         userRepository.save(user);
         return new RegisterResponse(registerRequest.getUsername());
+    }
+
+    public boolean isAuthenticated() {
+        return !Objects.isNull(SecurityContextHolder.getContext().getAuthentication()) &&
+                !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
+    }
+
+    public User getCurrentUser() {
+        if (isAuthenticated()) {
+            return null;
+        }
+
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

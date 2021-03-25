@@ -26,6 +26,10 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     List<Comment> findAllByUserIdOrderByCreationDateDesc(long userId);
 
+    List<Comment> findAllByPostPostIdOrSuperCommentIdOrderByCreationDateDesc(long postId, long commentId);
+
+    List<Comment> findAllByPostPostIdOrSuperCommentIdOrderByCreationDateAsc(long postId, long commentId);
+
     @Query(value = "SELECT comments.id, comments.creation_date, comments.text, comments.post_id," +
                            "comments.super_comment_id, comments.user_id,  SUM(CASE " +
                             "WHEN type = 'UPVOTE' THEN 1 " +
