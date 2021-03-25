@@ -23,7 +23,6 @@ public class SubjectService {
     }
 
     public List<Subject> getAll() {
-        List<Subject> subjects = (List<Subject>) repository.findAll();
-        return subjects;
+        return (List<Subject>) repository.findAll();
     }
 }

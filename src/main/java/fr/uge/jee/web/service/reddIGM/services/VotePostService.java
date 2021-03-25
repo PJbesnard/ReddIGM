@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
+import fr.uge.jee.web.service.reddIGM.models.Post;
 import fr.uge.jee.web.service.reddIGM.models.VotePost;
 import fr.uge.jee.web.service.reddIGM.repositories.VotePostRepository;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
@@ -31,11 +32,23 @@ public class VotePostService {
         return repository.findAllByUserId(userId);
     }
 
+    public Optional<VotePost> getByPostAndUser(long postId, long userId) {
+        return repository.findByPostPostIdAndUserId(postId, userId);
+    }
+
     public List<VotePost> getAllByUserIdOrdered(long userId, OrderType order) {
         if (order == OrderType.ASCENDING) {
             return repository.findAllByUserIdOrderByCreationDateAsc(userId);
         } else {
             return repository.findAllByUserIdOrderByCreationDateDesc(userId);
         }
+    }
+
+    public void delete(long voteId) {
+        repository.deleteById(voteId);
+    }
+
+    public void deleteAllByPost(Post post) {
+        repository.deleteAllByPost(post);
     }
 }

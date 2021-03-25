@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends CrudRepository<Comment, Long> {
-    List<Comment> findByPost(Post post);
+    List<Comment> findByPostPostId(long postId);
 
     long countByPostPostId(long postId);
 

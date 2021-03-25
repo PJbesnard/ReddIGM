@@ -7,8 +7,6 @@ import fr.uge.jee.web.service.reddIGM.mapper.UserMapper;
 import fr.uge.jee.web.service.reddIGM.models.*;
 import fr.uge.jee.web.service.reddIGM.repositories.*;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,19 +23,16 @@ import java.util.stream.Collectors;
 public class PostService {
 
     @Autowired
-    private PostRepository postRepository;
+    private PostRepository repository;
 
     @Autowired
-    private SubjectRepository subjectRepository;
+    private SubjectService subjectService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
-    private VotePostRepository votePostRepository;
-
-    @Autowired
-    private  CommentRepository commentRepository;
+    private VotePostService votePostService;
 
     @Autowired
     private CommentService commentService;
@@ -45,40 +40,43 @@ public class PostService {
     @Autowired
     private AuthenticationService authenticationService;
 
+    public Optional<Post> findPostById(long postId) {
+        return repository.findById(postId);
+    }
 
     public void save(PostRequest postRequest, Long userId){
-        Subject subreddit = subjectRepository.findById(postRequest.getSubjectId())
+        Subject subreddit = subjectService.getById(postRequest.getSubjectId())
                 .orElseThrow(() ->  new NoSuchElementException("Subject " + postRequest.getSubjectId() + " not found"));
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
-        postRepository.save(PostMapper.INSTANCE.map(postRequest, subreddit, user));
+        User user = userService.getById(userId).orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
+        repository.save(PostMapper.INSTANCE.map(postRequest, subreddit, user));
     }
 
     public Optional<PostResponse> getPost(Long id) {
-        return postRepository.findById(id).map(post -> createPostResponseDto(post, true, true, true));
+        return repository.findById(id).map(post -> createPostResponseDto(post, true, true, true));
     }
 
     public void deletePost(Long id, User user) {
         Authority adminAuth = new Authority("ADMIN");
-        Post post = postRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Post " + id.toString() + " not found"));
-        User principal = userRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException("User " + user.getId() + " not found"));
+        Post post = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Post " + id.toString() + " not found"));
+        User principal = userService.getById(user.getId()).orElseThrow(() -> new NoSuchElementException("User " + user.getId() + " not found"));
 
         if (!principal.getAuthorities().contains(adminAuth)) {
             throw new InvalidParameterException("Only admins can delete posts");
         }
 
-        commentRepository.findByPost(post).forEach(c -> {
+        commentService.getByPost(post.getPostId()).forEach(c -> {
             if (c.getSuperComment() == null) {
                 commentService.deleteComment(c.getId(), principal);
             }
         });
 
-        votePostRepository.deleteAllByPost(post);
-        postRepository.deleteById(id);
+        votePostService.deleteAllByPost(post);
+        repository.deleteById(id);
     }
 
     private VoteType getVoteForPostAndUser(long postId, long userId) {
-        Optional<VotePost> myVote = votePostRepository.findByPostPostIdAndUserId(postId, userId);
+        Optional<VotePost> myVote = votePostService.getByPostAndUser(postId, userId);
 
         if (myVote.isPresent()) {
             return myVote.get().getType();
@@ -88,23 +86,23 @@ public class PostService {
     }
 
     public PostResponse vote(VotePostDto vote, User user) {
-        Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + vote.getPostId().toString() + " not found"));
+        Post post = repository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + vote.getPostId().toString() + " not found"));
 
-        Optional<VotePost> voteByPostAndUser = votePostRepository.findByPostAndUser(post, user);
+        Optional<VotePost> voteByPostAndUser = votePostService.getByPostAndUser(post.getPostId(), user.getId());
         if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getType().equals(vote.getVote())) {
             throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this post");
         }
 
-        voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
-        votePostRepository.save(new VotePost(vote.getVote(), user, post, LocalDateTime.now()));
+        voteByPostAndUser.ifPresent(votePost -> votePostService.delete(votePost.getId()));
+        votePostService.save(new VotePost(vote.getVote(), user, post, LocalDateTime.now()));
 
         return createPostResponseDto(post, true, true, true);
     }
 
     public List<PostResponse> getAllPostsSortedByDate(OrderType sortType) {
         List<Post> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.findAllByOrderByCreatedDateAsc() :
-                postRepository.findAllByOrderByCreatedDateDesc();
+                repository.findAllByOrderByCreatedDateAsc() :
+                repository.findAllByOrderByCreatedDateDesc();
 
         return queryResult.stream()
                 .map(post ->
@@ -114,8 +112,8 @@ public class PostService {
 
     public List<PostResponse> getPostsBySubjectSortedByScore(long subjectId, OrderType sortType) {
         List<Object> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.getScoresSortedAsc() :
-                postRepository.getScoresSortedDesc();
+                repository.getScoresSortedAsc() :
+                repository.getScoresSortedDesc();
 
         return queryResult.stream()
                 .filter(obj -> {
@@ -141,8 +139,8 @@ public class PostService {
 
     public List<PostResponse> getAllPostsSortedByScore(OrderType sortType) {
         List<Object> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.getScoresSortedAsc() :
-                postRepository.getScoresSortedDesc();
+                repository.getScoresSortedAsc() :
+                repository.getScoresSortedDesc();
 
         return queryResult.stream()
                 .map(obj -> {
@@ -163,8 +161,8 @@ public class PostService {
 
     public List<PostResponse> getPostsByUserSortedByDate(long userId, OrderType sortType) {
         List<Post> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.findAllByUserIdOrderByCreatedDateAsc(userId) :
-                postRepository.findAllByUserIdOrderByCreatedDateDesc(userId);
+                repository.findAllByUserIdOrderByCreatedDateAsc(userId) :
+                repository.findAllByUserIdOrderByCreatedDateDesc(userId);
 
         return queryResult.stream()
                 .map(post ->
@@ -174,8 +172,8 @@ public class PostService {
 
     public List<PostResponse> getPostsBySubjectSortedByDate(long subjectId, OrderType sortType) {
         List<Post> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.findAllBySubjectIdOrderByCreatedDateAsc(subjectId) :
-                postRepository.findAllBySubjectIdOrderByCreatedDateDesc(subjectId);
+                repository.findAllBySubjectIdOrderByCreatedDateAsc(subjectId) :
+                repository.findAllBySubjectIdOrderByCreatedDateDesc(subjectId);
 
         return queryResult.stream()
                 .map(post ->
@@ -199,7 +197,7 @@ public class PostService {
             post.getCreatedDate(),
             myVote,
             UserMapper.INSTANCE.toDto(post.getUser()),
-            loadNbComments ? (int) commentRepository.countByPostPostId(post.getPostId()) : 0
+            loadNbComments ? (int) commentService.getNbSubComments(post.getPostId()) : 0
         );
     }
 
@@ -216,19 +214,19 @@ public class PostService {
                 postName,
                 postUrl,
                 postDescription,
-                loadSubject ? SubjectMapper.INSTANCE.toDto(subjectRepository.findById(subjectId).orElseGet(null)) : null,
+                loadSubject ? SubjectMapper.INSTANCE.toDto(subjectService.getById(subjectId).orElseGet(null)) : null,
                 loadScore ? loadScore(postId) : 0,
                 timestamp,
                 myVote,
-                loadUser ? UserMapper.INSTANCE.toDto(userRepository.findById(userId).orElseGet(null)) : null,
-                loadNbComments ? (int) commentRepository.countByPostPostId(postId) : 0
+                loadUser ? UserMapper.INSTANCE.toDto(userService.getById(userId).orElseGet(null)) : null,
+                loadNbComments ? (int) commentService.getNbSubComments(postId) : 0
         );
     }
 
     private int loadScore(long postId) {
         int score = 0;
 
-        var tmp = postRepository.getPostScore(postId);
+        var tmp = repository.getPostScore(postId);
         if (!Objects.isNull(tmp)) {
             score = tmp.intValue();
         }

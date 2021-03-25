@@ -28,9 +28,6 @@ public class AuthenticationService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -62,7 +59,7 @@ public class AuthenticationService {
         Set<Authority> authorities = new HashSet<>();
         authorities.add(new Authority("USER"));
         user.setAuthorities(authorities);
-        userRepository.save(user);
+        userService.save(user);
         return new RegisterResponse(registerRequest.getUsername());
     }
 

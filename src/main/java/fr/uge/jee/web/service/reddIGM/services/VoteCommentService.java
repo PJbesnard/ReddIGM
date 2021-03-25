@@ -31,11 +31,23 @@ public class VoteCommentService {
         return repository.findAllByUserId(userId);
     }
 
+    public Optional<VoteComment> getByCommentAndUser(long commentId, long userId) {
+        return repository.findByCommentIdAndUserId(commentId, userId);
+    }
+
     public List<VoteComment> getAllByUserIdOrdered(long userId, OrderType order) {
         if (order == OrderType.ASCENDING) {
             return repository.findAllByUserIdOrderByCreationDateAsc(userId);
         } else {
             return repository.findAllByUserIdOrderByCreationDateDesc(userId);
         }
+    }
+
+    public void delete(long voteCommentId) {
+        repository.deleteById(voteCommentId);
+    }
+
+    public void deleteAllByComment(long commentId) {
+        repository.deleteAllByComment_Id(commentId);
     }
 }

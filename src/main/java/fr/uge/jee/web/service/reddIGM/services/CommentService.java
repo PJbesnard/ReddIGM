@@ -26,12 +26,16 @@ public class CommentService {
 
     @Autowired
     private CommentRepository repository;
+
     @Autowired
-    private PostRepository postRepository;
+    private PostService postService;
+
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+
     @Autowired
-    private VoteCommentRepository voteCommentRepository;
+    private VoteCommentService voteCommentService;
+
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -39,8 +43,16 @@ public class CommentService {
         return repository.findById(id).map(comment -> createResponseDto(comment, true, true, true));
     }
 
+    public List<Comment> getByPost(long postId) {
+        return repository.findByPostPostId(postId);
+    }
+
+    public long getNbSubComments(long superCommentId) {
+        return repository.countByPostPostId(superCommentId);
+    }
+
     public CommentResponseDto save(CommentRequestDto comment, User user) {
-        Post post = postRepository.findById(comment.getPostId()).orElseThrow(
+        Post post = postService.findPostById(comment.getPostId()).orElseThrow(
                 () -> new NoSuchElementException("Post " + comment.getPostId().toString() + " not found")
         );
 
@@ -64,7 +76,7 @@ public class CommentService {
     }
 
     private VoteType getVoteForCommentAndUser(long commentId, long userId) {
-        Optional<VoteComment> myVote = voteCommentRepository.findByIdAndUserId(commentId, userId);
+        Optional<VoteComment> myVote = voteCommentService.getByCommentAndUser(commentId, userId);
 
         if (myVote.isPresent()) {
             return myVote.get().getType();
@@ -88,19 +100,19 @@ public class CommentService {
 
         /* Removing the comment and its associated votes */
         repository.deleteById(id);
-        voteCommentRepository.deleteAllByComment_Id(comment.getId());
+        voteCommentService.deleteAllByComment(comment.getId());
     }
 
     public CommentResponseDto vote(VoteCommentDto vote, User user) {
         Comment comment = repository.findById(vote.getCommentId()).orElseThrow(() -> new NoSuchElementException("Comment " + vote.getCommentId().toString() + " not found"));
-        Optional<VoteComment> existingVote = voteCommentRepository.findByIdAndUserId(vote.getCommentId(), user.getId());
+        Optional<VoteComment> existingVote = voteCommentService.getByCommentAndUser(vote.getCommentId(), user.getId());
 
         if (existingVote.isPresent() && existingVote.get().getType().equals(vote.getVote())) {
             throw new IllegalArgumentException("User " + user.getUsername() + " has already voted " + vote.getVote() + " for this comment");
         }
 
-        existingVote.ifPresent(voteComment -> voteCommentRepository.deleteById(voteComment.getId()));
-        voteCommentRepository.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
+        existingVote.ifPresent(voteComment -> voteCommentService.delete(voteComment.getId()));
+        voteCommentService.save(new VoteComment(vote.getVote(), user, comment, LocalDateTime.now()));
 
         return createResponseDto(comment, true, true, true);
     }
@@ -167,7 +179,7 @@ public class CommentService {
             myVote = getVoteForCommentAndUser(commentId, authenticationService.getCurrentUser().getId());
         }
 
-        User user = loadUser ? userRepository.findById(userId).orElse(null) : null;
+        User user = loadUser ? userService.getById(userId).orElse(null) : null;
 
         return new CommentResponseDto(
                 commentId, text, timestamp, postId, superCommentId,
