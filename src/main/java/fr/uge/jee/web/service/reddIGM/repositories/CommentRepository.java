@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,9 +38,10 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                             "ELSE 0 " +
                         "END) AS score " +
                     "FROM " +
-                        "comment_votes, comments " +
+                        "comment_votes RIGHT JOIN comments " +
+                    "ON " +
+                        "comment_id = comments.id " +
                     "WHERE " +
-                        "comment_id = comments.id AND " +
                         "(comments.post_id = :parentId AND comments.super_comment_id IS NULL OR " +
                         "comments.super_comment_id = :parentId) " +
                     "GROUP BY " +
@@ -56,9 +58,10 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                             "ELSE 0 " +
                         "END) AS score " +
                     "FROM " +
-                        "comment_votes, comments " +
+                        "comment_votes RIGHT JOIN comments " +
+                    "ON " +
+                        "comment_id = comments.id " +
                     "WHERE " +
-                        "comment_id = comments.id AND " +
                         "(comments.post_id = :parentId AND comments.super_comment_id IS NULL OR " +
                         "comments.super_comment_id = :parentId) " +
                     "GROUP BY " +
