@@ -75,7 +75,7 @@ public class CommentController {
         return ResponseEntity.ok(commentsDto);
     }
 
-    @GetMapping("/user/{userName}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsForUser(@PathVariable long userId) {
         return ResponseEntity.ok(commentService.getCommentsByUserSortedByDate(userId, OrderType.ASCENDING));
     }

@@ -14,8 +14,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post,Long> {
     List<Post> findAllPostBySubject(Subject subject);
 
-    List<Post> findAllPostByUser(User user);
-    List<Post> findByUser(User user);
+    List<Post> findAllByUser(User user);
 
     @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
                            "posts.sub_id, posts.user_id, SUM(CASE " +
@@ -26,14 +25,13 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                     "FROM " +
                         "post_votes, posts " +
                     "WHERE " +
-                        "post_votes.post_id = posts.post_id AND " +
-                        "posts.sub_id = :subjectId " +
+                        "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
                         "posts.post_id " +
                     "ORDER BY " +
                         "score ASC",
             nativeQuery = true)
-    List<Object> getScoresSortedAsc(@Param("subjectId") long subjectId);
+    List<Object> getScoresSortedAsc();
 
     @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
                            "posts.sub_id, posts.user_id, SUM(CASE " +
@@ -44,14 +42,13 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                     "FROM " +
                         "post_votes, posts " +
                     "WHERE " +
-                        "post_votes.post_id = posts.post_id AND " +
-                        "posts.sub_id = :subjectId " +
+                        "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
                         "posts.post_id " +
                     "ORDER BY " +
                         "score ASC",
             nativeQuery = true)
-    List<Object> getScoresSortedDesc(@Param("subjectId") long subjectId);
+    List<Object> getScoresSortedDesc();
 
     @Query(value = "SELECT SUM(CASE " +
                                     "WHEN type = 'UPVOTE' THEN 1 " +
@@ -65,7 +62,15 @@ public interface PostRepository extends JpaRepository<Post,Long> {
             nativeQuery = true)
     Long getPostScore(@Param("postId") long postId);
 
-    List<Post> findAllByUserIdOrderByCreatedDateAsc(@Param("subjectId") long subjectId);
+    List<Post> findAllByOrderByCreatedDateAsc();
 
-    List<Post> findAllByUserIdOrderByCreatedDateDesc(@Param("subjectId") long subjectId);
+    List<Post> findAllByOrderByCreatedDateDesc();
+
+    List<Post> findAllBySubjectIdOrderByCreatedDateAsc(long subjectId);
+
+    List<Post> findAllBySubjectIdOrderByCreatedDateDesc(long subjectId);
+
+    List<Post> findAllByUserIdOrderByCreatedDateAsc(long subjectId);
+
+    List<Post> findAllByUserIdOrderByCreatedDateDesc(long subjectId);
 }

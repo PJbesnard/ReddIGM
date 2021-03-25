@@ -57,8 +57,8 @@ export class CommentService {
     });
   }
 
-  getCommentsByUsername(username: string): Observable<Array<Comment>> {
-    return this.http.get<Array<Comment>>(this.urlUser + username);
+  getCommentsByUserId(userId: number): Observable<Array<Comment>> {
+    return this.http.get<Array<Comment>>(this.urlUser + userId);
   }
 
   createComment(commentPayload: CreateCommentPayload): Observable<any> {

@@ -21,8 +21,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-@Slf4j
 @Transactional
 public class PostService {
 
@@ -44,176 +42,121 @@ public class PostService {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
 
     public void save(PostRequest postRequest, Long userId){
         Subject subreddit = subjectRepository.findById(postRequest.getSubjectId())
                 .orElseThrow(() ->  new NoSuchElementException("Subject " + postRequest.getSubjectId() + " not found"));
+
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("User " + userId + " not found"));
         postRepository.save(PostMapper.INSTANCE.map(postRequest, subreddit, user));
-
     }
 
-    public PostResponse getPost(Long id) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
-        int voteNb = calcScore(votePostRepository.findAllByPost(post));
-        return PostMapper.INSTANCE.mapToDto(post, voteNb, VoteType.NOVOTE, SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
-    }
-
-    public PostResponse getPost(Long id, User user) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Id " + id.toString() + " not found"));
-        int voteNb = calcScore(votePostRepository.findAllByPost(post));
-        return PostMapper.INSTANCE.mapToDto(post, voteNb, getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
+    public Optional<PostResponse> getPost(Long id) {
+        return postRepository.findById(id).map(post -> createPostResponseDto(post, true, true, true));
     }
 
     public void deletePost(Long id, User user) {
         Authority adminAuth = new Authority("ADMIN");
         Post post = postRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Post " + id.toString() + " not found"));
         User principal = userRepository.findById(user.getId()).orElseThrow(() -> new NoSuchElementException("User " + user.getId() + " not found"));
-        if(!principal.getAuthorities().contains(adminAuth)) throw new InvalidParameterException("Only admins can delete posts");
-        List<Comment> comments = commentRepository.findByPost(post);
-        comments.forEach(c ->{ if(c.getSuperComment() == null) commentService.deleteComment(c.getId(), principal);});
+
+        if (!principal.getAuthorities().contains(adminAuth)) {
+            throw new InvalidParameterException("Only admins can delete posts");
+        }
+
+        commentRepository.findByPost(post).forEach(c -> {
+            if (c.getSuperComment() == null) {
+                commentService.deleteComment(c.getId(), principal);
+            }
+        });
+
         votePostRepository.deleteAllByPost(post);
         postRepository.deleteById(id);
     }
 
-
-    public List<PostResponse> getAllPosts(OrderType orderType) {
-        List<PostResponse> postResponses = computeVote(postRepository.findAll(), null);
-        return sortPosts(postResponses, orderType);
-
-    }
-
-    public List<PostResponse> getAllPosts(User user, OrderType orderType) {
-        List<PostResponse> postResponses = computeVote(postRepository.findAll(), user);
-        return sortPosts(postResponses, orderType);
-
-    }
-
-    private Integer nbCommentsInPost(Post post){
-        List<Comment> comments = commentRepository.findByPost(post);
-        return comments.stream().filter(c -> c.getSuperComment() == null).collect(Collectors.toList()).size();
-    }
-
-    public List<PostResponse> getPostsBySubjectId(Long subjectId) {
-        Subject subreddit = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new NoSuchElementException("Subject " + subjectId.toString() + " not found"));
-        List<Post> posts = postRepository.findAllPostBySubject(subreddit);
-        return computeVote(posts, null);
-
-    }
-
-    public List<PostResponse> getPostsById(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("Username " + userId.toString() + " not found"));
-        return computeVote(postRepository.findByUser(user), null);
-    }
-
-
-    private int calcScore(List<VotePost> votes) {
-        int voteNb = 0;
-        for (VotePost vote : votes) {
-            if (vote.getType().equals(VoteType.DOWNVOTE)) voteNb--;
-            else voteNb++;
-        }
-        return voteNb;
-    }
-
-    private List<PostResponse> computeVote(List<Post> posts, User user){
-        List<PostResponse> res = new ArrayList<>();
-        posts.forEach(p -> {
-            int voteNb = calcScore(votePostRepository.findAllByPost(p));
-            if (user == null)res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, VoteType.NOVOTE, SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser()), nbCommentsInPost(p)));
-            else  res.add(PostMapper.INSTANCE.mapToDto(p, voteNb, getVoteForPostAndUser(p, user), SubjectMapper.INSTANCE.toDto(p.getSubject()), UserMapper.INSTANCE.toDto(p.getUser()), nbCommentsInPost(p)));
-        });
-        return res;
-    }
-
-
-
-    private List<PostResponse> sortPosts(List<PostResponse> postsDtos, OrderType orderType) {
-        switch (orderType) {
-            case ASCENDING:
-                postsDtos.sort(Comparator.comparingInt(PostResponse::getVoteCount));
-                break;
-            case DESCENDING:
-                postsDtos.sort((o1, o2) -> o2.getVoteCount() - o1.getVoteCount());
-                break;
-            default:
-                postsDtos.sort((o1, o2) -> {
-                    if (o1.getDuration().isBefore(o2.getDuration())) {
-                        return 1;
-                    }
-                    else if(o1.getDuration().isEqual(o2.getDuration())) {
-                        return 0;
-                    }
-                    return -1;
-                });
-                break;
-        }
-        return postsDtos;
-    }
-
-    private VoteType getVoteForPostAndUser(Post post,User user) {
-        Optional<VotePost> myVote = votePostRepository.findByPostAndUser(post, user);
-        VoteType v = VoteType.NOVOTE;
-        if(myVote.isPresent()) v = myVote.get().getType();
-        return v;
-    }
-
     private VoteType getVoteForPostAndUser(long postId, long userId) {
         Optional<VotePost> myVote = votePostRepository.findByPostPostIdAndUserId(postId, userId);
-        VoteType v = VoteType.NOVOTE;
-        if(myVote.isPresent()) v = myVote.get().getType();
-        return v;
+
+        if (myVote.isPresent()) {
+            return myVote.get().getType();
+        }
+
+        return VoteType.NOVOTE;
     }
 
     public PostResponse vote(VotePostDto vote, User user) {
         Post post = postRepository.findById(vote.getPostId()).orElseThrow(() -> new NoSuchElementException("Post " + vote.getPostId().toString() + " not found"));
+
         Optional<VotePost> voteByPostAndUser = votePostRepository.findByPostAndUser(post, user);
         if (voteByPostAndUser.isPresent() && voteByPostAndUser.get().getType().equals(vote.getVote())) {
             throw new IllegalArgumentException("You have already voted " + vote.getVote() + " for this post");
         }
+
         voteByPostAndUser.ifPresent(votePost -> votePostRepository.deleteById(votePost.getId()));
         votePostRepository.save(new VotePost(vote.getVote(), user, post, LocalDateTime.now()));
-        return PostMapper.INSTANCE.mapToDto(post, calcScore(votePostRepository.findAllByPost(post)), getVoteForPostAndUser(post, user), SubjectMapper.INSTANCE.toDto(post.getSubject()), UserMapper.INSTANCE.toDto(post.getUser()), nbCommentsInPost(post));
+
+        return createPostResponseDto(post, true, true, true);
     }
 
-    public List<PostResponse> getAllPostsForSubject(Long subjectId, OrderType orderType, User user) {
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new NoSuchElementException("Subject " + subjectId.toString() + " not found"));
-        List<Post> postsForSubject = postRepository.findAllPostBySubject(subject);
-        List<PostResponse> PostResponseDtos = computeVote(postsForSubject, user);
-        return sortPosts(PostResponseDtos, orderType);
-    }
+    public List<PostResponse> getAllPostsSortedByDate(OrderType sortType) {
+        List<Post> queryResult = sortType == OrderType.ASCENDING ?
+                postRepository.findAllByOrderByCreatedDateAsc() :
+                postRepository.findAllByOrderByCreatedDateDesc();
 
-    public List<PostResponse> getAllPostsForSubject(Long subjectId, OrderType orderType) {
-        return  getAllPostsForSubject(subjectId, orderType, null);
+        return queryResult.stream()
+                .map(post ->
+                        createPostResponseDto(post, true, true, true)
+                ).collect(Collectors.toList());
     }
 
     public List<PostResponse> getPostsBySubjectSortedByScore(long subjectId, OrderType sortType) {
         List<Object> queryResult = sortType == OrderType.ASCENDING ?
-                postRepository.getScoresSortedAsc(subjectId) :
-                postRepository.getScoresSortedDesc(subjectId);
+                postRepository.getScoresSortedAsc() :
+                postRepository.getScoresSortedDesc();
+
+        return queryResult.stream()
+                .filter(obj -> {
+                    var array = (Object[]) obj;
+
+                    return ((BigInteger) array[5]).longValue() == subjectId;
+                })
+                .map(obj -> {
+                    var array = (Object[]) obj;
+
+                    return createPostResponseDto(
+                        ((BigInteger) array[0]).longValue(),
+                        ((String) array[3]),
+                        ((String) array[4]),
+                        (String) array[2],
+                        ((BigInteger) array[5]).longValue(),
+                        ((BigInteger) array[6]).longValue(),
+                        ((Timestamp) array[1]).toLocalDateTime(),
+                        true, true, true, true, true);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getAllPostsSortedByScore(OrderType sortType) {
+        List<Object> queryResult = sortType == OrderType.ASCENDING ?
+                postRepository.getScoresSortedAsc() :
+                postRepository.getScoresSortedDesc();
 
         return queryResult.stream()
                 .map(obj -> {
                     var array = (Object[]) obj;
-                    var user = userRepository.findById(((BigInteger) array[6]).longValue()).get();
-                    var subject = subjectRepository.findById(((BigInteger) array[5]).longValue()).get();
 
-                    return new PostResponse(
+                    return createPostResponseDto(
                             ((BigInteger) array[0]).longValue(),
                             ((String) array[3]),
                             ((String) array[4]),
                             (String) array[2],
-                            SubjectMapper.INSTANCE.toDto(subject),
-                            ((BigInteger) array[7]).intValue(),
+                            ((BigInteger) array[5]).longValue(),
+                            ((BigInteger) array[6]).longValue(),
                             ((Timestamp) array[1]).toLocalDateTime(),
-                            getVoteForPostAndUser(((BigInteger) array[0]).longValue(), ((BigInteger) array[6]).longValue()),
-                            UserMapper.INSTANCE.toDto(user),
-                            (int) commentRepository.countByPostPostId(((BigInteger) array[0]).longValue())
-                    );
+                            true, true, true, true, true);
                 })
                 .collect(Collectors.toList());
     }
@@ -224,17 +167,72 @@ public class PostService {
                 postRepository.findAllByUserIdOrderByCreatedDateDesc(userId);
 
         return queryResult.stream()
-                .map(post -> new PostResponse(
-                        post.getPostId(),
-                        post.getPostName(),
-                        post.getUrl(),
-                        post.getDescription(),
-                        SubjectMapper.INSTANCE.toDto(post.getSubject()),
-                        Objects.isNull(postRepository.getPostScore(post.getPostId())) ? 0 : postRepository.getPostScore(post.getPostId()).intValue(),
-                        post.getCreatedDate(),
-                        getVoteForPostAndUser(post, post.getUser()),
-                        UserMapper.INSTANCE.toDto(post.getUser()),
-                        (int) commentRepository.countByPostPostId(post.getPostId())
-                )).collect(Collectors.toList());
+                .map(post ->
+                        createPostResponseDto(post, true, true, true)
+                ).collect(Collectors.toList());
+    }
+
+    public List<PostResponse> getPostsBySubjectSortedByDate(long subjectId, OrderType sortType) {
+        List<Post> queryResult = sortType == OrderType.ASCENDING ?
+                postRepository.findAllBySubjectIdOrderByCreatedDateAsc(subjectId) :
+                postRepository.findAllBySubjectIdOrderByCreatedDateDesc(subjectId);
+
+        return queryResult.stream()
+                .map(post ->
+                    createPostResponseDto(post, true, true, true)
+                ).collect(Collectors.toList());
+    }
+
+    private PostResponse createPostResponseDto(Post post, boolean loadScore, boolean loadMyVote, boolean loadNbComments) {
+        VoteType myVote = VoteType.NOVOTE;
+        if (loadMyVote && authenticationService.isAuthenticated()) {
+            myVote = getVoteForPostAndUser(post.getPostId(), authenticationService.getCurrentUser().getId());
+        }
+
+        return new PostResponse(
+            post.getPostId(),
+            post.getPostName(),
+            post.getUrl(),
+            post.getDescription(),
+            SubjectMapper.INSTANCE.toDto(post.getSubject()),
+            loadScore ? loadScore(post.getPostId()) : 0,
+            post.getCreatedDate(),
+            myVote,
+            UserMapper.INSTANCE.toDto(post.getUser()),
+            loadNbComments ? (int) commentRepository.countByPostPostId(post.getPostId()) : 0
+        );
+    }
+
+    private PostResponse createPostResponseDto(long postId, String postName, String postUrl, String postDescription,
+                                               long subjectId, long userId, LocalDateTime timestamp, boolean loadScore,
+                                               boolean loadMyVote, boolean loadSubject, boolean loadUser, boolean loadNbComments) {
+        VoteType myVote = VoteType.NOVOTE;
+        if (loadMyVote && authenticationService.isAuthenticated()) {
+            myVote = getVoteForPostAndUser(postId, authenticationService.getCurrentUser().getId());
+        }
+
+        return new PostResponse(
+                postId,
+                postName,
+                postUrl,
+                postDescription,
+                loadSubject ? SubjectMapper.INSTANCE.toDto(subjectRepository.findById(subjectId).orElseGet(null)) : null,
+                loadScore ? loadScore(postId) : 0,
+                timestamp,
+                myVote,
+                loadUser ? UserMapper.INSTANCE.toDto(userRepository.findById(userId).orElseGet(null)) : null,
+                loadNbComments ? (int) commentRepository.countByPostPostId(postId) : 0
+        );
+    }
+
+    private int loadScore(long postId) {
+        int score = 0;
+
+        var tmp = postRepository.getPostScore(postId);
+        if (!Objects.isNull(tmp)) {
+            score = tmp.intValue();
+        }
+
+        return score;
     }
 }

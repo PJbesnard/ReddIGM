@@ -55,7 +55,7 @@ export class ProfilePageComponent implements OnInit {
     this.posts = this.posts.map(post => new PostModel().deserialize(post));
 
     // Retrieving comments
-    this.comments = await this.commentService.getCommentsByUsername(user.username).toPromise();
+    this.comments = await this.commentService.getCommentsByUserId(user.id).toPromise();
     this.comments = this.comments.map(comment => new Comment().deserialize(comment));
 
     // Retrieving votes posts

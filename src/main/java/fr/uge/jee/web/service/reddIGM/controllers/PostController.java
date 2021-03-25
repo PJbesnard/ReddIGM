@@ -8,14 +8,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
-import static org.springframework.http.ResponseEntity.status;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/posts/")
@@ -43,37 +41,40 @@ public class PostController {
         postService.deletePost(id, principal);
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(@PathVariable Long id) {
-        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return status(HttpStatus.OK).body(postService.getPost(id));
-        }
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return status(HttpStatus.OK).body(postService.getPost(id, principal));
+        return ResponseEntity.of(postService.getPost(id));
     }
 
     @GetMapping("by-user/{id}")
     public ResponseEntity<List<PostResponse>> getPostsById(@PathVariable Long id) {
-        return status(HttpStatus.OK).body(postService.getPostsById(id));
+        return ResponseEntity.ok(postService.getPostsByUserSortedByDate(id, OrderType.DESCENDING));
     }
 
     @GetMapping(value = {"all", "all/{orderType}"})
     public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable(required = false) OrderType orderType) {
-        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(orderType));
+        List<PostResponse> postResponses;
+
+        if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
+            postResponses = postService.getAllPostsSortedByDate(OrderType.DESCENDING);
+        } else {
+            postResponses = postService.getAllPostsSortedByScore(orderType);
         }
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return orderType == null ? status(HttpStatus.OK).body(postService.getAllPosts(principal, OrderType.NEWEST)) : status(HttpStatus.OK).body(postService.getAllPosts(principal, orderType));
+
+        return ResponseEntity.ok(postResponses);
     }
 
     @GetMapping(value = {"by-subject/{id}", "/by-subject/{id}/{orderType}"})
     public ResponseEntity<List<PostResponse>> getAllPostsForSubject(@PathVariable Long id, @PathVariable(required = false) OrderType orderType) {
-        if (SecurityContextHolder.getContext().getAuthentication() == null || SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) {
-            return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, OrderType.NEWEST)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, orderType));
+        List<PostResponse> postResponses;
+
+        if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
+            postResponses = postService.getPostsBySubjectSortedByDate(id, OrderType.DESCENDING);
+        } else {
+            postResponses = postService.getPostsBySubjectSortedByScore(id, orderType);
         }
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return orderType == null ? ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, OrderType.NEWEST, principal)) : ResponseEntity.status(HttpStatus.OK).body(postService.getAllPostsForSubject(id, orderType, principal));
+
+        return ResponseEntity.ok(postResponses);
     }
 
 }
