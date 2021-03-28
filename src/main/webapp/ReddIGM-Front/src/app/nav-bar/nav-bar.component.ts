@@ -38,7 +38,7 @@ export class NavBarComponent {
 
   logout() {
     this.authenticationService.logout();
-    this.router.navigate(["/home"]);
+    window.location.reload();
   }
 
   goToProfile() {

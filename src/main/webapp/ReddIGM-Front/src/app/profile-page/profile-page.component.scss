@@ -15,3 +15,11 @@
 .inline {
     display: inline;
 }
+
+.image-cropper {
+    width: 10em;
+    height: 10em;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}

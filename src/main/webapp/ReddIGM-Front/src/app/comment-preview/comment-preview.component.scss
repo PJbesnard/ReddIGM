@@ -58,3 +58,11 @@ a:hover {
     visibility: visible;
     opacity: 1;
   }
+
+.image-cropper {
+    width: 3em;
+    height: 3em;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}

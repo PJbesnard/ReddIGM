@@ -41,7 +41,7 @@
       </div>
 
       <figure *ngIf="isAuthentified" class="image" style="margin-block: 0.4em;">
-        <img class="is-rounded is-clickable" src="{{ picture }}" (click)="goToProfile()" style="width: 3em;">
+        <img class="is-rounded image-cropper is-clickable" src="{{ picture }}" (click)="goToProfile()">
       </figure>
 
       <label *ngIf="isAuthentified" class="navbar-item is-clickable has-text-light" (click)="goToProfile()">
