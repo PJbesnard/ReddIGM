@@ -122,7 +122,7 @@ public class CommentService {
                 repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateAsc(parentId, parentId) :
                 repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateDesc(parentId, parentId);
 
-        return queryResult.stream()
+        return queryResult.stream().filter(comment -> comment.getSuperComment() == null)
                 .map(comment -> createResponseDto(comment, true, true, true))
                 .collect(Collectors.toList());
     }
@@ -162,11 +162,10 @@ public class CommentService {
         if (loadMyVote && authenticationService.isAuthenticated()) {
             myVote = getVoteForCommentAndUser(comment.getId(), authenticationService.getCurrentUser().getId());
         }
-
         return CommentMapper.INSTANCE.toDto(comment,
-                loadNbSubComments ? (int) repository.countBySuperCommentId(comment.getId()) : 0,
-                myVote,
                 loadScore ? loadScore(comment.getId()) : 0,
+                myVote,
+                loadNbSubComments ? (int) repository.countBySuperCommentId(comment.getId()) : 0,
                 UserMapper.INSTANCE.toDto(comment.getUser()));
     }
 
