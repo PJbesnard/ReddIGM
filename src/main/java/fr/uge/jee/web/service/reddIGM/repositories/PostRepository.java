@@ -3,15 +3,17 @@ package fr.uge.jee.web.service.reddIGM.repositories;
 import fr.uge.jee.web.service.reddIGM.models.Post;
 import fr.uge.jee.web.service.reddIGM.models.Subject;
 import fr.uge.jee.web.service.reddIGM.models.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post,Long> {
+public interface PostRepository extends CrudRepository<Post,Long> {
     List<Post> findAllPostBySubject(Subject subject);
 
     List<Post> findAllByUser(User user);
@@ -31,7 +33,25 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                     "ORDER BY " +
                         "score ASC",
             nativeQuery = true)
-    List<Object> getScoresSortedAsc();
+    List<Object> getScoresSortedAsc(Pageable pageable);
+
+    @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
+            "posts.sub_id, posts.user_id,"+
+            "SUM(CASE " +
+            "WHEN type = 'UPVOTE' THEN 1 " +
+            "WHEN type = 'DOWNVOTE' THEN -1 " +
+            "ELSE 0 " +
+            "END) AS score " +
+            "FROM " +
+            "post_votes RIGHT JOIN posts " +
+            "ON " +
+            "post_votes.post_id = posts.post_id WHERE posts.sub_id = :subId " +
+            "GROUP BY " +
+            "posts.post_id " +
+            "ORDER BY " +
+            "score ASC",
+            nativeQuery = true)
+    List<Object> getScoresSortedAsc(@Param("subId") Long subId, Pageable pageable);
 
     @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
                            "posts.sub_id, posts.user_id, SUM(CASE " +
@@ -48,7 +68,24 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                     "ORDER BY " +
                         "score DESC",
             nativeQuery = true)
-    List<Object> getScoresSortedDesc();
+    List<Object> getScoresSortedDesc(Pageable pageable);
+
+    @Query(value = "SELECT posts.post_id, posts.created_date, posts.description, posts.post_name, posts.url, " +
+            "posts.sub_id, posts.user_id, SUM(CASE " +
+            "WHEN type = 'UPVOTE' THEN 1 " +
+            "WHEN type = 'DOWNVOTE' THEN -1 " +
+            "ELSE 0 " +
+            "END) AS score " +
+            "FROM " +
+            "post_votes RIGHT JOIN posts " +
+            "ON " +
+            "post_votes.post_id = posts.post_id WHERE posts.sub_id = :subId " +
+            "GROUP BY " +
+            "posts.post_id " +
+            "ORDER BY " +
+            "score DESC",
+            nativeQuery = true)
+    List<Object> getScoresSortedDesc(@Param("subId") Long subId, Pageable pageable);
 
     @Query(value = "SELECT SUM(CASE " +
                                     "WHEN type = 'UPVOTE' THEN 1 " +
@@ -66,9 +103,9 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     List<Post> findAllByOrderByCreatedDateDesc();
 
-    List<Post> findAllBySubjectIdOrderByCreatedDateAsc(long subjectId);
+    List<Post> findAll(Pageable pageable);
 
-    List<Post> findAllBySubjectIdOrderByCreatedDateDesc(long subjectId);
+    List<Post> findAllBySubjectId(long subjectId, Pageable pageable);
 
     List<Post> findAllByUserIdOrderByCreatedDateAsc(long subjectId);
 

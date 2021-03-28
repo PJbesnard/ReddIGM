@@ -51,27 +51,27 @@ public class PostController {
         return ResponseEntity.ok(postService.getPostsByUserSortedByDate(id, OrderType.DESCENDING));
     }
 
-    @GetMapping(value = {"all", "all/{orderType}"})
-    public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable(required = false) OrderType orderType) {
+    @GetMapping(value = {"all/{page}", "all/{page}/{orderType}"})
+    public ResponseEntity<List<PostResponse>> getAllPosts(@PathVariable Integer page, @PathVariable(required = false) OrderType orderType) {
         List<PostResponse> postResponses;
 
         if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
-            postResponses = postService.getAllPostsSortedByDate(OrderType.DESCENDING);
+            postResponses = postService.getAllPostsSortedByDate(OrderType.DESCENDING, page);
         } else {
-            postResponses = postService.getAllPostsSortedByScore(orderType);
+            postResponses = postService.getAllPostsSortedByScore(orderType, page);
         }
 
         return ResponseEntity.ok(postResponses);
     }
 
-    @GetMapping(value = {"by-subject/{id}", "/by-subject/{id}/{orderType}"})
-    public ResponseEntity<List<PostResponse>> getAllPostsForSubject(@PathVariable Long id, @PathVariable(required = false) OrderType orderType) {
+    @GetMapping(value = {"by-subject/{id}/{page}", "/by-subject/{id}/{page}/{orderType}"})
+    public ResponseEntity<List<PostResponse>> getAllPostsForSubject(@PathVariable Long id, @PathVariable Integer page, @PathVariable(required = false) OrderType orderType) {
         List<PostResponse> postResponses;
 
         if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
-            postResponses = postService.getPostsBySubjectSortedByDate(id, OrderType.DESCENDING);
+            postResponses = postService.getPostsBySubjectSortedByDate(id, OrderType.DESCENDING, page);
         } else {
-            postResponses = postService.getPostsBySubjectSortedByScore(id, orderType);
+            postResponses = postService.getPostsBySubjectSortedByScore(id, orderType, page);
         }
 
         return ResponseEntity.ok(postResponses);

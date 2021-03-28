@@ -8,6 +8,9 @@ import fr.uge.jee.web.service.reddIGM.models.*;
 import fr.uge.jee.web.service.reddIGM.repositories.*;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class PostService {
+
+    private Integer PAGE_SIZE = 5;
 
     @Autowired
     private PostRepository repository;
@@ -99,26 +104,26 @@ public class PostService {
         return createPostResponseDto(post, true, true, true);
     }
 
-    public List<PostResponse> getAllPostsSortedByDate(OrderType sortType) {
-        List<Post> queryResult = sortType == OrderType.ASCENDING ?
-                repository.findAllByOrderByCreatedDateAsc() :
-                repository.findAllByOrderByCreatedDateDesc();
-
+    public List<PostResponse> getAllPostsSortedByDate(OrderType sortType, Integer page) {
+        Pageable sortByDate = sortType == OrderType.ASCENDING ?
+                PageRequest.of(page, PAGE_SIZE, Sort.by("createdDate").ascending()) :
+                PageRequest.of(page, PAGE_SIZE, Sort.by("createdDate").descending());
+        List<Post> queryResult = repository.findAll(sortByDate);
         return queryResult.stream()
-                .map(post ->
-                        createPostResponseDto(post, true, true, true)
-                ).collect(Collectors.toList());
+                .map(post -> createPostResponseDto(post, true, true, true))
+                .collect(Collectors.toList());
     }
 
-    public List<PostResponse> getPostsBySubjectSortedByScore(long subjectId, OrderType sortType) {
+    public List<PostResponse> getPostsBySubjectSortedByScore(long subjectId, OrderType sortType, Integer page) {
+        Pageable sortByDate = PageRequest.of(page, PAGE_SIZE);
         List<Object> queryResult = sortType == OrderType.ASCENDING ?
-                repository.getScoresSortedAsc() :
-                repository.getScoresSortedDesc();
+                repository.getScoresSortedAsc(subjectId, sortByDate) :
+                repository.getScoresSortedDesc(subjectId, sortByDate);
 
         return queryResult.stream()
                 .filter(obj -> {
                     var array = (Object[]) obj;
-
+                    System.out.println("array received " + ((BigInteger) array[5]).longValue());
                     return ((BigInteger) array[5]).longValue() == subjectId;
                 })
                 .map(obj -> {
@@ -137,10 +142,13 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostResponse> getAllPostsSortedByScore(OrderType sortType) {
+    public List<PostResponse> getAllPostsSortedByScore(OrderType sortType, Integer page) {
+        Pageable sortByDate = PageRequest.of(page, PAGE_SIZE);
+
         List<Object> queryResult = sortType == OrderType.ASCENDING ?
-                repository.getScoresSortedAsc() :
-                repository.getScoresSortedDesc();
+                repository.getScoresSortedAsc(sortByDate) :
+                repository.getScoresSortedDesc(sortByDate);
+
 
         return queryResult.stream()
                 .map(obj -> {
@@ -170,10 +178,13 @@ public class PostService {
                 ).collect(Collectors.toList());
     }
 
-    public List<PostResponse> getPostsBySubjectSortedByDate(long subjectId, OrderType sortType) {
+    public List<PostResponse> getPostsBySubjectSortedByDate(long subjectId, OrderType sortType, Integer page) {
+        Pageable sortByDate = sortType == OrderType.ASCENDING ?
+                PageRequest.of(page, PAGE_SIZE, Sort.by("createdDate").ascending()) :
+                PageRequest.of(page, PAGE_SIZE, Sort.by("createdDate").descending());
         List<Post> queryResult = sortType == OrderType.ASCENDING ?
-                repository.findAllBySubjectIdOrderByCreatedDateAsc(subjectId) :
-                repository.findAllBySubjectIdOrderByCreatedDateDesc(subjectId);
+                repository.findAllBySubjectId(subjectId, sortByDate) :
+                repository.findAllBySubjectId(subjectId, sortByDate);
 
         return queryResult.stream()
                 .map(post ->

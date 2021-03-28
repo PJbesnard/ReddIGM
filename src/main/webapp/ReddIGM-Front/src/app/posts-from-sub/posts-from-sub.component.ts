@@ -9,6 +9,7 @@ import {User} from "../models/user.model"
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-posts-from-sub',
@@ -25,6 +26,9 @@ export class PostsFromSubComponent implements OnInit {
   currentPosts: Array<PostModel> = [];
   subscription!: Subscription;
   message:string = "";
+  page: number = 0;
+  faArrowRight = faArrowRight;
+  faArrowLeft = faArrowLeft;
 
   constructor(private postService: PostService,
 	private subjectService: SubjectService,
@@ -33,12 +37,12 @@ export class PostsFromSubComponent implements OnInit {
 	private router: Router,
 	private dataService: DataService) {
     this.subId = this.route.snapshot.params['id'];
-    this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {this.posts = data;});
+    this.postService.getPostsBySubject(this.subId, this.page, this.sort).subscribe(data => {this.posts = data;});
     this.subjectService.getSubject(this.subId).subscribe(data => {this.subName = data.name; this.subDescription = data.description;});
   }
 
   ngOnInit(): void {
-	this.postService.getPostsBySubject(this.subId, this.sort).subscribe(data => {
+	this.postService.getPostsBySubject(this.subId, this.page, this.sort).subscribe(data => {
 		this.currentPosts = data;
 		this.posts = data;
     this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
@@ -63,6 +67,30 @@ export class PostsFromSubComponent implements OnInit {
     this.sort = "DESCENDING";
     this.hot = true;
     this.ngOnInit();
+  }
+
+  nextPostsClick() {
+    this.postService.getPostsBySubject(this.subId, this.page + 1, this.sort).subscribe(data => {
+      if(data.length > 0) {
+        this.currentPosts = data;
+        this.posts = data;
+        this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+        this.posts = this.posts.map(post => new PostModel().deserialize(post));
+        this.page += 1;
+      }
+    });
+  }
+
+  previousPostsClick(){
+    this.postService.getPostsBySubject(this.subId, this.page - 1, this.sort).subscribe(data => {
+      if(data.length > 0) {
+        this.currentPosts = data;
+        this.posts = data;
+        this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+        this.posts = this.posts.map(post => new PostModel().deserialize(post));
+        this.page -= 1;
+      }
+    });
   }
 
   search(searchText : string){

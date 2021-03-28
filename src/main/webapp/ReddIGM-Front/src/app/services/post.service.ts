@@ -24,16 +24,17 @@ export class PostService {
     return this.httpClient.delete<PostModel>(BASE_ADDRESS+"posts/delete/"+id);
   }
 
-  getAllPosts(sort: String): Observable<PostModel[]> {
-    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/all/" + sort);
+  getAllPosts(page: number, sort: String): Observable<PostModel[]> {
+    console.log("getting page nb", page)
+    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/all/" + page + "/" + sort);
   }
 
   getPostsByUserId(id: number): Observable<PostModel[]> {
     return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-user/" + id);
   }
 
-  getPostsBySubject(id: number, sort: String): Observable<PostModel[]> {
-    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-subject/" + id+ "/" + sort);
+  getPostsBySubject(id: number, page: number, sort: String): Observable<PostModel[]> {
+    return this.httpClient.get<PostModel[]>(BASE_ADDRESS+"posts/by-subject/" + id+ "/" + page + "/" + sort);
   }
 
   createPost(postPayload: CreatePostPayload): Observable<any> {

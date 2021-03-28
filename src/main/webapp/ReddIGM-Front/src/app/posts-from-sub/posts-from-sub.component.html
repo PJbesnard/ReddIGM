@@ -20,7 +20,21 @@
   <div class="columns">
     <div class="column is-three-quarters ">
       <app-post-view [id]="p.id" [title]="p.postName" [content]="p.description" [date]="p.getDate().toLocaleString()" [rate]="p.voteCount" [vote]="p.myVote" [subName]="p.sub.name" [author]="p.user.username" [image]="p.user.getPicture()" [authorId]="p.user.id" [subId]="p.sub.id" *ngFor="let p of currentPosts"></app-post-view>
-
+      <div class="columns is-vcentered">
+        <div class="column is-1">
+          <fa-icon [icon]="faArrowLeft" class="content has-text-light is-clickable" style="font-size: 24px;" *ngIf="page > 0" (click)="previousPostsClick()"></fa-icon>
+        </div>
+        <div class="column is-3 has-text-left">
+          <p class="title is-5 is-spaced has-text-light" *ngIf="page > 0">PREVIOUS</p>
+        </div>
+        <div class="column is-6"></div>
+        <div class="column is-1">
+          <p class="title is-5 is-spaced has-text-light">NEXT</p>
+        </div>
+        <div class="column is-1">
+          <fa-icon [icon]="faArrowRight" class="content has-text-light is-clickable" style="font-size: 24px;" (click)="nextPostsClick()"></fa-icon>
+        </div>
+      </div>
     </div>
     <div class="column is-one-quarter">
       <app-card-create-post></app-card-create-post>
