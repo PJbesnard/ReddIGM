@@ -1,5 +1,6 @@
 package fr.uge.jee.web.service.reddIGM.services;
 
+import fr.uge.jee.web.service.reddIGM.models.Comment;
 import fr.uge.jee.web.service.reddIGM.models.VoteComment;
 import fr.uge.jee.web.service.reddIGM.repositories.VoteCommentRepository;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
@@ -47,7 +48,7 @@ public class VoteCommentService {
         repository.deleteById(voteCommentId);
     }
 
-    public void deleteAllByComment(long commentId) {
-        repository.deleteAllByComment_Id(commentId);
+    public void deleteAllByComment(Comment comment) {
+        repository.deleteAllByComment(comment);
     }
 }

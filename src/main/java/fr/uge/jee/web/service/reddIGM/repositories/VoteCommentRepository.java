@@ -18,5 +18,5 @@ public interface VoteCommentRepository extends JpaRepository<VoteComment, Long> 
     List<VoteComment> findAllByUserIdOrderByCreationDateAsc(long userId);
     List<VoteComment> findAllByUserIdOrderByCreationDateDesc(long userId);
 
-    void deleteAllByComment_Id(long comment_Id);
+    void deleteAllByComment(Comment comment);
 }

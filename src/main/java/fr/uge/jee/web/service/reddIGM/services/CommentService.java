@@ -85,6 +85,17 @@ public class CommentService {
         return VoteType.NOVOTE;
     }
 
+    private void deleteSubComments(Long id) {
+        Comment comment = repository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("Comment " + id.toString() + " not found")
+        );
+        repository.findAllBySuperComment(comment).forEach(c -> deleteSubComments(c.getId()));
+
+        /* Removing the comment and its associated votes */
+        voteCommentService.deleteAllByComment(comment);
+        repository.deleteById(id);
+    }
+
     public void deleteComment(Long id, User user) {
         Comment comment = repository.findById(id).orElseThrow(
                 () -> new NoSuchElementException("Comment " + id.toString() + " not found")
@@ -96,11 +107,11 @@ public class CommentService {
         }
 
         /* Removing sub comments and their associated votes (recursively) */
-        repository.findAllBySuperComment(comment).forEach(c -> deleteComment(c.getId(), user));
+        repository.findAllBySuperComment(comment).forEach(c -> deleteSubComments(c.getId()));
 
         /* Removing the comment and its associated votes */
+        voteCommentService.deleteAllByComment(comment);
         repository.deleteById(id);
-        voteCommentService.deleteAllByComment(comment.getId());
     }
 
     public CommentResponseDto vote(VoteCommentDto vote, User user) {

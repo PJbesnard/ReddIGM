@@ -39,7 +39,6 @@ public class CommentController {
 
     @DeleteMapping("/delete/{id}")
     public void deleteComment(@PathVariable Long id) {
-        System.out.println("bite");
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         commentService.deleteComment(id, principal);
     }
