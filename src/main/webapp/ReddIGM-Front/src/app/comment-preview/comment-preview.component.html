@@ -2,8 +2,8 @@
     <div class="card-content">
         <article class="media">
             <figure class="media-left">
-              <a class="image is-64x64">
-                <img src="{{ comment.user.getPicture() }}" (click)="goToUser()">
+              <a>
+                <img class="is-rounded image-cropper" src="{{ comment.user.getPicture() }}" (click)="goToUser()">
               </a>
             </figure>
             <div class="media-content">

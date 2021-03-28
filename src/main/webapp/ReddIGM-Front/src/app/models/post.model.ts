@@ -10,13 +10,16 @@ export class PostModel implements Datable, Deserializable {
 	url!: string;
 	description!: string;
 	voteCount!: number;
-	//userId!:number;
 	sub!: SubjectModel;
 	private duration! : string;
-	//subjectId!:number;
 	user!: User;
 	myVote!: VoteType;
 	nbComments!: number;
+
+	constructor() {
+		this.sub = new SubjectModel();
+		this.user = new User();
+	}
 
 	getDate(): Date {
         return new Date(this.duration);

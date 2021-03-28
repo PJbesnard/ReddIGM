@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { PostViewInContextComponent } from '../post-view-in-context/post-view-in-context.component';
 import { PostService } from '../services/post.service';
 import { PostModel } from '../models/post.model';
-import { DataService } from '../services/data.service';
-
 
 @Component({
   selector: 'app-display-post-page',
@@ -34,8 +30,16 @@ export class DisplayPostPageComponent implements OnInit {
           }
         }
       );
-      this.subjectName = this.route.snapshot.paramMap.get('subName')!.toString();
-      this.subjectId = this.route.snapshot.paramMap.get('subId')!.toString();
+
+      let subName = this.route.snapshot.paramMap.get('subName');
+      if (subName) {
+        this.subjectName = subName.toString();
+      }
+
+      let subId = this.route.snapshot.paramMap.get('subId');
+      if (subId) {
+        this.subjectId = subId.toString();
+      }
     }
   }
 

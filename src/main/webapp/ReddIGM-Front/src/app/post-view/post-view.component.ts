@@ -52,6 +52,7 @@ export class PostViewComponent implements OnInit {
         this.date = this.post.getDate().toLocaleString();
         this.subName = this.post.sub.name;
         this.rate = this.post.voteCount;
+        this.image = this.post.user.getPicture();
         this.vote = this.post.myVote;
         this.subId = this.post.sub.id;
         this.authorId = this.post.user.id;
@@ -66,6 +67,7 @@ export class PostViewComponent implements OnInit {
           this.date = post.getDate().toLocaleString();
           this.subName = post.sub.name;
           this.rate = post.voteCount;
+          this.image = post.user.getPicture();
           this.vote = post.myVote;
           this.subId = post.sub.id;
           this.authorId = post.user.id;

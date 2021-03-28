@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { AlertService } from '../services/alert.service';
+import { AuthenticationService } from '../services/authentication.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -15,7 +16,9 @@ export class EditProfilePageComponent implements OnInit {
   user: User = new User();
   registerForm: FormGroup;
 
-  constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private alertService: AlertService) {
+  constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private alertService: AlertService,
+              private authService: AuthenticationService) {
+
     let userId = this.route.snapshot.params['id'];
 
     this.registerForm = this.formBuilder.group({
@@ -59,6 +62,7 @@ export class EditProfilePageComponent implements OnInit {
 
     if ( formValue.picture !== this.user.getPicture() ) {
       this.user.setPicture(formValue.picture);
+      this.authService.getCurrentUser()?.setPicture(formValue.picture);
     }
 
     if ( formValue.newsletters !== this.user.newsletterSubscriber ) {
@@ -79,7 +83,6 @@ export class EditProfilePageComponent implements OnInit {
     );
 
     if (formValue.password) {
-      console.log("Changement du pass");
       this.userService.updateUserPassword(this.user.id, formValue.password).subscribe(
         (response) => {
           if (!redirecting) {
