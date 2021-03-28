@@ -60,6 +60,7 @@ public class PostService {
         Authority adminAuth = new Authority("ADMIN");
         Post post = repository.findById(id).orElseThrow(() -> new NoSuchElementException("Post " + id.toString() + " not found"));
         User principal = userService.getById(user.getId()).orElseThrow(() -> new NoSuchElementException("User " + user.getId() + " not found"));
+
         if (!principal.getAuthorities().contains(adminAuth)) {
             throw new InvalidParameterException("Only admins can delete posts");
         }

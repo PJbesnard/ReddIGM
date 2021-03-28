@@ -46,7 +46,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
                     "GROUP BY " +
                         "posts.post_id " +
                     "ORDER BY " +
-                        "score ASC",
+                        "score DESC",
             nativeQuery = true)
     List<Object> getScoresSortedDesc();
 

@@ -27,9 +27,27 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
 
     List<Comment> findAllByUserIdOrderByCreationDateDesc(long userId);
 
-    List<Comment> findAllByPostPostIdOrSuperCommentIdOrderByCreationDateDesc(long postId, long commentId);
+    @Query(value = "SELECT " +
+                        "c " +
+                    "FROM " +
+                        "Comments c " +
+                    "WHERE " +
+                        "c.superComment.id = :parentId OR " +
+                        "c.post.postId = :parentId AND c.superComment IS NULL " +
+                    "ORDER BY " +
+                        "c.creationDate DESC")
+    List<Comment> getCommentsByParentOrderByDateDesc(@Param("parentId") long parentId);
 
-    List<Comment> findAllByPostPostIdOrSuperCommentIdOrderByCreationDateAsc(long postId, long commentId);
+    @Query(value = "SELECT " +
+            "c " +
+            "FROM " +
+            "Comments c " +
+            "WHERE " +
+            "c.superComment.id = :parentId OR " +
+            "c.post.postId = :parentId AND c.superComment IS NULL " +
+            "ORDER BY " +
+            "c.creationDate ASC")
+    List<Comment> getCommentsByParentOrderByDateAsc(@Param("parentId") long parentId);
 
     @Query(value = "SELECT comments.id, comments.creation_date, comments.text, comments.post_id," +
                            "comments.super_comment_id, comments.user_id,  SUM(CASE " +

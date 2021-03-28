@@ -119,8 +119,8 @@ public class CommentService {
 
     public List<CommentResponseDto> getCommentsByParentSortedByDate(long parentId, OrderType orderType) {
         List<Comment> queryResult = orderType == OrderType.ASCENDING ?
-                repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateAsc(parentId, parentId) :
-                repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateDesc(parentId, parentId);
+                repository.getCommentsByParentOrderByDateAsc(parentId) :
+                repository.getCommentsByParentOrderByDateDesc(parentId);
 
         return queryResult.stream()
                 .map(comment -> createResponseDto(comment, true, true, true))
@@ -162,6 +162,7 @@ public class CommentService {
         if (loadMyVote && authenticationService.isAuthenticated()) {
             myVote = getVoteForCommentAndUser(comment.getId(), authenticationService.getCurrentUser().getId());
         }
+
         return CommentMapper.INSTANCE.toDto(comment,
                 loadScore ? loadScore(comment.getId()) : 0,
                 myVote,
