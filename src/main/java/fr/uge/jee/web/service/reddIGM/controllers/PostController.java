@@ -35,7 +35,7 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.CREATED).body(postService.vote(vote, principal));
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deletePost(@PathVariable Long id) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         postService.deletePost(id, principal);

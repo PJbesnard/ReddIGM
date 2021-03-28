@@ -27,7 +27,7 @@ export class UserService {
   getUserByEmail(email: string): Observable<User> {
     return this.httpClient.get<User>(BASE_ADDRESS + "users/emails/" + email);
   }
-  
+
   getUserVotesPost(userId: number, orderType: OrderType = OrderType.DESCENDING): Observable<VotePost[]> {
     return this.httpClient.get<VotePost[]>(BASE_ADDRESS + "users/" + userId + "/votes/posts/" + orderType);
   }
@@ -37,10 +37,10 @@ export class UserService {
   }
 
   updateUser(userId: number, newUser: User): Observable<User> {
-    return this.httpClient.post<User>(BASE_ADDRESS + "users/" + userId, newUser);
+    return this.httpClient.put<User>(BASE_ADDRESS + "users/" + userId, newUser);
   }
 
   updateUserPassword(userId: number, newPassword: string): Observable<User> {
-    return this.httpClient.post<User>(BASE_ADDRESS + "users/editPassword/" + userId, newPassword);
+    return this.httpClient.put<User>(BASE_ADDRESS + "users/editPassword/" + userId, newPassword);
   }
 }

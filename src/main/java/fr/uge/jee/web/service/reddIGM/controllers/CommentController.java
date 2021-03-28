@@ -37,8 +37,9 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.save(comment, principal));
     }
 
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteComment(@PathVariable Long id) {
+        System.out.println("bite");
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         commentService.deleteComment(id, principal);
     }
@@ -78,7 +79,5 @@ public class CommentController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<CommentResponseDto>> getAllCommentsForUser(@PathVariable long userId) {
         return ResponseEntity.ok(commentService.getCommentsByUserSortedByDate(userId, OrderType.ASCENDING));
-    }
-
     }
 }

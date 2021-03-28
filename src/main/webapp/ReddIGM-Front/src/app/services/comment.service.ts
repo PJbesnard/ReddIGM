@@ -38,10 +38,11 @@ export class CommentService {
   }
 
   deleteComment(id: number) {
-    return this.http.get(BASE_ADDRESS + 'comments/delete/'+id, {
+    return this.http.delete(BASE_ADDRESS + 'comments/delete/'+id, {
       headers: new HttpHeaders(
         {
-          'Access-Control-Allow-Origin':'*'
+          "Access-Control-Allow-Origin": "*",
+
         }
       )
     })

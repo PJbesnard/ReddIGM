@@ -86,7 +86,7 @@ public class UserController {
         );
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         var ctx = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -104,7 +104,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserMapper.INSTANCE.toDto(userService.save(user)));
     }
 
-    @PostMapping("/editPassword/{id}")
+    @PutMapping("/editPassword/{id}")
     public ResponseEntity<UserDto> updateUserPassword(@PathVariable Long id, @RequestBody String password) {
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

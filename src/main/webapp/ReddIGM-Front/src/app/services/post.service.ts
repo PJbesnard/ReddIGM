@@ -21,7 +21,7 @@ export class PostService {
   }
 
   deletePost(id: number): Observable<PostModel> {
-    return this.httpClient.get<PostModel>(BASE_ADDRESS+"posts/delete/"+id);
+    return this.httpClient.delete<PostModel>(BASE_ADDRESS+"posts/delete/"+id);
   }
 
   getAllPosts(sort: String): Observable<PostModel[]> {
