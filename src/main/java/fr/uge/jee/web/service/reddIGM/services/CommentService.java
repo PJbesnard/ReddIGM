@@ -122,7 +122,7 @@ public class CommentService {
                 repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateAsc(parentId, parentId) :
                 repository.findAllByPostPostIdOrSuperCommentIdOrderByCreationDateDesc(parentId, parentId);
 
-        return queryResult.stream().filter(comment -> comment.getSuperComment() == null)
+        return queryResult.stream()
                 .map(comment -> createResponseDto(comment, true, true, true))
                 .collect(Collectors.toList());
     }
