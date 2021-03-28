@@ -1,21 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { faChevronCircleUp, faPlusCircle, faReply, faMinusCircle, faCommentAlt, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 
 import { Subject, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Comment } from '../models/comment.model';
 import { CommentService } from '../services/comment.service';
 import { Router } from '@angular/router';
 import { VoteType } from '../models/vote-type.enum';
 import { AuthenticationService } from '../services/authentication.service';
 import { PostService } from "../services/post.service"
-import { CreateCommentComponent} from "../create-comment/create-comment.component";
 import { DataService } from '../services/data.service';
-
-
-
-
+import { WindowService } from '../services/window.service';
 
 @Component({
   selector: 'app-post-view-in-context',
@@ -25,6 +20,15 @@ import { DataService } from '../services/data.service';
 
 @Injectable()
 export class PostViewInContextComponent implements OnInit {
+  @HostListener('window:scroll', ['$event']) onWindowScroll(e: any) {
+    let scrollTop = (document.documentElement.scrollTop || document.body.scrollTop);
+    let innerHeight = this.windowService.windowRef.innerHeight;
+    let scrollHeight = document.documentElement.scrollHeight;
+
+    if ((innerHeight + scrollTop) >= scrollHeight) {
+      this.onBottomPage();
+    }
+  }
 
   showComments = false;
 
@@ -71,7 +75,8 @@ export class PostViewInContextComponent implements OnInit {
   @Input() vote: VoteType = VoteType.NOVOTE;
   @Input() nbSubComment: number = 0;
 
-  constructor(private commentService: CommentService,
+  constructor(private windowService: WindowService,
+  private commentService: CommentService,
 	private postService: PostService,
 	private authenticationService: AuthenticationService,
 	private router: Router,
@@ -169,5 +174,5 @@ export class PostViewInContextComponent implements OnInit {
 	  })
   }
 
-
+  onBottomPage() {}
 }

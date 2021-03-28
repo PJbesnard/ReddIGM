@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { PostService } from "../services/post.service";
 import {PostModel} from "../models/post.model";
-import { User } from '../models/user.model';
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
 import { AuthenticationService } from '../services/authentication.service';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { WindowService } from '../services/window.service';
 
 @Component({
   selector: 'app-home-page',
@@ -13,6 +13,16 @@ import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit {
+  @HostListener('window:scroll', ['$event']) onWindowScroll(e: any) {
+    let scrollTop = (document.documentElement.scrollTop || document.body.scrollTop);
+    let innerHeight = this.windowService.windowRef.innerHeight;
+    let scrollHeight = document.documentElement.scrollHeight;
+
+    if ((innerHeight + scrollTop) >= scrollHeight) {
+      this.onBottomPage();
+    }
+  }
+
   posts: Array<PostModel> = [];
   hot: boolean = true;
   sort: String = "DESCENDING";
@@ -20,19 +30,20 @@ export class HomePageComponent implements OnInit {
   subscription!: Subscription;
   message:string = "";
   faTimesCircle = faTimesCircle;
+  isScrolled: boolean = false;
 
-  constructor(private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
+  constructor(private windowService: WindowService, private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
     this.postService.getAllPosts(this.sort).subscribe(data => {this.posts = data;});
   }
 
   ngOnInit(): void {
-	this.postService.getAllPosts(this.sort).subscribe(data => {
-		this.currentPosts = data;
-		this.posts = data;
-    this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
-    this.posts = this.posts.map(post => new PostModel().deserialize(post));
-	});
-	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
+    this.postService.getAllPosts(this.sort).subscribe(data => {
+      this.currentPosts = data;
+      this.posts = data;
+      this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
+      this.posts = this.posts.map(post => new PostModel().deserialize(post));
+    });
+    this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
   }
 
   newOnclick(){
@@ -64,5 +75,5 @@ export class HomePageComponent implements OnInit {
 	  })
   }
 
-
+  onBottomPage() {}
 }
