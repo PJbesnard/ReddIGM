@@ -67,7 +67,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                         "comments.id " +
                     "ORDER BY " +
                         "score ASC, " +
-                        "comments.creation_date DESC",
+                        "comments.creation_date ASC",
             nativeQuery = true)
     List<Object> getScoresSortedAsc(@Param("parentId") long parentId, Pageable pageable);
 
@@ -88,7 +88,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                         "comments.id " +
                     "ORDER BY " +
                         "score DESC, " +
-                        "comments.creation_date DESC",
+                        "comments.creation_date ASC",
             nativeQuery = true)
     List<Object> getScoresSortedDesc(@Param("parentId") long parentId, Pageable pageable);
 
