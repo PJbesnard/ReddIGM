@@ -23,6 +23,7 @@ export class HomePageComponent implements OnInit {
   faTimesCircle = faTimesCircle;
   faArrowRight = faArrowRight;
   faArrowLeft = faArrowLeft;
+  nextButtonShow = true;
 
   constructor(private postService: PostService, private dataService: DataService, private authenticationService: AuthenticationService) {
     this.postService.getAllPosts(this.page, this.sort).subscribe(data => {this.posts = data;});
@@ -60,6 +61,7 @@ export class HomePageComponent implements OnInit {
         this.posts = this.posts.map(post => new PostModel().deserialize(post));
         this.page += 1;
       }
+      if(data.length < 5) this.nextButtonShow = false;
     });
   }
 
@@ -71,6 +73,7 @@ export class HomePageComponent implements OnInit {
         this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
         this.posts = this.posts.map(post => new PostModel().deserialize(post));
         this.page -= 1;
+        this.nextButtonShow = true;
       }
     });
   }

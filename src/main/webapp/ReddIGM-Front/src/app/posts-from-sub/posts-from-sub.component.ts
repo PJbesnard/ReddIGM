@@ -29,6 +29,7 @@ export class PostsFromSubComponent implements OnInit {
   page: number = 0;
   faArrowRight = faArrowRight;
   faArrowLeft = faArrowLeft;
+  nextButtonShow = true;
 
   constructor(private postService: PostService,
 	private subjectService: SubjectService,
@@ -78,6 +79,7 @@ export class PostsFromSubComponent implements OnInit {
         this.posts = this.posts.map(post => new PostModel().deserialize(post));
         this.page += 1;
       }
+      if(data.length < 5) this.nextButtonShow = false;
     });
   }
 
@@ -89,6 +91,7 @@ export class PostsFromSubComponent implements OnInit {
         this.currentPosts = this.currentPosts.map(post => new PostModel().deserialize(post));
         this.posts = this.posts.map(post => new PostModel().deserialize(post));
         this.page -= 1;
+        this.nextButtonShow = true;
       }
     });
   }
