@@ -60,6 +60,8 @@ export class PostViewInContextComponent implements OnInit {
 
   page: number = 0;
 
+  showMoreActive = true;
+
 
   @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
@@ -100,19 +102,21 @@ export class PostViewInContextComponent implements OnInit {
     this.showComments = true
     if (this.type === "post"){
       this.commentService.getCommentsFromPost(this.sort, this.id, this.page).subscribe(data =>{
-        this.comments = data;
-		this.currentComments = data
-        this.comments = this.comments.map(c => new Comment().deserialize(c))
-		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
+      this.comments = data;
+		  this.currentComments = data
+      this.comments = this.comments.map(c => new Comment().deserialize(c))
+	    this.currentComments = this.comments.map(c => new Comment().deserialize(c))
+      if(data.length < 5) this.showMoreActive = false;
       });
     }
 
     if (this.type === "comment"){
       this.commentService.getCommentsForComment(this.sort, this.id, this.page).subscribe(data =>{
-        this.comments = data;
-		this.currentComments = data
-        this.comments = this.comments.map(c => new Comment().deserialize(c))
-		this.currentComments = this.comments.map(c => new Comment().deserialize(c))
+      this.comments = data;
+		  this.currentComments = data
+      this.comments = this.comments.map(c => new Comment().deserialize(c))
+		  this.currentComments = this.comments.map(c => new Comment().deserialize(c))
+      if(data.length < 5) this.showMoreActive = false;
       });
     }
   }
@@ -131,6 +135,7 @@ export class PostViewInContextComponent implements OnInit {
     this.comments = [];
     this.currentComments = [];
     this.page = 0;
+    this.showMoreActive = true;
   }
 
   displayAuthor(){
@@ -142,6 +147,7 @@ export class PostViewInContextComponent implements OnInit {
     this.sort = "NEWEST";
     this.hot = false;
     this.page = 0;
+    this.showMoreActive = true;
     this.displayResponses();
   }
 
@@ -150,6 +156,7 @@ export class PostViewInContextComponent implements OnInit {
     this.sort = "DESCENDING";
     this.hot = true;
     this.page = 0;
+    this.showMoreActive = true;
     this.displayResponses();
   }
 
@@ -162,6 +169,7 @@ export class PostViewInContextComponent implements OnInit {
         tmpComments.forEach(c => this.comments.push(new Comment().deserialize(c)))
         tmpCurrentComments.forEach(c => this.currentComments.push(new Comment().deserialize(c)))
         if(data.length > 0) this.page += 1;
+        if(data.length < 5) this.showMoreActive = false;
       });
     }
 
@@ -172,6 +180,7 @@ export class PostViewInContextComponent implements OnInit {
         tmpComments.forEach(c => this.comments.push(new Comment().deserialize(c)))
         tmpCurrentComments.forEach(c => this.currentComments.push(new Comment().deserialize(c)))
         if(data.length > 0) this.page += 1;
+        if(data.length < 5) this.showMoreActive = false;
       });
     }
   }

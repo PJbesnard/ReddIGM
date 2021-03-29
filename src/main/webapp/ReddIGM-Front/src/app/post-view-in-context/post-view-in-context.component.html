@@ -94,7 +94,7 @@
       <div class="columns">
         <div class="column is-5"></div>
         <div class="column is-2">
-          <p class="content has-text-light is-clickable" *ngIf="currentComments.length -1 == i" (click) = "showMoreClick()">SHOW MORE</p>
+          <p class="content has-text-light is-clickable" *ngIf="currentComments.length -1 == i && showMoreActive" (click) = "showMoreClick()">SHOW MORE</p>
         </div>
         <div class="column is-5"></div>
       </div>
