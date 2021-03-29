@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Repository
@@ -36,7 +37,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                         "c.post.postId = :parentId AND c.superComment IS NULL " +
                     "ORDER BY " +
                         "c.creationDate DESC")
-    List<Comment> getCommentsByParentOrderByDateDesc(@Param("parentId") long parentId);
+    List<Comment> getCommentsByParentOrderByDateDesc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT " +
             "c " +
@@ -47,7 +48,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
             "c.post.postId = :parentId AND c.superComment IS NULL " +
             "ORDER BY " +
             "c.creationDate ASC")
-    List<Comment> getCommentsByParentOrderByDateAsc(@Param("parentId") long parentId);
+    List<Comment> getCommentsByParentOrderByDateAsc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT comments.id, comments.creation_date, comments.text, comments.post_id," +
                            "comments.super_comment_id, comments.user_id,  SUM(CASE " +
@@ -67,7 +68,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                     "ORDER BY " +
                         "score ASC",
             nativeQuery = true)
-    List<Object> getScoresSortedAsc(@Param("parentId") long parentId);
+    List<Object> getScoresSortedAsc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT comments.id, comments.creation_date, comments.text, comments.post_id," +
                            "comments.super_comment_id, comments.user_id,  SUM(CASE " +
@@ -87,7 +88,7 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                     "ORDER BY " +
                         "score DESC",
             nativeQuery = true)
-    List<Object> getScoresSortedDesc(@Param("parentId") long parentId);
+    List<Object> getScoresSortedDesc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT SUM(CASE " +
                                 "WHEN type = 'UPVOTE' THEN 1 " +

@@ -10,6 +10,8 @@ import fr.uge.jee.web.service.reddIGM.repositories.UserRepository;
 import fr.uge.jee.web.service.reddIGM.repositories.VoteCommentRepository;
 import fr.uge.jee.web.service.reddIGM.utils.OrderType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CommentService {
+
+    private Integer PAGE_SIZE = 5;
 
     @Autowired
     private CommentRepository repository;
@@ -128,20 +132,22 @@ public class CommentService {
         return createResponseDto(comment, true, true, true);
     }
 
-    public List<CommentResponseDto> getCommentsByParentSortedByDate(long parentId, OrderType orderType) {
+    public List<CommentResponseDto> getCommentsByParentSortedByDate(long parentId, OrderType orderType, Integer page) {
+        Pageable sortByDate = PageRequest.of(page, PAGE_SIZE);
         List<Comment> queryResult = orderType == OrderType.ASCENDING ?
-                repository.getCommentsByParentOrderByDateAsc(parentId) :
-                repository.getCommentsByParentOrderByDateDesc(parentId);
+                repository.getCommentsByParentOrderByDateAsc(parentId, sortByDate) :
+                repository.getCommentsByParentOrderByDateDesc(parentId, sortByDate);
 
         return queryResult.stream()
                 .map(comment -> createResponseDto(comment, true, true, true))
                 .collect(Collectors.toList());
     }
 
-    public List<CommentResponseDto> getCommentsByParentSortedByScore(long parentId, OrderType sortOrder) {
+    public List<CommentResponseDto> getCommentsByParentSortedByScore(long parentId, OrderType sortOrder, Integer page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         List<Object> queryResult = sortOrder == OrderType.ASCENDING ?
-                repository.getScoresSortedAsc(parentId) :
-                repository.getScoresSortedDesc(parentId);
+                repository.getScoresSortedAsc(parentId, pageable):
+                repository.getScoresSortedDesc(parentId, pageable);
 
         return queryResult.stream()
                 .map(obj -> {

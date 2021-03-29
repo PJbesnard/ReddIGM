@@ -58,6 +58,8 @@ export class PostViewInContextComponent implements OnInit {
 
   isAdmin: boolean | undefined = false;
 
+  page: number = 0;
+
 
   @Input() commentNumber: number = 0;
   @Input() authorId: number = 1;
@@ -89,7 +91,7 @@ export class PostViewInContextComponent implements OnInit {
     if(this.authenticationService.getCurrentUser()?.username === this.author || this.isAdmin) this.crossComment = true;
 
 
-	
+
 	this.subscription = this.dataService.currentMessage.subscribe(message => this.search(message));
 
   }
@@ -97,7 +99,7 @@ export class PostViewInContextComponent implements OnInit {
   displayResponses(){
     this.showComments = true
     if (this.type === "post"){
-      this.commentService.getCommentsFromPost(this.sort, this.id).subscribe(data =>{
+      this.commentService.getCommentsFromPost(this.sort, this.id, this.page).subscribe(data =>{
         this.comments = data;
 		this.currentComments = data
         this.comments = this.comments.map(c => new Comment().deserialize(c))
@@ -106,7 +108,7 @@ export class PostViewInContextComponent implements OnInit {
     }
 
     if (this.type === "comment"){
-      this.commentService.getCommentsForComment(this.sort, this.id).subscribe(data =>{
+      this.commentService.getCommentsForComment(this.sort, this.id, this.page).subscribe(data =>{
         this.comments = data;
 		this.currentComments = data
         this.comments = this.comments.map(c => new Comment().deserialize(c))
@@ -127,7 +129,8 @@ export class PostViewInContextComponent implements OnInit {
   hideResponses() {
     this.showComments = false;
     this.comments = [];
-	this.currentComments = [];
+    this.currentComments = [];
+    this.page = 0;
   }
 
   displayAuthor(){
@@ -135,15 +138,42 @@ export class PostViewInContextComponent implements OnInit {
   }
 
   newOnclick(){
+    if(this.sort === "NEWEST") return
     this.sort = "NEWEST";
     this.hot = false;
+    this.page = 0;
     this.displayResponses();
   }
 
   hotOnclick(){
+    if(this.sort === "DESCENDING") return
     this.sort = "DESCENDING";
     this.hot = true;
+    this.page = 0;
     this.displayResponses();
+  }
+
+  showMoreClick(){
+    this.showComments = true
+    if (this.type === "post"){
+      this.commentService.getCommentsFromPost(this.sort, this.id, this.page + 1).subscribe(data =>{
+        let tmpComments = data;
+        let tmpCurrentComments = data;
+        tmpComments.forEach(c => this.comments.push(new Comment().deserialize(c)))
+        tmpCurrentComments.forEach(c => this.currentComments.push(new Comment().deserialize(c)))
+        if(data.length > 0) this.page += 1;
+      });
+    }
+
+    if (this.type === "comment"){
+      this.commentService.getCommentsForComment(this.sort, this.id, this.page + 1).subscribe(data =>{
+        let tmpComments = data;
+        let tmpCurrentComments = data;
+        tmpComments.forEach(c => this.comments.push(new Comment().deserialize(c)))
+        tmpCurrentComments.forEach(c => this.currentComments.push(new Comment().deserialize(c)))
+        if(data.length > 0) this.page += 1;
+      });
+    }
   }
 
   clickVote(userVote: VoteType) {

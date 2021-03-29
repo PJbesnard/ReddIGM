@@ -49,27 +49,27 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.vote(vote, principal));
     }
 
-    @GetMapping(value = {"/comment/{commentId}", "/comment/{commentId}/{orderType}"})
-    public ResponseEntity<List<CommentResponseDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable(required = false) OrderType orderType) {
+    @GetMapping(value = {"/comment/{commentId}/{page}", "/comment/{commentId}/{page}/{orderType}"})
+    public ResponseEntity<List<CommentResponseDto>> getSubCommentsOrdered(@PathVariable Long commentId, @PathVariable Integer page, @PathVariable(required = false) OrderType orderType) {
         List<CommentResponseDto> commentsDto;
 
         if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
-            commentsDto = commentService.getCommentsByParentSortedByDate(commentId, OrderType.DESCENDING);
+            commentsDto = commentService.getCommentsByParentSortedByDate(commentId, OrderType.DESCENDING, page);
         } else {
-            commentsDto = commentService.getCommentsByParentSortedByScore(commentId, orderType);
+            commentsDto = commentService.getCommentsByParentSortedByScore(commentId, orderType, page);
         }
 
         return ResponseEntity.ok(commentsDto);
     }
 
-    @GetMapping(value = {"/post/{postId}", "/post/{postId}/{orderType}"})
-    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable(required = false) OrderType orderType) {
+    @GetMapping(value = {"/post/{postId}/{page}", "/post/{postId}/{page}/{orderType}"})
+    public ResponseEntity<List<CommentResponseDto>> getAllCommentsForPost(@PathVariable Long postId, @PathVariable Integer page, @PathVariable(required = false) OrderType orderType) {
         List<CommentResponseDto> commentsDto;
 
         if (Objects.isNull(orderType) || orderType == OrderType.NEWEST) {
-            commentsDto = commentService.getCommentsByParentSortedByDate(postId, OrderType.DESCENDING);
+            commentsDto = commentService.getCommentsByParentSortedByDate(postId, OrderType.DESCENDING, page);
         } else {
-            commentsDto = commentService.getCommentsByParentSortedByScore(postId, orderType);
+            commentsDto = commentService.getCommentsByParentSortedByScore(postId, orderType, page);
         }
 
         return ResponseEntity.ok(commentsDto);
