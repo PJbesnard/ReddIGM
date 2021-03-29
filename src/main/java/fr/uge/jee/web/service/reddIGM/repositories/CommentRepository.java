@@ -40,14 +40,14 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
     List<Comment> getCommentsByParentOrderByDateDesc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT " +
-            "c " +
-            "FROM " +
-            "Comments c " +
-            "WHERE " +
-            "c.superComment.id = :parentId OR " +
-            "c.post.postId = :parentId AND c.superComment IS NULL " +
-            "ORDER BY " +
-            "c.creationDate ASC")
+                        "c " +
+                    "FROM " +
+                        "Comments c " +
+                    "WHERE " +
+                        "c.superComment.id = :parentId OR " +
+                        "c.post.postId = :parentId AND c.superComment IS NULL " +
+                    "ORDER BY " +
+                        "c.creationDate ASC")
     List<Comment> getCommentsByParentOrderByDateAsc(@Param("parentId") long parentId, Pageable pageable);
 
     @Query(value = "SELECT comments.id, comments.creation_date, comments.text, comments.post_id," +
@@ -66,7 +66,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                     "GROUP BY " +
                         "comments.id " +
                     "ORDER BY " +
-                        "score ASC",
+                        "score ASC, " +
+                        "comments.creation_date DESC",
             nativeQuery = true)
     List<Object> getScoresSortedAsc(@Param("parentId") long parentId, Pageable pageable);
 
@@ -86,7 +87,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                     "GROUP BY " +
                         "comments.id " +
                     "ORDER BY " +
-                        "score DESC",
+                        "score DESC, " +
+                        "comments.creation_date DESC",
             nativeQuery = true)
     List<Object> getScoresSortedDesc(@Param("parentId") long parentId, Pageable pageable);
 
