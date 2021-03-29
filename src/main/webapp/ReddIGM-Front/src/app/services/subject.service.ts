@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SubjectModel } from '../models/subject-response';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+const BASE_ADDRESS = environment.baseURL;
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +13,7 @@ export class SubjectService {
   private url: string;
 
   constructor(private http: HttpClient) {
-    this.url = 'http://localhost:8080/subjects/'
+    this.url = BASE_ADDRESS + 'subjects/'
   }
 
   getAllSubjects(): Observable<Array<SubjectModel>> {
