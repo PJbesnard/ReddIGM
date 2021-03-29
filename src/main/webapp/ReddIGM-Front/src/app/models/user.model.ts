@@ -12,6 +12,10 @@ export class User implements Deserializable {
   newsletterSubscriber!: boolean;
   authorities!: Authorities[];
 
+  constructor() {
+    this.authorities = new Array<Authorities>();
+  }
+
   deserialize(input: any): this {
     Object.assign(this, input);
     return this;

@@ -8,6 +8,7 @@
 <div class="aligned" style="margin-left: 5%;">
     <img class="is-rounded image-cropper" src="{{ user.getPicture() }}">
     <h1 class="title is-1 has-text-light title-underlined">{{ user.username }}</h1>
+    <span *ngIf="user.isAdmin()" class="tag is-primary" style="margin-left: 1em; margin-bottom: 1em;">Admin</span>
 </div>
 
 <div class="columns">

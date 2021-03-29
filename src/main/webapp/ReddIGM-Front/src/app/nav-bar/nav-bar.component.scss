@@ -25,6 +25,10 @@
   box-shadow:0px 0px 25px 0px rgba(1,1,1,0.2);
 }
 
+.navbar-menu.is-active {
+  background-color: rgb(53, 57, 63);
+}
+
 .navbar-start > a.navbar-item:hover {
   background-color:rgb(63, 67, 73);
 }

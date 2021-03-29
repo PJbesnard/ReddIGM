@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, ViewChild, ElementRef  } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { AuthenticationService } from "../services/authentication.service"
 import { User } from '../models/user.model';
@@ -14,6 +14,9 @@ import { Router } from '@angular/router';
 
 
 export class NavBarComponent {
+  @ViewChild('navBurger') navBurger!: ElementRef;
+  @ViewChild('navMenu') navMenu!: ElementRef;
+
 	searchText: string = "";
   isAuthentified: boolean = false;
   name: string | undefined;
@@ -31,6 +34,11 @@ export class NavBarComponent {
       this.name = this.user?.username;
     }
   }
+
+  toggleNavbar() {
+    this.navBurger.nativeElement.classList.toggle('is-active');
+    this.navMenu.nativeElement.classList.toggle('is-active');
+}
 
   search(){
 	  this.dataService.changeMessage(this.searchText)
