@@ -64,7 +64,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                         "(comments.post_id = :parentId AND comments.super_comment_id IS NULL OR " +
                         "comments.super_comment_id = :parentId) " +
                     "GROUP BY " +
-                        "comments.id " +
+                        "comments.id, " +
+                        "comments.creation_date " +
                     "ORDER BY " +
                         "score ASC, " +
                         "comments.creation_date ASC",
@@ -85,7 +86,8 @@ public interface CommentRepository extends CrudRepository<Comment, Long> {
                         "(comments.post_id = :parentId AND comments.super_comment_id IS NULL OR " +
                         "comments.super_comment_id = :parentId) " +
                     "GROUP BY " +
-                        "comments.id " +
+                        "comments.id," +
+                        "comments.creation_date " +
                     "ORDER BY " +
                         "score DESC, " +
                         "comments.creation_date ASC",

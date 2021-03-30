@@ -29,7 +29,8 @@ public interface PostRepository extends CrudRepository<Post,Long> {
                     "ON " +
                         "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
-                        "posts.post_id " +
+                        "posts.post_id," +
+                        "posts.created_date " +
                     "ORDER BY " +
                         "score ASC, " +
                         "posts.created_date DESC",
@@ -48,7 +49,8 @@ public interface PostRepository extends CrudRepository<Post,Long> {
                     "ON " +
                         "post_votes.post_id = posts.post_id WHERE posts.sub_id = :subId " +
                     "GROUP BY " +
-                        "posts.post_id " +
+                        "posts.post_id," +
+                        "posts.created_date " +
                     "ORDER BY " +
                         "score ASC, " +
                         "posts.created_date DESC",
@@ -66,7 +68,8 @@ public interface PostRepository extends CrudRepository<Post,Long> {
                     "ON " +
                         "post_votes.post_id = posts.post_id " +
                     "GROUP BY " +
-                        "posts.post_id " +
+                        "posts.post_id," +
+                        "posts.created_date " +
                     "ORDER BY " +
                         "score DESC, " +
                         "posts.created_date DESC",
@@ -84,7 +87,8 @@ public interface PostRepository extends CrudRepository<Post,Long> {
                     "ON " +
                         "post_votes.post_id = posts.post_id WHERE posts.sub_id = :subId " +
                     "GROUP BY " +
-                        "posts.post_id " +
+                        "posts.post_id," +
+                        "posts.created_date " +
                     "ORDER BY " +
                         "score DESC, " +
                         "posts.created_date DESC",
