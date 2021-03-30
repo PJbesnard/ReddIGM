@@ -1,0 +1,17 @@
+<app-nav-bar></app-nav-bar>
+<br>
+<br>
+<br>
+<div class="container is-fluid">
+  <p class="title is-4 is-spaced has-text-light has-text-weight-semibold text-decoration: underline is-clickable"  style="text-decoration: underline" (click)="displaySub()">{{subjectName}}</p>
+  <br>
+
+  <div class="columns">
+    <div class="column is-three-quarters ">
+      <app-post-view-in-context [postId]="post.id" [image]="post.user.getPicture()" [commentNumber]="post.nbComments" [vote]="post.myVote" [id]="post.id" [author]="post.user.username" [title]="post.postName" [content]="post.description" [authorId]="post.user.id" [date]="post.getDate().toLocaleString()" [subName]="post.sub.name" [rate]="post.voteCount"></app-post-view-in-context>     
+    </div>
+    <div class="column is-one-quarter">
+      <app-browse-subs></app-browse-subs>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+<router-outlet></router-outlet>
+
+<app-nav-bar></app-nav-bar>
+
+<br />
+<br />
+
+<div class="aligned" style="margin-left: 5%;">
+    <img class="is-rounded image-cropper" src="{{ user.getPicture() }}">
+    <h1 class="title is-1 has-text-light title-underlined">{{ user.username }}</h1>
+    <span *ngIf="user.isAdmin()" class="tag is-primary" style="margin-left: 1em; margin-bottom: 1em;">Admin</span>
+</div>
+
+<div class="columns">
+    <div class="column is-one-quarter" style="margin-top: 5em; margin-left: 3em;">
+        <h1 class="title inline has-text-light">About me</h1>
+        <a class="subtitle inline has-text-light" (click)="onEdit()" *ngIf="isMe">&nbsp;&nbsp;Edit</a>
+
+        <br />
+        <br />
+
+        <div *ngIf="user.description" class="box has-text-grey-lighter" style="background-color: #303336;">
+            <p>{{ user.description }}</p>
+        </div>
+
+        <div class="box has-text-grey-lighter" style="background-color: #303336;">
+            <ul>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Posts : </span>{{ posts.length }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Comments : </span>{{ comments.length }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Likes : </span>{{ nbLikes }}</li>
+                <li><span class="subtitle has-text-grey-lighter has-text-weight-light">Dislikes : </span>{{ nbDislikes }}</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="column">
+
+    </div>
+
+    <div class="column is-half">
+        <div style="overflow: auto;">
+            <label style="float: right;">
+                <h2 class="title has-text-light" style="display: inline;">Filter : </h2>
+                <div class="select">
+                    <select #filterSelector (change)="onFilterChange(filterSelector.value)">
+                      <option>All</option>
+                      <option>Posts</option>
+                      <option>Comments</option>
+                      <option>Votes</option>
+                    </select>
+                </div>
+            </label>
+        </div>
+
+        <br />
+        <br />
+
+        <div *ngFor="let elem of chronologicalHistoryFiltered">
+            <div *ngIf="isPost(elem)">
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has posted</p>
+                <app-post-preview [loaded]="false" [id]="asPost(elem).id"></app-post-preview>
+            </div>
+
+            <div *ngIf="isComment(elem) && !asComment(elem).superCommentId">
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has commented this post</p>
+                <app-post-preview [id]="asComment(elem).postId" [loaded]="false"></app-post-preview>
+                <div style="margin-inline: auto; width: 98%; margin-top: -2%;">
+                    <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
+                </div>
+            </div>
+
+            <div *ngIf="isComment(elem) && asComment(elem).superCommentId">
+                <p class="has-text-light">&nbsp;&nbsp;{{ user.username }} has replied to this comment</p>
+                <app-comment-preview [commentId]="asComment(elem).superCommentId"></app-comment-preview>
+                <div style="margin-inline: auto; width: 98%; margin-top: -2%;">
+                    <app-comment-preview [commentId]="asComment(elem).commentId"></app-comment-preview>
+                </div>
+            </div>
+
+            <div *ngIf="isVotePost(elem) || isVoteComment(elem)">
+                <p class="has-text-light" *ngIf="isUpvote(elem)">&nbsp;&nbsp;{{ user.username }} liked this</p>
+                <p class="has-text-light" *ngIf="isDownvote(elem)">&nbsp;&nbsp;{{ user.username }} disliked this</p>
+                <app-post-preview *ngIf="isVotePost(elem)" [loaded]="false" [id]="asVotePost(elem).postId"></app-post-preview>
+                <app-comment-preview *ngIf="isVoteComment(elem)" [commentId]="asVoteComment(elem).commentId"></app-comment-preview>
+            </div>
+
+            <br>
+        </div>
+    </div>
+
+    <div class="column">
+        
+    </div>
+</div>

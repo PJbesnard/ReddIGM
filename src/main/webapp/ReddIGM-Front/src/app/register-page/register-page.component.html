@@ -1,0 +1,117 @@
+<app-nav-bar></app-nav-bar>
+
+<br />
+<br />
+
+<div class="columns">
+    <div class="column is-1"></div> <!-- Offset -->
+
+    <div class="column">
+        <h1 class="title is-1 has-text-light" style="text-align: center;">
+            Join Reddigm today !
+        </h1>
+
+        <br />
+
+        <figure class="image is-16by9">
+            <img src="assets/connected_world_map.png">
+        </figure>
+
+        <br />
+
+        <h2 class="subtitle has-text-light" style="text-align: center;">
+            A safe place where you can share your biggest shames across the world
+        </h2>
+    </div>
+
+    <div class="column is-1"></div> <!-- Offset -->
+
+    <div class="column">
+        <br />
+
+        <div class="content" style="margin-inline: auto; width: 90%;">
+            <app-alert></app-alert>
+        </div>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmitForm()">
+            <div class="field">
+                <label class=" has-text-white">&nbsp;&nbsp;Username <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input is-primary" placeholder="Username" formControlName="username">
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-user"></i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class=" has-text-white">&nbsp;&nbsp;Email address <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input is-primary" placeholder="Email address" formControlName="email">
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-envelope"></i>
+                  </span>
+                </div>
+                <div *ngIf="registerForm.controls.email.errors" class="invalid-feedback">
+                    <div *ngIf="registerForm.controls.email.errors.email">
+                        <p class="subtitle has-text-danger is-6">Email address is incorrect</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class=" has-text-white">&nbsp;&nbsp;Password <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input is-primary" placeholder="Password" type="password" formControlName="password">
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class=" has-text-white">&nbsp;&nbsp;Confirm password <span class="has-text-danger">*</span></label>
+                <div class="control has-icons-left">
+                    <input class="input is-primary" placeholder="Confirm password" type="password" formControlName="passwordConfirm">
+                    <span class="icon is-small is-left" style="margin-block: 1%;">
+                        <i class="fas fa-lock"></i>
+                  </span>
+                </div>
+                <div *ngIf="!registerForm.controls.passwordConfirm.errors" class="invalid-feedback">
+                    <div *ngIf="registerForm.hasError('passwordConfirmValidator')">
+                        <p class="subtitle has-text-danger is-6">Passwords are differents</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="padding-left: 1%;">
+                <div class="field">
+                    <label class="checkbox has-text-light">
+                        <input type="checkbox" formControlName="subscribeNews" />
+                        I agree to get emails about cool stuff on Reddigm.
+                    </label>
+                </div>
+        
+                <p class="has-text-light">By creating an account, you agree the <a href="#"><u>Terms of Service</u></a>.</p>
+            </div>
+    
+            <br/>
+
+            <ngx-recaptcha2 #captchaElem
+                [siteKey]="captchaKey"
+                formControlName="recaptcha">
+            </ngx-recaptcha2>
+
+            <br/>
+    
+            <div>
+                <p class="control is-expanded">
+                    <button class="button is-primary" type="submit" [ngClass]="{'is-loading': logging}" [disabled]="registerForm.invalid">Create account</button>
+                </p>
+            </div>
+        </form>
+
+    </div>
+
+    <div class="column is-1"></div> <!-- Offset -->
+</div>

@@ -1,0 +1,104 @@
+<div class="card has-background-grey block" style="margin-bottom: 5px;">
+    <div class="card-content">
+      <div class="columns is-vcentered">
+        <div class="column is-1 has-text-centered">
+          <fa-icon [icon]="faPlusCircle" class="content is-clickable has-text-light" style="font-size: 24px;" *ngIf="vote!=upvote" (click)="clickVote(upvote)"></fa-icon>
+          <fa-icon [icon]="faPlusCircle" class="content has-text-primary" style="font-size: 24px;" *ngIf="vote===upvote"></fa-icon>
+          <p class="has-text-light is-size-5" > {{rate}} </p>
+          <fa-icon [icon]="faMinusCircle"class="content is-clickable has-text-light" style="font-size: 24px;" *ngIf="vote!=downvote" (click)="clickVote(downvote)"></fa-icon>
+          <fa-icon [icon]="faMinusCircle"class="content has-text-danger" style="font-size: 24px;" *ngIf="vote===downvote"></fa-icon>
+        </div>
+        <div class="column is-10">
+          <div class="content is-size-4 has-text-light has-text-weight-bold">
+            {{title}}
+          </div>
+          <div class="content has-text-light" [innerHTML]="content">
+          </div>
+          <div class="columns is-vcentered">
+
+            <div class="column is-1 ">
+              <img class="is-rounded is-clickable image-cropper" src={{image}} (click)="displayAuthor()">
+            </div>
+
+            <div class="column is-1 has-text-left is-clickable "(click)="displayAuthor()">
+              <div class="content has-text-primary ">{{author}} </div>
+            </div>
+
+            <div class="column is-1"></div>
+            <div class="column is-2">
+              <div class="content has-text-light has-text-left">{{date}}</div>
+            </div>
+            <div class="column is-3" *ngIf="(!isAdmin && type=='post') || (!isAdmin && !crossComment)"></div>
+            <div class="column is-2" *ngIf="(isAdmin) || (!isAdmin && type != 'post' && crossComment)"></div>
+            <div class="column is-2">
+              <div *ngIf = "nbSubComment <= 2" class="content has-text-light is-clickable has-text-left " (click)="openModalCreatePost()">
+                <fa-icon  [icon]="faReply"class="content is-clickable has-text-light"  style="font-size: 18px;"> </fa-icon>
+                  Reply
+              </div>
+              <div *ngIf = "nbSubComment > 2" class="content has-text-light is-clickable has-text-left " (click)="openModalCreatePost()">
+                <fa-icon [icon]="faReply"class="content is-clickable has-text-light"  style="font-size: 18px;"> </fa-icon>
+              </div>
+            </div>
+            <div class="column is-3">
+              <div *ngIf = "showComments === false  && nbSubComment <= 2"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">
+                <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>
+                 Comments ({{commentNumber}})
+              </div>
+              <div *ngIf = "showComments === false && nbSubComment > 2"class="content has-text-light is-clickable has-text-left "  (click)="displayResponses()">
+                <fa-icon [icon]="faCommentAlt"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>
+                ({{commentNumber}})
+              </div>
+              <div *ngIf = "showComments === true" class="content has-text-light is-clickable has-text-left "  (click)="hideResponses()">
+                <fa-icon [icon]="faChevronCircleUp"class="content is-clickable has-text-light" style="font-size: 18px;"> </fa-icon>
+                 Hide
+              </div>
+            </div>
+            <div class="column is-1" *ngIf="(isAdmin) || (!isAdmin && type != 'post' && crossComment)"><fa-icon [icon]="faTimesCircle" class="content is-clickable has-text-light" style="font-size: 24px;" (click)="deleteId(id)"></fa-icon></div>
+          </div>
+        </div>
+        <div class="column is-1">
+        </div>
+      </div>
+    </div>
+      <app-create-comment  *ngIf="type === 'comment'" [postId]="postId" [superCommentId]="id" [openModal]= "isModalActive" (openModelChange)="isModalActive = false"> </app-create-comment>
+      <app-create-comment *ngIf="type === 'post'"  [postId]="id" [openModal]= "isModalActive" (openModelChange)="isModalActive = false"> </app-create-comment>
+    </div>
+  <div *ngIf = "comments.length > 0 && showComments === true && nbSubComment <= 1" class="columns">
+    <div class="column is-2"  >
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "hotOnclick()">Hot</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-light is-clickable" (click) = "hotOnclick()">Hot</p>
+    </div>
+    <div class="column is-2">
+      <p *ngIf = "hot === true" class="title is-5 is-spaced has-text-light is-clickable" (click) = "newOnclick()">New</p>
+      <p *ngIf = "hot === false" class="title is-5 is-spaced has-text-primary is-clickable" (click) = "newOnclick()">New</p>
+    </div>
+  </div>
+
+  <div *ngIf = "comments.length > 0 && showComments === true && nbSubComment > 1" class="columns">
+    <div class="column is-2"  >
+      <p *ngIf = "hot === true" class="title is-6 is-spaced has-text-primary is-clickable" (click) = "hotOnclick()">Hot</p>
+      <p *ngIf = "hot === false" class="title is-6 is-spaced has-text-light is-clickable" (click) = "hotOnclick()">Hot</p>
+    </div>
+    <div class="column is-2">
+      <p *ngIf = "hot === true" class="title is-6 is-spaced has-text-light is-clickable" (click) = "newOnclick()">New</p>
+      <p *ngIf = "hot === false" class="title is-6 is-spaced has-text-primary is-clickable" (click) = "newOnclick()">New</p>
+    </div>
+  </div>
+
+
+  <div class="columns" *ngFor="let c of currentComments; let i = index" [attr.data-index]="i">
+    <div class="column is-1" >
+    </div>
+    <div class="column is-11" >
+      <app-post-view-in-context [nbSubComment]="nbSubComment + 1"[postId]="postId" [image]="c.user.getPicture()" [type]="'comment'" [commentNumber]=c.nbComments [vote]=c.myVote [id]=c.commentId [author]=c.user.username [title]="''" [content]=c.text [authorId]=c.user.id [date]=c.getDate().toLocaleString() [subName]="''" [rate]=c.nbVote></app-post-view-in-context>
+      <div class="columns">
+        <div class="column is-5"></div>
+        <div class="column is-2">
+          <p class="content has-text-light is-clickable" *ngIf="currentComments.length -1 == i && showMoreActive" (click) = "showMoreClick()">SHOW MORE</p>
+        </div>
+        <div class="column is-5"></div>
+      </div>
+    </div>
+  </div>
+
+

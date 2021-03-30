@@ -1,0 +1,5 @@
+[0m2021.03.09 00:06:02 INFO  Started: Metals version 0.10.0 in workspace '/Users/thierno/M2/JEE/LAST-VERSION' for client vscode 1.54.1.[0m
+[0m2021.03.09 00:06:22 INFO  time: initialize in 20s[0m
+[0m2021.03.09 00:06:26 WARN  Build server is not auto-connectable.[0m
+mars 09, 2021 12:16:22 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFOS: Unsupported notification method: $/setTraceNotification
