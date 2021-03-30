@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user.model';
 import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from '../services/authentication.service';
+import { JwtService } from '../services/jwt.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -17,7 +18,7 @@ export class EditProfilePageComponent implements OnInit {
   registerForm: FormGroup;
 
   constructor(private userService: UserService, private formBuilder: FormBuilder, private route: ActivatedRoute, private router: Router, private alertService: AlertService,
-              private authService: AuthenticationService) {
+              private authService: AuthenticationService, private jwtService: JwtService) {
 
     let userId = this.route.snapshot.params['id'];
 
@@ -73,6 +74,7 @@ export class EditProfilePageComponent implements OnInit {
       (response) => {
         if (!redirecting) {
           redirecting = true;
+          this.jwtService.setUser(this.user);
           this.alertService.success("Profile successfully updated", true);
           this.router.navigate(["/users/" + this.user.id]);
         }

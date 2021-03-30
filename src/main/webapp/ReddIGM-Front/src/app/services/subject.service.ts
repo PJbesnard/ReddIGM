@@ -13,7 +13,7 @@ export class SubjectService {
   private url: string;
 
   constructor(private http: HttpClient) {
-    this.url = BASE_ADDRESS + 'subjects/'
+    this.url = BASE_ADDRESS + "subjects/";
   }
 
   getAllSubjects(): Observable<Array<SubjectModel>> {
