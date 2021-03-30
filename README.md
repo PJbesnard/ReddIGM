@@ -21,6 +21,7 @@
       <ul>
         <li><a href="#requirements">Requirements</a></li>
         <li><a href="#clone-the-repository">Clone the Repository</a></li>
+        <li><a href="#accounts-available">Accounts available</a></li>
         <li><a href="#running-the-back-end-application-locally">Running the Back-End application locally</a></li>
         <li><a href="#running-the-front-end-application-locally">Running the Front-End application locally</a></li>
         <li><a href="#use-application">Use application</a></li>
@@ -44,9 +45,9 @@ This project was developed during the last year of software master's degree at I
 <p align="center">
     <img src="./src/main/webapp/ReddIGM-Front/src/assets/img/home-screen.png" alt="Logo" height="350">
 </p>
-Reddigm allows its users to create posts about a specific topic.
-Users can also comment on these posts or other comments.
-The site offers the possibility of personalizing their profile.
+Reddigm allows users to create subjects and posts about a specific topic.
+Users can also comment or vote on these posts or other comments.
+The site offers them the possibility of personalizing their profile.
 
 ### Developed with
 * [Java](https://docs.oracle.com/en/java/javase/13/docs/api/index.html)
@@ -54,7 +55,11 @@ The site offers the possibility of personalizing their profile.
 * [Angular](https://angular.io/)
 
 ### Architecture
-This application follow a REST architecture.
+This application follows a REST architecture, here is the technical stack used for this project :
+
+<p align="center">
+    <img src="./src/main/webapp/ReddIGM-Front/src/assets/img/technical_stack-schema.png" alt="Logo" height="350">
+</p>
 
 ## Getting Started
 
@@ -71,11 +76,17 @@ As usual, you get started by cloning the project to your local machine:
 git clone https://gitlab.com/jee-2020-2021-apprentis/groupe-c.git
 ```
 
+### Accounts available
+* Pseudo = ElTiernausore : Password = Thierno (USER)
+* Pseudo = LouisBinaire : Password = Yvette (USER)
+* Pseudo = admin : Password = admin (ADMIN)
+
+
 ### Running the Back-End application locally
 There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `src/main/java/fr/uge/jee/web/service/reddIGM` ReddIgmApplication class from your IDE.
 
 ### Running the Front-End application locally
-The easiest way to run the Front-End application is to run `ng serve`command in the `src/main/webapp/ReddIGM-Front` folder.
+The easiest way to run the Front-End application is to run `ng serve` command in the `src/main/webapp/ReddIGM-Front` folder.
 
 ### Use application
 You can then go on website which is available locally at: `http://localhost:4200/home`
